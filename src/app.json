@@ -1,0 +1,20 @@
+{
+  "pages": [
+    
+    "pages/index/main"
+    ,"pages/publish/main"
+    ,"pages/consult_publish/main"
+    ,"pages/message_nieye/main"
+    ,"pages/my_bell/main"
+    ,"pages/my_order/main"
+    ,"pages/my_publish/main"
+    ,"pages/setting/main"
+
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#5887F9",
+    "navigationBarTitleText": "传动医生",
+    "navigationBarTextStyle": "light"
+  }
+}
