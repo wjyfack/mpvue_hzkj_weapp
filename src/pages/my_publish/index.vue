@@ -1,8 +1,8 @@
 <template>
     <div class="publish">
-       <van-tabs :active="active" @change="onChange" :color="'#5887F9'">
+       <van-tabs :active="active" @change="onChange" :color="'#5887F9'" custom-class="fixed-tab">
             <van-tab title="维修">
-                <div class="publish-item" v-for="(item, index) in 3" :key="key">
+                <div class="publish-item" v-for="(item, index) in 10" :key="key">
                     <div class="cont">
                         <img src="//placehold.it/100x100" alt="" class="or_img">
                         <div class="or_cont">
@@ -16,8 +16,10 @@
                     <div class="btn-list">
                         <div class="status">正在展示</div>
                         <div class="item">
-                            <div class="btn-item">取消订单</div>
-                            <div class="btn-item cl">取消订单</div>
+                            <div class="btn-item c1">上架</div>
+                            <div class="btn-item c1">下架</div>
+                            <div class="btn-item c1">编辑</div>
+                            <div class="btn-item">删除</div>
                         </div>
                         
                     </div>
@@ -90,14 +92,15 @@ export default {
     .btn-list {
         display: flex;
         align-items: center;
+        padding: 5px 0;
         .status {font-size: 10px;color:#393939;}
         .item {
             flex: 1;
             display: flex;
             justify-content: flex-end;
            .btn-item {
-                color: #5887F9;
-                border: 1px solid #5887F9;
+                color: #FC5F6B;
+                border: 1px solid #FC5F6B;
                 font-size: 12px;
                 min-width: 66px;
                 display: flex;
@@ -107,8 +110,8 @@ export default {
                 border-radius: 20px;
             }
             .c1 {
-                color:rgb(11, 13, 17);
-                border-color:#4C5264;
+                color:#393939;
+                border-color:#C9C9C9;
             } 
         }
         

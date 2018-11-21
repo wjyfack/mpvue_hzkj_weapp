@@ -20,4 +20,10 @@ export default {
   -webkit-transition: width 2s;
   -o-transition: width 2s;
 }
+.fixed-tab .van-tabs__wrap{
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+}
 </style>

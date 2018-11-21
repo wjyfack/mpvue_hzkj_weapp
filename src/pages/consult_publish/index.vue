@@ -9,7 +9,13 @@
                 <img :src="item" class="img">
                 <img src="../../../static/imgs/close.png" class="close" @click="onClose(index)">
             </div>
-        </div> 
+        </div>
+        <div class="bell">
+            <div class="cells van-hairline--bottom" @click="onCloseSort">
+                <div class="name">分类</div>
+                <div class="detail">分类 <img src="../../../static/imgs/arrow.png" class="arrow"></div>
+            </div>
+        </div>
         <div class="textarea-hi">
         <van-cell-group class="">
             <van-field
@@ -33,9 +39,36 @@
         </div>
         <div class="tips">问题描述的更清晰方便于他人为您解答哦~</div>
         <van-toast id="van-toast" />
-        <div class="set_btn">
-            <van-button size="large" type="danger" @click="onPublish">发布</van-button>
+        <div class="set_btn" v-if="isBtn">
+            <van-button size="large" type="danger" square @click="onPublish">发布</van-button>
         </div>
+        <van-popup :show="isSort" @close="onCloseSort" position="bottom" custom-class="sort_tree">
+            <div class="back"><van-button size="small" type="default" @click="onCloseSort">返回</van-button></div>
+            <div class="tree-select">
+                <div class="tree-select__nav">
+                    <div
+                    v-for="(item, index) in 5"
+                    :key="key"
+                    class="tree-select__nitem van-ellipsis"
+                    @click="onClickNav(index)"
+                    :class="{'tree-select__nitem--active': index == sortOne}"
+                    >
+                    分类１
+                    </div>
+                </div>
+                <div class="tree-select__content">
+                    <div
+                    v-for="(item, index) in 5"
+                    :key="key"
+                    class="tree-select__item van-ellipsis"
+                    :class="{'tree-select__item--active': index == sortTwo}"
+                    @click="onSelectItem(index)"
+                    >
+                    分类２
+                    </div>
+                </div>
+            </div>
+        </van-popup>
     </div>
 </template>
 <script>
@@ -46,6 +79,10 @@ export default {
             title: ''
             ,detail: ''
             ,imgArr: []
+            ,isSort: false // 分类
+            ,isBtn: true
+            ,sortOne: 0
+            ,sortTwo: 0
         }
     }
     ,methods: {
@@ -79,6 +116,18 @@ export default {
         }
         ,onPublish(){
             console.log('发表')
+        }
+        ,onCloseSort() {
+            this.isSort = !this.isSort            
+            this.isBtn = this.isSort ? false:true
+          
+        }
+        ,onClickNav(index) {
+            this.sortOne = index
+        }
+        ,onSelectItem(index){
+            this.sortTwo = index
+            this.onCloseSort()
         }
     }
 
@@ -135,6 +184,96 @@ export default {
         left: 0;
         right: 0;
     }
+}
+.sort_tree {
+    width: 100%;
+    height: 100%;
+    .back {padding: 10px;}
+}
+.bell {
+    background: #FFFFFF;
+    .cells {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 20px;
+        .name{
+            font-size: 16px;
+            color:#333;
+        }
+        .detail {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color:#B2B2B2;
+            .arrow {
+                margin-left: 5px;
+                width:  6px;
+                height: 11px;
+                color: #5887F9;
+            }
+        }
+    }
+    
+}
+.tree-select {
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+  font-size: 16px
+}
+
+.tree-select__nav {
+  width: 35%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow: scroll;
+  background-color: #fff;
+  -webkit-overflow-scrolling: touch
+}
+
+.tree-select__nitem {
+  line-height: 44px;
+  padding: 0 15px;
+  background-color: #fff
+}
+
+.tree-select__nitem--active,
+.tree-select__nitem:active {
+  background-color: #f8f8f8
+}
+
+.tree-select__nitem--active {
+  font-weight: 500
+}
+
+.tree-select__content {
+  padding: 0 15px;
+  margin-left: 35%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch
+}
+
+.tree-select__item {
+  position: relative;
+  line-height: 44px;
+  padding-left: 5px;
+  padding-right: 18px
+}
+
+.tree-select__item--active,
+.tree-select__item:active {
+  color: #f44
+}
+
+.tree-select__selected {
+  float: right;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  line-height: inherit
 }
 </style>
 

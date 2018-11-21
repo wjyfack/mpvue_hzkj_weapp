@@ -1,5 +1,5 @@
 <template>
-  <div class="container" >
+  <scroll-view scroll-y="true" class="container" @scrolltolower="onLoadMore">
     <div class="search-bar">
       <div class="search">
         搜索您需要的服务<img src="../../static/imgs/search.png" class="search-icon"/>
@@ -55,13 +55,13 @@
           <a href="/pages/counter/main" class="more">更多>></a>
         </div>
       <div class="article">
-        <a href="/pages/article/main" class="article-item" v-for="(item, index) in 5" :key="key">
+        <a href="/pages/article/main" class="article-item" v-for="(item, index) in 2" :key="key">
           <div class="art-title van-ellipsis van-hairline--bottom">什么是齿式联轴器？什么是齿式联轴器？</div>
           <div class="min_time">1分钟前</div>
         </a>
       </div>
     </div>
-    <van-tabs :active="active" @change="onChange" :color="'#5887F9'">
+    <van-tabs :active="active" @change="onChange" :color="'#5887F9'" custom-class="tabbars">
       <!-- 选择框 -->
       <div class="select">
         <div class="select-item">
@@ -144,12 +144,10 @@
       </van-tab>
     </van-tabs>
     
-  </div>
+  </scroll-view>
 </template>
 
 <script>
-
-
 export default {
   data () {
     return {
@@ -158,6 +156,7 @@ export default {
       ,banners: [{url: 'http://placehold.it/320x100'},{url: 'http://placehold.it/320x100'},{url: 'http://placehold.it/320x100'}]
       ,isPrice: false // 价格高低框
       ,isSort: false // 分类
+      ,scrollTop: 0 // 
     }
   },
 
@@ -195,10 +194,21 @@ export default {
 
       }
     }
+    ,onLoadMore() {
+      console.log(123)
+    }
   },
   created () {
     // 调用应用实例的方法获取全局数据
     // this.getUserInfo()
+  }
+
+  ,onReachBottom(){ // 底部添加更多
+    console.log(1222)
+  }
+  ,onPageScroll(event){
+    this.scrollTop = event.scrollTop
+    
   }
 }
 </script>
@@ -207,6 +217,12 @@ export default {
 // .container {
 //   padding-bottom: 50px;
 // }
+.tabbars{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
 .consult {
    background: #F9F9F9;
     &-item {

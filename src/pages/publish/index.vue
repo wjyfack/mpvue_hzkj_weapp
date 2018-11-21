@@ -30,9 +30,9 @@
 
                 </van-cell-group> 
             </div>
-            <div class="addr">
+            <div class="addr" @click="onCloseAddr">
                 <van-icon name="location"></van-icon>
-                <div class="addr_detail">佛山 南海</div>
+                <div class="addr_detail">{{area.province}} {{area.city}}</div>
             </div>
             <div class="bell">
                 <div class="cells van-hairline--bottom" @click="onCloseSort">
@@ -67,36 +67,39 @@
             </div>
             <div class="tips">填写完毕，按下方按钮发布~</div>
             <van-toast id="van-toast"/>
-            <div class="set_btn" v-if="!isSort">    
+            <div class="set_btn" v-if="isBtn">    
                 <van-button size="large" square type="danger" @click="onPublish">发布</van-button>
             </div>
         </div>
         <van-popup :show="isSort" @close="onCloseSort" position="bottom" custom-class="sort_tree">
-                <div class="back"><van-button size="small" type="default" @click="onCloseSort">返回</van-button></div>
-                <div class="tree-select">
-                    <div class="tree-select__nav">
-                        <div
-                        v-for="(item, index) in 5"
-                        :key="key"
-                        class="tree-select__nitem van-ellipsis"
-                        @click="onClickNav"
-                        :class="{'tree-select__nitem--active': true}"
-                        >
-                        分类１
-                        </div>
-                    </div>
-                    <div class="tree-select__content">
-                        <div
-                         v-for="(item, index) in 5"
-                        :key="key"
-                        class="tree-select__item van-ellipsis"
-                        :class="{'tree-select__item--active': true}"
-                        @click="onSelectItem"
-                        >
-                        分类２
-                        </div>
+            <div class="back"><van-button size="small" type="default" @click="onCloseSort">返回</van-button></div>
+            <div class="tree-select">
+                <div class="tree-select__nav">
+                    <div
+                    v-for="(item, index) in 5"
+                    :key="key"
+                    class="tree-select__nitem van-ellipsis"
+                    @click="onClickNav(index)"
+                    :class="{'tree-select__nitem--active': index == sortOne}"
+                    >
+                    分类１
                     </div>
                 </div>
+                <div class="tree-select__content">
+                    <div
+                    v-for="(item, index) in 5"
+                    :key="key"
+                    class="tree-select__item van-ellipsis"
+                    :class="{'tree-select__item--active': index == sortTwo}"
+                    @click="onSelectItem(index)"
+                    >
+                    分类２
+                    </div>
+                </div>
+            </div>
+        </van-popup>
+        <van-popup :show="isAddr" @close="onCloseAddr" position="bottom" custom-class="sort_tree">
+            <van-area :area-list="areaList" :columns-num="2" @cancel="onCloseAddr" @confirm="getAddr"/>
         </van-popup>
     </div>
 </template>
@@ -106,31 +109,34 @@ export default {
     data() {
         return {
             title: ''
-            ,isSort: false
+            ,isSort: false // 分类
+            ,isAddr: false //地址选择
+            ,isBtn: true
             ,detail: ''
-            ,imgArr: []
-            ,sorts: [
-                {
-                    // 导航名称
-                    text: '所有城市',
-                    // 该导航下所有的可选项
-                    children: [
-                    {
-                        // 可选项的名称
-                        text: '温州',
-                        // 可选项的id，高亮的时候是根据id是否和选中的id是否相同进行判断的
-                        id: 1002
-                    },
-                    {
-                        // 可选项的名称
-                        text: '杭州',
-                        // 可选项的id，高亮的时候是根据id是否和选中的id是否相同进行判断的
-                        id: 1001
-                    }
-                    ]
+            ,imgArr: [] // 图片
+            ,sortOne: 0
+            ,sortTwo: 0
+            ,area: { // 地区
+                city: ''
+                ,code: '0'
+                ,province: '请选择'
+            }
+            ,areaList: {
+                province_list: {
+                    110000: '北京市',
+                    120000: '天津市'
+                },
+                city_list: {
+                    110100: '北京市',
+                    110200: '县',
+                    120100: '天津市'
+                },
+                county_list: {
+                    110101: '东城区',
+                    110102: '西城区',
+                    110105: '朝阳区'                 
                 }
-            ]
-            
+            }
         }
     }
     
@@ -186,14 +192,34 @@ export default {
         }
        
         ,onCloseSort() {
-            this.isSort = !this.isSort
+            this.isSort = !this.isSort            
+            this.isBtn = this.isSort ? false:true
+          
         }
-       
+        ,onCloseAddr() { // 地址选择
+            this.isAddr = !this.isAddr
+            this.isBtn = this.isAddr ? false:true
+        }
+        ,getAddr(event) {
+            // console.log(event.mp.detail)
+            this.area = event.mp.detail.detail
+            this.onCloseAddr()
+        }
+        ,onClickNav(index) {
+            this.sortOne = index
+        }
+        ,onSelectItem(index){
+            this.sortTwo = index
+            this.onCloseSort()
+        }
     }
     
 }
 </script>
 <style lang="less" scoped>
+.bg-ff {
+    background: #FFFFFF;
+}
 .sort_tree {
     width: 100%;
     height: 100%;
