@@ -148,6 +148,7 @@
 </template>
 
 <script>
+import fly from '@/utils/fly'
 export default {
   data () {
     return {
@@ -201,6 +202,12 @@ export default {
   created () {
     // 调用应用实例的方法获取全局数据
     // this.getUserInfo()
+    fly.get('doctor_user.php?act=doctor_user_demand_quoted_list&is_ajax=1&keyword&page=1')
+    .then(function(res){
+      console.log(res)
+    }).catch(function(error){
+      console.log(error)
+    })
   }
 
   ,onReachBottom(){ // 底部添加更多
