@@ -1,6 +1,6 @@
 {
   "pages": [
-    
+    "pages/my_renzheng/main",
     "pages/index/main"
     ,"pages/publish/main"
     ,"pages/consult_publish/main"
@@ -9,6 +9,8 @@
     ,"pages/my_order/main"
     ,"pages/my_publish/main"
     ,"pages/setting/main"
+    ,"pages/login/main"
+    ,"pages/my_problem/main"
 
   ],
   "window": {

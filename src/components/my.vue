@@ -57,7 +57,7 @@
                 <div class="name">我的发布</div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
             </a>
-            <a href="" class="nongne_item van-hairline--bottom">
+            <a href="../my_shou/main" class="nongne_item van-hairline--bottom">
                 <img src="../../static/imgs/my_shouc.png" alt="" class="nongne_img" mode="widthFix">
                 <div class="name">我的收藏</div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
@@ -67,7 +67,7 @@
                 <div class="name">我的地址</div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
             </a>
-            <a href="" class="nongne_item van-hairline--bottom">
+            <a href="../my_problem/main" class="nongne_item van-hairline--bottom">
                 <img src="../../static/imgs/my_wenti.png" alt="" class="nongne_img" mode="widthFix">
                 <div class="name">常见问题</div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">

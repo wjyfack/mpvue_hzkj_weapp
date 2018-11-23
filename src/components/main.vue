@@ -1,5 +1,6 @@
 <template>
   <scroll-view scroll-y="true" class="container" @scrolltolower="onLoadMore">
+   
     <div class="search-bar">
       <div class="search">
         搜索您需要的服务<img src="../../static/imgs/search.png" class="search-icon"/>
@@ -198,16 +199,22 @@ export default {
     ,onLoadMore() {
       console.log(123)
     }
+    ,getPhoneNumber(e) {
+      console.log(e)
+    }
   },
   created () {
     // 调用应用实例的方法获取全局数据
     // this.getUserInfo()
-    fly.get('doctor_user.php?act=doctor_user_demand_quoted_list&is_ajax=1&keyword&page=1')
-    .then(function(res){
-      console.log(res)
-    }).catch(function(error){
-      console.log(error)
-    })
+    // fly.post('doctor_user.php',{
+    //   act: 'get'
+    //   ,code: 'jjjjjj'
+    // })
+    // .then(function(res){
+    //   console.log(res)
+    // }).catch(function(error){
+    //   console.log(error)
+    // })
   }
 
   ,onReachBottom(){ // 底部添加更多

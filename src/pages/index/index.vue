@@ -69,14 +69,21 @@ export default {
     },
     getUserInfo () {
       // 调用登录接口
-      wx.login({
-        success: () => {
-          wx.getUserInfo({
-            success: (res) => {
-              console.log(res)
-              this.userInfo = res.userInfo
-            }
-          })
+      let _this = this
+      wx.getSetting({
+        success (res) {
+          if(res.authSetting['scope.userInfo']) {
+            wx.getUserInfo({
+              success: function(data) {
+                console.log(data)
+              }
+            })
+  
+          } else {
+            // 跳到授权页面
+            _this.bindViewTap('../login/main')
+          }
+          
         }
       })
     },
@@ -117,11 +124,14 @@ export default {
         title: name//页面标题为路由参数
       })
     }
+    ,getPhoneNumber(e){
+      console.log(e)
+    }
   },
   
   created () {
     // 调用应用实例的方法获取全局数据
-     //this.getUserInfo()
+    this.getUserInfo()
   }
 }
 </script>
