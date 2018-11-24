@@ -93,7 +93,20 @@
 
 <script>
 export default {
-    
+    data(){
+        return {}
+    }
+    ,methods: {
+        bindViewTap (url) {
+            // const url = '../logs/main'
+            wx.navigateTo({ url })
+        }
+    }
+    ,created(){
+     if(true) {
+         this.bindViewTap('../my_login/main')
+     }   
+    }   
 }
 </script>
 <style lang="less" scoped>

@@ -1,6 +1,6 @@
 <template>
     <div class="renzheng">
-        <van-tabs :active="active" @change="onChange">
+        <van-tabs :active="active" @change="onChange" color="#5887F9">
             <van-tab title="已有帐号">
                 <van-cell-group>
                     <van-field
