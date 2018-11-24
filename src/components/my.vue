@@ -67,6 +67,11 @@
                 <div class="name">我的地址</div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
             </a>
+            <a href="../my_renzheng/main" class="nongne_item van-hairline--bottom">
+                <img src="../../static/imgs/my_wenti.png" alt="" class="nongne_img" mode="widthFix">
+                <div class="name">实名认证</div>
+                <img src="../../static/imgs/arrow.png" alt="" class="arrow">
+            </a>
             <a href="../my_problem/main" class="nongne_item van-hairline--bottom">
                 <img src="../../static/imgs/my_wenti.png" alt="" class="nongne_img" mode="widthFix">
                 <div class="name">常见问题</div>

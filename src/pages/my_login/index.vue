@@ -1,71 +1,75 @@
 <template>
     <div class="renzheng">
-        <div class="title">请填写您的个人信息</div>
-        <van-cell-group>
-            <van-field
-                :value="realName"
-                placeholder="请输入真实姓名"
-                :border="true"
-                label="真实姓名："
-               
-            />
-            <van-field
-                :value="idcard"
-                v-model.lazy="idcard"
-                placeholder="请输入身份证"
-                :border="true"
-                label="身份证号："
-                :error-message="idcard_error"
-                @change="onChangeIdcard"
-            />
-            <van-field
-                :value="ibankcard"
-                placeholder="请输入银行名称"
-                :border="true"
-                label="银行名称："
-               
-            />
-            <van-field
-                :value="ibanknum"
-                v-model.lazy="ibanknum"
-                placeholder="请输入银行卡号"
-                :border="true"
-                label="银行卡号："
-                 :error-message="ibanknum_error"
-                @change="onChangeIbanknum"
-            />
-            <van-field
-                :value="mobile_phone"
-                v-model.lazy="mobile_phone"
-                placeholder="请输入手机号"
-                :border="true"
-                label="手机号："
-                :error-message="mobile_phone_error"
-                @change="onChangePhone"
-            />
-            <van-field
-                :value="mobile_code"
-                placeholder="请输入验证码"
-                :border="true"
-                label="验证码："
-                @change="onChange"
-                use-button-slot
-            >
-            <van-button slot="button" size="small" type="primary" @click="getSms">{{sms_name}}</van-button>
-            </van-field>
-        </van-cell-group>
-        <div class="title">请拍摄身份证正反面照片</div>
-        <div class="idcard">
-            <img :src="proson_z" alt="" class="idcard-item" @click="getImage(1)">
-            <img :src="proson_f" alt="" class="idcard-item" @click="getImage(2)">
-        </div>
-        <div class="tips">
-            <div class="tips-item">1.身份证信息仅供传动先生平台提供诚信保证使用。</div>
-            <div class="tips-item">2.传动先生承诺不向其他第三方透露您的个人信息。</div>
-        </div>
-        <div class="btn">
-            <van-button size="normal" custom-class="bc" block>提交申请</van-button>
-        </div>
+        <van-tabs :active="active" @change="onChange">
+            <van-tab title="已有帐号">
+                <van-cell-group>
+                    <van-field
+                        :value="username"
+                        v-model.lazy="username"
+                        placeholder="请输入用户名/手机号"
+                        :border="true"
+                        left-icon="contact"
+                        :error-message="username_error"
+                    />
+                    <van-field
+                        :value="userpwd"
+                        placeholder="请输入登录密码"
+                        :border="true"
+                        left-icon="password-view"
+                        :error-message="userpwd_error"
+                    >
+                    </van-field>
+                </van-cell-group>
+                <div class="btn">
+                    <van-button size="normal" custom-class="bc" block>绑定</van-button>
+                </div>
+            </van-tab>
+            <van-tab title="快速注册">
+                <van-cell-group>
+                    <van-field
+                        :value="mobile_phone"
+                        v-model.lazy="mobile_phone"
+                        placeholder="请输入手机号"
+                        :border="true"
+                       
+                        :error-message="mobile_phone_error"
+                        @change="onChangePhone"
+                    />
+                    <van-field
+                        :value="mobile_code"
+                        placeholder="请输入验证码"
+                        :border="true"
+                        @change="onChange"
+                        use-button-slot
+                    >
+                    <van-button slot="button" size="small" type="primary" @click="getSms">{{sms_name}}</van-button>
+                    </van-field>
+                    <van-field
+                        :value="pwd"
+                        v-model.lazy="pwd"
+                        placeholder="请输入密码"
+                        :border="true"
+                        :error-message="pwd_error"
+                        @change="onChangePwd"
+                    />
+                    <van-field
+                        :value="apwd"
+                        v-model.lazy="apwd"
+                        placeholder="请输入确认密码"
+                        :border="true"
+                        :error-message="apwd_error"
+                        @change="onChangeApwd"
+                    />
+                </van-cell-group>
+
+                <div class="btn">
+                    <van-button size="normal" custom-class="bc" block>立即注册</van-button>
+                </div>
+
+            </van-tab>
+            
+        </van-tabs> 
+        
     </div>
 </template>
 <script>
@@ -160,37 +164,9 @@ export default {
     }
 }
 </script>
-<style lang="less" >
+<style lang="less">
 .renzheng {
     background: #F9F9F9;
-    .title {
-        font-size: 12px;
-        color:#828282;
-        padding: 10px 20px;
-    }
-    .idcard {
-        background: #ffffff;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        padding:20px 0;
-        &-item {
-            width: 127px;
-            height: 87px;
-        }
-    }
-    .tips {
-        padding-top: 20px;
-        padding-bottom: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        &-item {
-            font-size: 12px;
-            color:#828282;
-        }
-    }
     .btn {
         width:90%;
         margin: 0 auto;
