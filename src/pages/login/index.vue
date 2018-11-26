@@ -10,6 +10,7 @@
 </template>
 
 <script>
+
 export default {
     data(){
         return{
@@ -17,7 +18,11 @@ export default {
     }
     ,methods: {
         bindGetUserInfo(e){ // 获取到的数据
-            console.log(e)
+            wx.setStorage({
+                key:"userInfo",
+                data:e.mp.detail
+            })
+           wx.redirectTo({url:'../index/main'})
         }
     }
     

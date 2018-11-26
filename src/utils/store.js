@@ -7,17 +7,17 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    count: 0 // 不要的
-    
+
+    isUserInfo: false // 是否能获取用户信息
+    ,userData:{} // 用户信息
   },
   mutations: {
-    increment: (state) => {
-      const obj = state
-      obj.count += 1
-    },
-    decrement: (state) => {
-      const obj = state
-      obj.count -= 1
+
+    changeIsUserInfo(state,data){
+      state.isUserInfo = data
+    }
+    ,changeUserData(state,data){
+      state.userData = data
     }
   }
 })

@@ -26,4 +26,9 @@ export default {
   top: 0;
   right: 0;
 }
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

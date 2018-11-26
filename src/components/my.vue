@@ -1,10 +1,10 @@
 <template>
     <div class="my">
         <div class="person">
-            <img src="//placehold.it/100x100" alt="" class="avatar_img">
+            <img :src="baseInfo.user_picture" alt="" class="avatar_img">
             <div class="info">
-                <div class="name">刘老头</div>
-                <div class="id">ID:1919191919</div>
+                <div class="name">{{baseInfo.nick_name}}</div>
+                <div class="id">{{baseInfo.user_name}}</div>
             </div>
             <a class="setting" href="../setting/main"><img src="../../static/imgs/my_setting.png" class="set"> <div class="sett">设置</div></a>
         </div>
@@ -37,15 +37,15 @@
             </a>
             <div class="bell_my_bell">
                 <div class="item">
-                    <div class="price">0.00</div>
+                    <div class="price">{{baseInfo.user_money}}</div>
                     <div class="bell_name">账户余额</div>
                 </div>
                 <div class="item">
-                    <div class="price">2</div>
+                    <div class="price">{{accountInfo.coupon_count}}</div>
                     <div class="bell_name">优惠券</div>
                 </div>
                 <div class="item">
-                    <div class="price">200</div>
+                    <div class="price">{{baseInfo.pay_points}}</div>
                     <div class="bell_name">账户积分</div>
                 </div>
                 
@@ -92,20 +92,101 @@
 </template>
 
 <script>
+import fly from '@/utils/fly'
+
 export default {
     data(){
-        return {}
+        return {
+            baseInfo: {
+                user_picture: ''
+                ,nick_name: ''
+                ,user_money:0
+                ,pay_points: 0
+            }
+            ,accountInfo: {
+                coupon_count: 0
+            }
+        }
+    }
+    ,computed: {
+        userData() {
+            var value = wx.getStorageSync('userData')
+            return value
+        }
     }
     ,methods: {
         bindViewTap (url) {
             // const url = '../logs/main'
             wx.navigateTo({ url })
         }
+        ,getInfo() {
+            // 我的个人中心（必须登录）
+            // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=User&a=getMyInfo
+            fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=User&a=getMyInfo&s='+this.userData.session_id)
+                .then((res)=>{
+                    if(res.code == 0) {
+                        this.accountInfo = res.data.account_info
+                        this.baseInfo = res.data.base_info
+                    }
+                })
+        }
     }
-    ,created(){
-     if(true) {
-         this.bindViewTap('../my_login/main')
-     }   
+    ,mounted(){
+        let _this = this
+        wx.checkSession({
+            success (key) {
+                console.log(key)
+                //session_key 未过期，并且在本生命周期一直有效
+                // 获取个人信息
+                _this.getInfo()
+            },
+            fail () { 
+               
+              wx.login({
+                success (res) {
+                    if (res.code) {
+                       wx.getStorage({
+                        key: 'userInfo',
+                        success (data) {
+                            // console.log(data.data)
+                            let userData = data.data
+                            //发起网络请求
+                            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=Login&a=login', {
+                                login_type: 'wx_minprogram'
+                                ,encrypted_data: userData.encryptedData
+                                ,iv: userData.iv
+                                ,raw_data: userData.rawData
+                                ,signature: userData.signature
+                                // ,useInfo: userData.useInfo
+                                ,js_code: res.code
+                            }).then(function (response) {
+                                console.log(response.data)
+                                if(response.code == 0) {
+                                   wx.setStorage({
+                                    key:"userData",
+                                    data:response.data
+                                    })
+                                   if(response.data.user_id > 0) {// 有用户信息
+
+                                   } else { // 前去绑定帐号
+                                    wx.navigateTo({url: '../my_login/main'})
+                                   }
+                                }
+                            })
+                            
+                        }
+                        })
+                     
+                    } else {
+                    console.log('登录失败！' + res.errMsg)
+                    }
+                }
+              })
+            }
+        })
+    //  if(true) {
+    //      this.bindViewTap('../my_login/main')
+    //  }   
     }   
 }
 </script>

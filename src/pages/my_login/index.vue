@@ -6,22 +6,26 @@
                     <van-field
                         :value="username"
                         v-model.lazy="username"
+                        clearable
                         placeholder="请输入用户名/手机号"
                         :border="true"
                         left-icon="contact"
-                        :error-message="username_error"
+                       　@change="changeUsername"
                     />
                     <van-field
                         :value="userpwd"
+                        v-model.lazy="userpwd"
+                        type="password"
                         placeholder="请输入登录密码"
+                        clearable
                         :border="true"
                         left-icon="password-view"
-                        :error-message="userpwd_error"
+                        @change="changeUserpwd"
                     >
                     </van-field>
                 </van-cell-group>
                 <div class="btn">
-                    <van-button size="normal" custom-class="bc" block>绑定</van-button>
+                    <van-button @click="bangding" size="normal" custom-class="bc" block>绑定</van-button>
                 </div>
             </van-tab>
             <van-tab title="快速注册">
@@ -31,7 +35,6 @@
                         v-model.lazy="mobile_phone"
                         placeholder="请输入手机号"
                         :border="true"
-                       
                         :error-message="mobile_phone_error"
                         @change="onChangePhone"
                     />
@@ -39,7 +42,7 @@
                         :value="mobile_code"
                         placeholder="请输入验证码"
                         :border="true"
-                        @change="onChange"
+                        @change="onChangeCode"
                         use-button-slot
                     >
                     <van-button slot="button" size="small" type="primary" @click="getSms">{{sms_name}}</van-button>
@@ -47,93 +50,146 @@
                     <van-field
                         :value="pwd"
                         v-model.lazy="pwd"
+                        type= "password"
                         placeholder="请输入密码"
                         :border="true"
-                        :error-message="pwd_error"
                         @change="onChangePwd"
                     />
                     <van-field
                         :value="apwd"
                         v-model.lazy="apwd"
+                        type= "password"
                         placeholder="请输入确认密码"
                         :border="true"
-                        :error-message="apwd_error"
                         @change="onChangeApwd"
                     />
                 </van-cell-group>
 
                 <div class="btn">
-                    <van-button size="normal" custom-class="bc" block>立即注册</van-button>
+                    <van-button @click="register" size="normal" custom-class="bc" block >立即注册</van-button>
                 </div>
 
-            </van-tab>
+            </van-tab>  
             
         </van-tabs> 
-        
+        <van-toast id="van-toast" />
     </div>
 </template>
 <script>
-
+import fly from '@/utils/fly'
+import Toast from '../../../static/vant/toast/toast';
 export default {
     data() {
         return {
            isCode: true
            ,sms_name: '发送验证码'
-           ,realName: '' // 真实姓名
-           ,idcard: ''  // 身份证号
-           ,idcard_error: ''  // 错误提示身份证号
-           ,ibankcard: '' //银行名称
-           ,ibanknum: '' //银行卡号
-           ,ibanknum_error: '' //错误提示银行卡号
            ,mobile_phone: '' // 手机号
            ,mobile_phone_error: ''
            ,mobile_code: '' // 验证码
-           ,proson_z: '/static/imgs/ren_p.png' // 身份证正面
-           ,proson_f: '/static/imgs/ren_b.png' // 身份证反面
            ,isSub: false // 数据能否提交
            ,reg_phone: /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/ // 验证手机号
-           ,reg_idcard: /^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/ // 验证身份证
-           ,reg_ibankcard: /^([1-9]{1})(\d{14}|\d{18})$/ // 验证银行卡号
+           ,username: ''
+           ,userpwd: ''
+           ,pwd: ''
+           ,apwd: ''
+           ,pwd_error: ''
+           ,status: true // 验证码发送状态
+        }
+    }
+    ,computed: {
+        userData() {
+            var value = wx.getStorageSync('userData')
+            return value
         }
     }
     ,watch: {
         mobile_phone(val,oldVal) {
-           
             this.mobile_phone_error = this.reg_phone.test(val)?  '':'手机号码格式错误'
         }
-        ,idcard(val,oldVal) {
-            //console.log(val)
-            this.idcard_error = this.reg_idcard.test(val)?  '':'身份证格式错误'
-        }
-        ,ibanknum(val,oldVal) {
-            this.ibanknum_error = this.ibanknum.test(val)?  '':'银行卡号格式错误'
-        }
+        
     }
     ,methods: {
         getSms(){
+            if(!this.reg_phone.test(this.mobile_phone)) {
+                Toast('手机号不正确')
+                return ;
+            }
             if(this.isCode) {
+                
                 this.daojishi()  
             }           
         }
-        
-        ,getImage(index){
-            let _this = this
-            wx.chooseImage({
-                count: 1
-                ,sizeType: ['original', 'compressed']
-                ,sourceType: ['album', 'camera']
-                ,success(res) {
-                    
-                    if(index ==1) {
-                       _this.proson_z = res.tempFilePaths[0]
-                    } else {
-                        _this.proson_f = res.tempFilePaths[0]
-                    }
-                    
-                }
-                ,fail(res) {
-                    console.log(res)
-                }
+        ,bangding(){
+            // 绑定旧账号
+            if(this.username == '') {
+                Toast('请输入用户名或手机号')
+                return;
+            }
+            if(this.userpwd == '') {
+                Toast('请输入密码')
+                return ;
+            }
+            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=Login&a=bindingUser&s='+this.userData.session_id,{
+                binding_type:"wx_minprogram"
+                ,user_name: this.username
+                ,password:this.userpwd
+            }).then((res)=>{
+               if(res.code == 0) {
+                   this.userData.user_id = res.data.user_id
+                   // console.log(this.userData)
+                   wx.setStorage({
+                    key:"userData",
+                    data:this.userData
+                    })
+                    wx.redirectTo({
+                    url: '../index/main'
+                    })
+               }else {
+                   Toast(res.message)
+               }
+            })
+        }
+        ,register() {
+            // 注册
+            if(!this.status) {
+                Toast('请获取验证码')
+                return '';
+            }
+            if(this.mobile_code == '') {
+                Toast('请输入验证码')
+                return '';
+            }
+            console.log(this.pwd,this.apwd)
+            if('' == this.pwd || ''== this.apwd || this.pwd != this.apwd ) {
+                Toast('请检查密码是否一致')
+                return '';
+            }
+                //             注册账号
+                // http://cdzj.demo.com/Apiapi/?v=V1&g=Common&c=Login&a=registerUserByMobile 
+                // register_type=wx_minprogram
+                // mobile
+                // password
+                // sms_code
+            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=Login&a=registerUserByMobile&s='+this.userData.session_id,{
+                mobile: this.mobile_phone
+                ,password: this.pwd
+                ,sms_code: this.mobile_code
+            }).then((res)=> {
+                console.log(res,res.message)
+                if(res.code == 0) {
+                    Toast('注册成功')
+                   this.userData.user_id = res.data.user_id
+                   // console.log(this.userData)
+                   wx.setStorage({
+                    key:"userData",
+                    data:this.userData
+                    })
+                    wx.redirectTo({
+                    url: '../index/main'
+                    })
+               }else {
+                   Toast(res.message)
+               }
             })
         }
         ,daojishi(){
@@ -150,17 +206,28 @@ export default {
                 }
                 
             },1000)
+            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=Sms&a=sendSms&s='+this.userData.session_id,{
+                mobile: this.mobile_phone
+            }).then((res)=> {
+               if(res.code == 0) {
+                   Toast('验证码发送成功')
+                   this.status = true
+               }
+            })
+            
         }
         ,onChangePhone(event){
             this.mobile_phone = event.mp.detail
         }
-        ,onChangeIdcard(event) {
-             this.idcard = event.mp.detail
+        ,changeUsername(event) {
+            this.username = event.mp.detail
         }
-        ,onChangeIbanknum(event){
-            this.ibankcard = event.mp.detail
+        ,changeUserpwd(event) {
+            this.userpwd = event.mp.detail
         }
-        
+        ,onChangeCode(event){this.mobile_code = event.mp.detail}
+        ,onChangePwd(event){this.pwd = event.mp.detail}
+        ,onChangeApwd(event){this.apwd = event.mp.detail}
     }
 }
 </script>

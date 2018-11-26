@@ -45,10 +45,10 @@
         <div class="more">更多>></div>
       </div>
       <div class="expert">
-        <div class="expert-item" v-for="(item, index) in 10" :key="key">
-          <img src="http://placehold.it/100x100" alt="" class="expert-img">
-          <div class="expert-name">刘家祥</div>
-        </div>
+        <a :href="'../xxx/main?id='+item.user_id" class="expert-item" v-for="(item, index) in expertList" :key="key">
+          <img :src="item.user_picture" alt="" class="expert-img">
+          <div class="expert-name">{{item.real_name}}</div>
+        </a>
       </div>
       <!-- 文章列表 -->
       <div class="head">
@@ -56,13 +56,13 @@
           <a href="/pages/counter/main" class="more">更多>></a>
         </div>
       <div class="article">
-        <a href="/pages/article/main" class="article-item" v-for="(item, index) in 2" :key="key">
-          <div class="art-title van-ellipsis van-hairline--bottom">什么是齿式联轴器？什么是齿式联轴器？</div>
-          <div class="min_time">1分钟前</div>
+        <a :href="'/pages/article/main?id='+item.id" class="article-item" v-for="(item, index) in articleList" :key="key">
+          <div class="art-title van-ellipsis van-hairline--bottom">{{item.title}}</div>
+          <div class="min_time">{{item.add_time}}</div>
         </a>
       </div>
     </div>
-    <van-tabs :active="active" @change="onChange" :color="'#5887F9'" custom-class="tabbars">
+    <van-tabs :active="active" @change="onChange" :color="'#5887F9'" custom-class="">
       <!-- 选择框 -->
       <div class="select">
         <div class="select-item">
@@ -88,7 +88,7 @@
       </div>
       <van-tab title="项目维修">
         <div class="repair">
-          <a href="" class="repair-item" v-for="(items, indexs) in 3" :key="key">
+          <a href="" class="repair-item" v-for="(items, indexs) in 5" :key="key">
             <div class="repair-header">
               <img src="http://placehold.it/100x100" alt="" class="actor">
               <div class="self">
@@ -110,16 +110,18 @@
       </van-tab>
       <van-tab title="需求列表">
         <div class="xuqiu">
-          <div class="xuqiu-item" v-for="(items, indexs) in 3" :key="key">
-              <div class="title title van-multi-ellipsis--l">标题彼岸他哦提</div>
-              <div class="cont title van-multi-ellipsis--l">内容内容内容</div>
+          <div class="xuqiu-item" v-for="(item, index) in xuqiuList" :key="key">
+              <div class="title title van-multi-ellipsis--l">{{item.title}}</div>
+              <div class="cont title van-multi-ellipsis--l">{{item.content}}</div>
               <div class="xuqiu-imgs">
-                <div class="img-item" v-for="(item, index) in 5" :key="key"><img src="http://placehold.it/100x100" alt="" class="img"></div>
+                <div class="img-item" v-for="(items, indexs) in item.pics_str" :key="keys">
+                  <img :src="items" alt="" class="img">
+                  </div>
               </div>
               <div class="name">
-                <div>联系人:张*****</div>
-                <div>联系方式:136****2645</div>
-                <div>2018-11-11</div>
+                <div>联系人:{{item.contact_name}}</div>
+                <div>联系方式:{{item.contact_phone}}</div>
+                <div>{{item.add_time}}</div>
               </div>
               <div class="bar">
                 <div class="bar-item">正在进行</div>
@@ -131,15 +133,15 @@
       <van-tab title="问题咨询">
         <div class="consult">
             
-            <a href="" class="consult-item van-hairline--bottom" v-for="(item, index) in 5" :key="key">
+            <a :href="item.id" class="consult-item van-hairline--bottom" v-for="(item, index) in consultList" :key="key">
                 <div class="cont">
-                    <div class="title van-multi-ellipsis--l2">什么联轴器才是最好用的呢用的呢用的呢用的呢用的呢用的呢</div>
+                    <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
                     <div class="mini">
-                        <div>追风少年刘全有</div>
-                        <div>2 评论</div>
+                        <div>{{item.nick_name}}</div>
+                        <div>{{itemexpert_answer_count}} 评论</div>
                     </div>
                 </div>
-                <img src="http://placehold.it/100x100" alt="" class="img">
+                <!-- <img src="http://placehold.it/100x100" alt="" class="img"> -->
             </a>
        </div>
       </van-tab>
@@ -158,15 +160,21 @@ export default {
       ,banners: [{url: 'http://placehold.it/320x100'},{url: 'http://placehold.it/320x100'},{url: 'http://placehold.it/320x100'}]
       ,isPrice: false // 价格高低框
       ,isSort: false // 分类
-      ,scrollTop: 0 // 
+      ,scrollTop: 0 //
+      ,repairList: [] // 维修列表
+      ,expertList: [] // 专家列表
+      ,consultList: [] // 咨询列表
+      ,articleList: [] // 文章列表
+      ,xuqiuList: [] // 需求列表
+      ,consultPage: 1
     }
   },
 
   methods: {
-    bindViewTap () {
-      const url = '../logs/main'
-      wx.navigateTo({ url })
-    },
+    // bindViewTap () {
+    //   const url = '../logs/main'
+    //   wx.navigateTo({ url })
+    // },
     getUserInfo () {
       // 调用登录接口
       wx.login({
@@ -178,12 +186,10 @@ export default {
           })
         }
       })
-    },
-    clickHandle (msg, ev) {
-      console.log('clickHandle:', msg, ev)
     }
     ,onChange(event) {
-      console.log(event)
+      this.active = event.mp.detail.index
+      
     }
     ,onSelect(num) {
       switch(num) {
@@ -196,29 +202,76 @@ export default {
 
       }
     }
-    ,onLoadMore() {
-      console.log(123)
+    ,getData(){
+      let _this = this
+      this.getConsultData()
+      this.getExpertData()
+      this.getArticleData()
+      this.getxuqiuData()
     }
-    ,getPhoneNumber(e) {
-      console.log(e)
+    ,getExpertData() {
+       fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=Expert&a=getIndexExpertList').then((res) =>{
+        this.expertList = res.data.list
+      })
+    }
+    ,getConsultData() { // 咨询
+       fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=Consult&a=getConsultList',{
+         cat_id: 0//cat_id
+        ,field_id: 0//field_id
+        ,page: this.consultPage
+        ,page_size: 10
+      }).then((res)=>{
+        // console.log(this.consultList.concat(res.data.list))
+        this.consultList = this.consultList.concat(res.data.list)
+       
+      })
+    }
+    ,getArticleData() {
+      fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=Article&a=getArticleList',{
+         cat_id: 0//cat_id
+        ,field_id: 0//field_id
+        //,sort: 'new' // 默认new,hot,top,all,like,comment
+        ,page: 1
+        ,page_size: 2
+      }).then((res)=>{
+        console.log(res)
+        this.articleList = this.articleList.concat(res.data.list)
+       
+      })
+    }
+    ,getxuqiuData() {
+      fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=Demand&a=getDemandList',{
+         cat_id: 0//cat_id
+        ,field_id: 0//field_id
+        //,sort: 'new' // 默认new,hot,top,all,like,comment
+        ,page: 1
+        ,page_size: 2
+      }).then((res)=>{
+        console.log(res)
+        this.xuqiuList = this.xuqiuList.concat(res.data.list)
+       
+      })
     }
   },
   created () {
-    // 调用应用实例的方法获取全局数据
-    // this.getUserInfo()
-    // fly.post('doctor_user.php',{
-    //   act: 'get'
-    //   ,code: 'jjjjjj'
-    // })
-    // .then(function(res){
-    //   console.log(res)
-    // }).catch(function(error){
-    //   console.log(error)
-    // })
+    this.getData()
+    
   }
 
   ,onReachBottom(){ // 底部添加更多
-    console.log(1222)
+    console.log(this.active)
+    switch(this.active) {
+      case 0: // 维修项目
+
+      break;
+      case 1: // 需求列表
+
+      break;
+      case 2:　// 咨询
+        // this.consultPage += 1
+        // this.getConsultData()
+      break;
+    }
   }
   ,onPageScroll(event){
     this.scrollTop = event.scrollTop
@@ -265,6 +318,7 @@ export default {
                 justify-content: space-between;
                 color:#A1A1A1;
                 font-size: 10px;
+                padding: 5px 0;
             }
         }
         

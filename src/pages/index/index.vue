@@ -43,6 +43,7 @@ import publish from '@/components/publish'
 import message from '@/components/message'
 import my from '@/components/my'
 
+import fly from '@/utils/fly'
 export default {
   data () {
     return {
@@ -75,7 +76,16 @@ export default {
           if(res.authSetting['scope.userInfo']) {
             wx.getUserInfo({
               success: function(data) {
-                console.log(data)
+                // const user = {
+                //   encryptedData: data.encryptedData
+                //   ,iv: data.iv
+                //   ,signature: data.signature
+                //   ,userInfo: data.userInfo
+                // }
+                wx.setStorage({
+                  key:"userInfo",
+                  data:data
+                })
               }
             })
   
@@ -86,6 +96,7 @@ export default {
           
         }
       })
+
     },
     onChangeTab(event) {
         let detail = event.mp.detail // 0:首页1:咨询2:发布3:消息4:我的
@@ -124,14 +135,12 @@ export default {
         title: name//页面标题为路由参数
       })
     }
-    ,getPhoneNumber(e){
-      console.log(e)
-    }
+    
   },
   
   created () {
     // 调用应用实例的方法获取全局数据
-    // this.getUserInfo()
+     this.getUserInfo()
   }
 }
 </script>

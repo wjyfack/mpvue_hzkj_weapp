@@ -14,5 +14,6 @@
       ,"van-cell": "../../static/vant/cell/index"
       ,"van-cell-group": "../../static/vant/cell-group/index"
       ,"van-tree-select": "../../static/vant/tree-select/index"
+      ,"van-popup": "../../static/vant/popup/index"
     }
 }
