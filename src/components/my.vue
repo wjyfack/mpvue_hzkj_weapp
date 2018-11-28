@@ -68,8 +68,8 @@
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
             </a>
             <a href="../my_renzheng/main" class="nongne_item van-hairline--bottom">
-                <img src="../../static/imgs/my_wenti.png" alt="" class="nongne_img" mode="widthFix">
-                <div class="name">实名认证</div>
+                <img src="../../static/imgs/my_card.png" alt="" class="nongne_img" mode="widthFix">
+                <div class="name">实名认证 <div class="res">(立即去认证)</div></div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
             </a>
             <a href="../my_problem/main" class="nongne_item van-hairline--bottom">
@@ -122,7 +122,7 @@ export default {
         ,getInfo() {
             // 我的个人中心（必须登录）
             // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=User&a=getMyInfo
-            fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=User&a=getMyInfo&s='+this.userData.session_id)
+            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=User&a=getMyInfo&s='+this.userData.session_id)
                 .then((res)=>{
                     if(res.code == 0) {
                         this.accountInfo = res.data.account_info
@@ -311,6 +311,13 @@ export default {
                 font-size: 12px;
                 color:#606060;
                 padding-left: 10px;
+                display: flex;
+                align-items: center;
+                .res {
+                    color:#FC5F6B;
+                    font-size: 10px;
+                    margin-left: 5px;
+                }
             }
             .arrow {
                 width:  6px;

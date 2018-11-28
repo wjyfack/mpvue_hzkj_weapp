@@ -11,7 +11,7 @@
     <swiper class="swiper" indicator-dots="true" autoplay="true" interval="5000" duration="1000"> 
       <block v-for="(item, index) in banners" :index="index" :key="key">
         <swiper-item> 
-          <image :src="item.url" class="slide-image" mode="scaleToFill"/> 
+          <image :src="item.ad_code" class="slide-image" mode="scaleToFill"/> 
         </swiper-item> 
       </block> 
     </swiper>
@@ -22,14 +22,14 @@
          <img src="../../static/imgs/weixiu.png" alt="" class="service-img">
          <div class="service-name">项目维修</div>
        </div>
-       <div class="service-item">
+       <a href="../demand_publish/main" class="service-item">
          <img src="../../static/imgs/xuqiu.png" alt="" class="service-img">
          <div class="service-name">需求发布</div>
-       </div>
-       <div class="service-item">
+       </a>
+       <a href="../consult_publish/main" class="service-item">
          <img src="../../static/imgs/wenda.png" alt="" class="service-img">
-         <div class="service-name">问题咨询</div>
-       </div>
+         <div class="service-name">咨询发布</div>
+       </a>
        <div class="service-item">
          <img src="../../static/imgs/zhuanjia.png" alt="" class="service-img">
          <div class="service-name">专家服务</div>
@@ -62,9 +62,9 @@
         </a>
       </div>
     </div>
-    <van-tabs :active="active" @change="onChange" :color="'#5887F9'" custom-class="">
+    <van-tabs :active="active" @change="onChange" :color="'#5887F9'" :custom-class="scrollTop">
       <!-- 选择框 -->
-      <div class="select">
+      <div class="select" :class="{selects: scrollTop != ''}">
         <div class="select-item">
           <div class="select-item-name" :class="{'active': isPrice}" @click="onSelect(1)"> <span>默认排序<van-icon name="arrow" class="arrow-icon"/></span></div>
           <van-transition :show="isPrice" :name="'fade-down'">
@@ -88,23 +88,23 @@
       </div>
       <van-tab title="项目维修">
         <div class="repair">
-          <a href="" class="repair-item" v-for="(items, indexs) in 5" :key="key">
+          <a href="../detail_repair/main" class="repair-item" v-for="(item, index) in repairList" :key="key">
             <div class="repair-header">
-              <img src="http://placehold.it/100x100" alt="" class="actor">
+              <img :src="item.user_picture" alt="" class="actor">
               <div class="self">
-                <div class="name">涨价先</div>
+                <div class="name">{{item.real_name}}</div>
                 <div class="info">
-                  <div class="addr">广东佛山&nbsp;|</div>
-                  <div class="online">当前在线</div>
-                  <div class="unline">当前离线</div>
+                  <div class="addr"> <span v-for="(it,inde) in item.user_Region" :key="ky">{{it}}</span> &nbsp;</div>
+                  <!-- <div class="online">当前在线</div>
+                  <div class="unline">当前离线</div> -->
                 </div>
               </div>
             </div>
             <div class="repair-imgs">
-              <div class="img-item" v-for="(item, index) in 5" :key="key"><img src="http://placehold.it/100x100" alt="" class="img"></div>
+              <div class="img-item" v-for="(items, indexs) in item.pics_str" :key="keys"><img :src="items" alt="" class="img"></div>
             </div>
-            <div class="repair-title">服务标题标题标题标题标题标题标题标题标题标题标题标题...</div>
-            <div class="repair-price"><div class="yy">¥</div>　<div>1000.00</div>  </div>
+            <div class="repair-title">{{item.title}}</div>
+            <div class="repair-price"><div class="yy">¥</div>　<div>{{item.price}}</div>  </div>
           </a>
         </div>
       </van-tab>
@@ -125,7 +125,7 @@
               </div>
               <div class="bar">
                 <div class="bar-item">正在进行</div>
-                <div class="bar-item">已有999+人报价</div>
+                <div class="bar-item">已有{{item.quoted_count}}人报价</div>
               </div>
           </div>
         </div>
@@ -146,27 +146,31 @@
        </div>
       </van-tab>
     </van-tabs>
-    
+     <van-toast id="van-toast" />
   </scroll-view>
 </template>
 
 <script>
+import * as Params from '@/utils/params'
 import fly from '@/utils/fly'
+import Toast from '../../static/vant/toast/toast';
 export default {
   data () {
     return {
        active: 0
       ,userInfo: {}
-      ,banners: [{url: 'http://placehold.it/320x100'},{url: 'http://placehold.it/320x100'},{url: 'http://placehold.it/320x100'}]
+      ,banners: []
       ,isPrice: false // 价格高低框
       ,isSort: false // 分类
-      ,scrollTop: 0 //
+      ,scrollTop: '' //
       ,repairList: [] // 维修列表
       ,expertList: [] // 专家列表
       ,consultList: [] // 咨询列表
       ,articleList: [] // 文章列表
       ,xuqiuList: [] // 需求列表
       ,consultPage: 1
+      ,repairPage: 1
+      ,xuqiuPage: 1
     }
   },
 
@@ -203,19 +207,25 @@ export default {
       }
     }
     ,getData(){
+      Toast.loading({
+        mask: true,
+        message: '加载中...'
+      })
       let _this = this
       this.getConsultData()
       this.getExpertData()
       this.getArticleData()
       this.getxuqiuData()
+      this.getrepairsData()
+      this.getAdData()
     }
     ,getExpertData() {
-       fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=Expert&a=getIndexExpertList').then((res) =>{
+       fly.post('/?v=V1&g=Doctor&c=Expert&a=getIndexExpertList'+Params.default.param).then((res) =>{
         this.expertList = res.data.list
       })
     }
     ,getConsultData() { // 咨询
-       fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=Consult&a=getConsultList',{
+       fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultList'+Params.default.param,{
          cat_id: 0//cat_id
         ,field_id: 0//field_id
         ,page: this.consultPage
@@ -223,33 +233,53 @@ export default {
       }).then((res)=>{
         // console.log(this.consultList.concat(res.data.list))
         this.consultList = this.consultList.concat(res.data.list)
-       
+        Toast.clear()
       })
     }
     ,getArticleData() {
-      fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=Article&a=getArticleList',{
+      fly.post('/?v=V1&g=Doctor&c=Article&a=getArticleList'+Params.default.param,{
          cat_id: 0//cat_id
         ,field_id: 0//field_id
         //,sort: 'new' // 默认new,hot,top,all,like,comment
         ,page: 1
         ,page_size: 2
       }).then((res)=>{
-        console.log(res)
+        //console.log(res)
         this.articleList = this.articleList.concat(res.data.list)
        
       })
     }
     ,getxuqiuData() {
-      fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=Demand&a=getDemandList',{
+      fly.post('/?v=V1&g=Doctor&c=Demand&a=getDemandList'+Params.default.param,{
          cat_id: 0//cat_id
-        ,field_id: 0//field_id
+        ,field_ids: 0//field_id
         //,sort: 'new' // 默认new,hot,top,all,like,comment
-        ,page: 1
-        ,page_size: 2
+        ,page: this.xuqiuPage
+        ,page_size: 10
       }).then((res)=>{
-        console.log(res)
+        //console.log(res)
         this.xuqiuList = this.xuqiuList.concat(res.data.list)
-       
+        Toast.clear()
+      })
+    }
+    ,getrepairsData() {
+      fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairList'+Params.default.param,{
+         cat_id: 0
+        ,field_ids: 0
+        ,page: this.repairPage
+        ,page_size: 15
+      }).then((res)=>{
+        // console.log(res)
+        this.repairList = this.repairList.concat(res.data.list)
+        Toast.clear()
+      })
+    }
+    ,getAdData() {
+      fly.post('/?v=V1&g=Common&c=Ad&a=getAdList'+Params.default.param,{
+        ad_type: 'doctor_index_top'
+      }).then((res)=>{
+        if(res.code == 0)
+        this.banners = res.data.list
       })
     }
   },
@@ -260,22 +290,32 @@ export default {
 
   ,onReachBottom(){ // 底部添加更多
     console.log(this.active)
+    Toast.loading({
+      mask: true,
+      message: '加载中...'
+    })
     switch(this.active) {
       case 0: // 维修项目
-
+        this.repairPage++
+        this.getrepairsData()
       break;
       case 1: // 需求列表
-
+        this.xuqiuPage++
+        this.getxuqiuData()
       break;
       case 2:　// 咨询
-        // this.consultPage += 1
-        // this.getConsultData()
+         this.consultPage += 1
+         this.getConsultData()
       break;
     }
   }
   ,onPageScroll(event){
-    this.scrollTop = event.scrollTop
     
+    if(event.scrollTop > 458) {
+      this.scrollTop = 'fixed-tab'
+    } else {
+      this.scrollTop = ''
+    }
   }
 }
 </script>
@@ -417,6 +457,9 @@ export default {
       }
     }
   }
+}
+.selects {
+  margin-top: 22px;
 }
 .select {
   display: flex;

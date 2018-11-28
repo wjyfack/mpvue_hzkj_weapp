@@ -1,8 +1,8 @@
 {
-    "navigationBarTitleText": "维修咨询",
+    "navigationBarTitleText": "我的发布",
     "usingComponents": {
-        "van-icon": "../../static/vant/icon/index",
         "van-tab": "../../static/vant/tab/index",
         "van-tabs": "../../static/vant/tabs/index"
     }
+        
 }

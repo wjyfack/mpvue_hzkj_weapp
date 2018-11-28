@@ -3,6 +3,8 @@
     "usingComponents": {
         "van-tab": "../../static/vant/tab/index",
         "van-tabs": "../../static/vant/tabs/index"
+        ,"van-dialog": "../../static/vant/dialog/index"
+        ,"van-toast": "../../static/vant/toast/index"
     }
         
 }

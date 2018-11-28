@@ -2,11 +2,11 @@
     <div class="publish">
        <van-tabs :active="active" @change="onChange" :color="'#5887F9'" custom-class="fixed-tab">
             <van-tab title="维修">
-                <div class="publish-item" v-for="(item, index) in 10" :key="key">
+                <div class="publish-item" v-for="(item, index) in repairList" :key="key">
                     <div class="cont">
-                        <img src="//placehold.it/100x100" alt="" class="or_img">
+                        <img :src="item.pics_str" alt="" class="or_img">
                         <div class="or_cont">
-                             <div class="title van-multi-ellipsis--l2">tittle</div>
+                             <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
                              <div class="price"><div class="ya">￥</div><div class="men">1000.00</div></div>
                             <div class="mini-title"><div class="mini">评价 50</div><div class="mini">浏览 5651</div></div>
                         </div>
@@ -14,12 +14,12 @@
                     </div>
                    
                     <div class="btn-list">
-                        <div class="status">正在展示</div>
+                        <div class="status" v-if="item.audit_status == 2">正在展示</div>
+                        <div class="status" v-if="item.audit_status == 1">正在审核</div>
                         <div class="item">
-                            <div class="btn-item c1">上架</div>
-                            <div class="btn-item c1">下架</div>
-                            <div class="btn-item c1">编辑</div>
-                            <div class="btn-item">删除</div>
+                            <div class="btn-item c1" @click="changeRepair('sale',item.id,2)" v-if="item.is_onsale == 1">上架</div>
+                            <div class="btn-item c1" @click="changeRepair('sale',item.id,1)" v-if="item.is_onsale == 2">下架</div>
+                            <div class="btn-item" @click="changeRepair('detele',item.id,1)">删除</div>
                         </div>
                         
                     </div>
@@ -27,17 +27,17 @@
             </van-tab>
             <van-tab title="需求">
             <div class="xuqiu">
-                <div class="xuqiu-item" v-for="(items, indexs) in 3" :key="key">
-                    <div class="title title van-multi-ellipsis--l">标题彼岸他哦提</div>
-                    <div class="cont title van-multi-ellipsis--l">内容内容内容</div>
+                <div class="xuqiu-item" v-for="(item, index) in xuqiuList" :key="key">
+                    <div class="title title van-multi-ellipsis--l">{{item.title}}</div>
+                    <div class="cont title van-multi-ellipsis--l">{{item.content}}</div>
                     <div class="xuqiu-imgs">
-                        <div class="img-item" v-for="(item, index) in 5" :key="key"><img src="http://placehold.it/100x100" alt="" class="img"></div>
+                        <div class="img-item" v-for="(items, indexs) in item.pics_str" :key="keys"><img :src="items" alt="" class="img"></div>
                     </div>
                    
                     <div class="bar">
                         <div class="bar-item hl">已结束</div>
-                        <div class="bar-item">已有999+人报价</div>
-                        <div class="time">2018-11-11</div>
+                        <div class="bar-item">已有{{item.quoted_count}}人报价</div>
+                        <div class="time">{{item.add_time}}</div>
                     </div>
                     <div class="btn-list">
                         <div class="status"></div>
@@ -51,16 +51,16 @@
             </van-tab>
             <van-tab title="咨询">
                 <div class="consult">
-                    <div class="consult-item" v-for="(item, index) in 5" :key="key">
+                    <div class="consult-item" v-for="(item, index) in consultList" :key="key">
                         <div class="head">
                             <div class="cont">
-                                <div class="title van-multi-ellipsis--l2">什么联轴器才是最好用的呢用的呢用的呢用的呢用的呢用的呢</div>
+                                <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
                                 <div class="mini">
-                                    <div>追风少年刘全有</div>
-                                    <div>2 评论</div>
+                                    <div>{{item.nick_name}}</div>
+                                    <div>{{expert_answer_count}} 评论</div>
                                 </div>
                             </div>
-                            <img src="http://placehold.it/100x100" alt="" class="img">
+                            <!-- <img src="http://placehold.it/100x100" alt="" class="img"> -->
                         </div>
                         <div class="btn-list">
                             <div class="status"></div>
@@ -73,24 +73,112 @@
                 </div>
             </van-tab>
         </van-tabs>
+        <van-dialog id="van-dialog" />
+        <van-toast id="van-toast" />
     </div>
 </template>
 <script>
+import fly from '@/utils/fly'
+import * as Params from '@/utils/params'
+import Dialog from '../../../static/vant//dialog/dialog';
+import Toast from '../../../static/vant/toast/toast';
 export default {
     data() {
         return {
             active: 0
+            ,repairList: []
+            ,consultList: []
+            ,xuqiuList: []
+            ,pageRepair: 0
+            ,pageXuqiu: 0
+            ,pageConsult: 0
         }
     }
     ,methods: {
         onChange(event){
-            console.log(event);
+            console.log(event)
         }
         ,getdata() {
-            console.log(this)
+           this.getrepirList()
+           this.getxuqiuList()
+           this.getconsultList()
+        }
+        ,getrepirList(){
+            fly.post('/?v=V1&g=Doctor&c=Repair&a=getMyRepairList'+Params.default.param,{
+                keyword: ''
+                ,page: this.pageRepair
+                ,page_size: 10
+            }).then((res)=>{
+                console.log(res)
+                this.repairList = this.repairList.concat(res.data.list)
+            })
+        }
+        ,getxuqiuList(){
+            fly.post('/?v=V1&g=Doctor&c=Demand&a=getMyDemandList'+Params.default.param,{
+                keyword: ''
+                ,page: this.xuqiuList
+                ,page_size: 10
+            }).then((res)=>{
+                this.xuqiuList = this.xuqiuList.concat(res.data.list)
+            })
+        }
+        ,getconsultList(){
+            fly.post('/?v=V1&g=Doctor&c=Consult&a=getMyConsultList'+Params.default.param,{
+                keyword: ''
+                ,type: 0
+                ,page: this.pageConsult
+                ,page_size: 10
+            }).then((res)=>{
+                this.consultList = this.consultList.concat(res.data.list)
+            })
+        }
+        ,changeRepair(opt,id,sale) {
+            // 修改我的维修项目（必须登录）
+            // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=Repair&a=editMyRepair
+            // repair_id
+            // type del_repair删除/on_sale上下架
+            // val  删除时=1    上下架时1下架，2上架
+            let type = 'on_sale'
+            let title = '是否上架？'
+            let sucTitle = '上架成功'
+            switch(opt) {
+                case 'sale':
+                if(sale == 1) {
+                    title = '是否下架？'
+                    sucTitle = '下架成功'
+                }
+                break
+                case 'detele':
+                type = 'del_repair'
+                title = '确实删除？'
+                sucTitle = '删除成功'
+                break
+            }
+            Dialog.confirm({
+                title: title,
+                message: ''
+                }).then(() => {
+                fly.post('/?v=V1&g=Doctor&c=Repair&a=editMyRepair'+Params.default.param,{
+                    repair_id: id
+                    ,type: type
+                    ,val: sale
+                    }).then((res)=>{
+                       if(res.code == 0) {
+                          
+                           Toast(sucTitle)
+                           this.repairList = []
+                           this.getrepirList()
+                       } else {
+                           Toast('操作失败')
+                       }
+                    })
+                }).catch(() => {
+                // on cancel
+            });
+            
         }
     }
-    ,onShow() {
+    ,mounted() {
         this.getdata()
     }
 }

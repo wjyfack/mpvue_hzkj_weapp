@@ -1,7 +1,7 @@
 {
   "pages": [
-    
-    "pages/index/main"
+    "pages/pingjia_detail/main"
+    ,"pages/index/main"
     ,"pages/publish/main"
     ,"pages/consult_publish/main"
     ,"pages/message_nieye/main"
@@ -13,6 +13,9 @@
     ,"pages/my_problem/main"
     ,"pages/my_renzheng/main"
     ,"pages/my_login/main"
+    ,"pages/detail_repair/main"
+    ,"pages/demand_publish/main"
+    
   ],
   "window": {
     "backgroundTextStyle": "light",
