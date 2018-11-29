@@ -1,81 +1,71 @@
 <template>
+<div class="consult">
     <div class="detail">
-        <div class="status">
-            <div class="sts"><img src="../../../static/imgs/order_bell.png" alt="" class="img">待付款</div>
-            <div class="last">还剩30分钟自动关闭此订单</div>
+        <div class="head">
+            皮卡刻字机脱机状态小车走纸轴不动轴不动轴皮卡刻字机脱机状态小车走纸轴不动轴不动轴
         </div>
-        <div class="addr">
-            <img src="" alt="../../../static/imgs/order_addr.png" class="addr_img">
-            <div class="addr_detail">
-                <div class="name">吴先生<span class="phone">13211164483</span></div>
-                <div class="detail">广东省 佛山市 南海区 大沥镇 大沥凤城一路9号秀慧养生馆3楼</div>
-            </div>
-        </div>
-        <div class="order">
-            <div class="heard">
-                <div class="info">
-                    <img src="../../../static/imgs/order_person.png" alt="" class="avator">
-                    <div class="name">黄老铁</div>
-                    
+        <div class="info">
+            <div class="person">
+                <img src="http://placehold.it/100x100" alt="" class="img">
+                <div class="infos">
+                    <div class="name">abb1656408236</div>
+                    <div class="eye">
+                        <img src="../../../static/imgs/eye.png" alt="" class="eye-img">
+                        9999+  /11-27 16:06
+                    </div>
                 </div>
-                <div class="stat">待付款</div>
             </div>
-            <div class="cont">
-                <img src="//placehold.it/100x100" alt="" class="or_img">
-                <div class="or_cont">
-                        <div class="title van-multi-ellipsis--l2">tittle</div>
-                    <div class="mini-title">分裂了</div>
-                </div>
-                
-            </div>
-            <div class="order-status">
-                商品总价： ¥1099.00
-            </div>
-            <div class="order-status">
-                平台优惠： -¥99.00
-            </div>
-            <div class="prices">
-                <div></div>
-                <div class="service">共1次服务 实付款：<div class="price">¥1000.00</div> </div>
-            </div>
-            
+            <div class="guanzhu">关注</div>
         </div>
-        <div class="order-detail">
-            <div class="header">订单详情</div>
-            <div class="item">
-                <div class="title">订单编号：</div>
-                <div>1234567891234567897</div>
-            </div>
-            <div class="item">
-                <div class="title">支付方式：</div>
-                <div>微信支付</div>
-            </div>
-            <div class="item">
-                <div class="title">交易编号：</div>
-                <div>1234567891234567897234567897</div>
-            </div>
-            <div class="item">
-                <div class="title">创建时间：</div>
-                <div>2018-11-28  10:44</div>
-            </div>
-            <div class="item">
-                <div class="title">付款时间：</div>
-                <div>2018-11-28  10:44</div>
-            </div>
-            <div class="item">
-                <div class="title">服务完成时间：</div>
-                <div>2018-11-28  10:44</div>
-            </div>
-            <div class="item">
-                <div class="title">售后时间：</div>
-                <div>2018-11-28  10:44</div>
-            </div>
+        <div class="cont">
+            <p>皮卡刻字机1200脱机状态 小车不动 走纸轴不动 风扇也不转 摁任何键子机器显示器上都有数值变化 就是小车不动 走纸轴叶不动 联机状态也一样 用刻绘大师软件输出 电脑读条走一点就不走了 刻字机显示器就会显示ERROR!+X Limit 我买了电源 驱动和主板 都换了 还是之前的状况 一点也没变化 求师傅上门检测维修</p>
+            <img src="http://placehold.it/100x100" alt="">
         </div>
-        <div class="order-btn">
-            <img src="../../../static/imgs/order_phone.png" alt="" class="img">
-            <div>联系卖家</div>
+        <div class="btn-group">
+            <div class="btn"><img src="../../../static/imgs/con_hui.png" alt="" class="btn-img">回答</div>
+            <div class="btn"><img src="../../../static/imgs/con_ju.png" alt="" class="btn-img">举报</div>
+            <div class="btn fr"><img src="../../../static/imgs/con_zhui.png" alt="" class="btn-img">追加悬赏</div>
         </div>
     </div>
+    <div class="pinglun">
+        <div class="hd">评论</div>
+        <div class="pinglun-item">
+            <div class="header">
+                <div class="infod">
+                    <img src="http://placehold.it/100x100" alt="" class="avatar">
+                    <div class="cont">
+                        <span class="name">ZzZZZZZ</span>
+                        <span class="barnd">传动先生认证专家、十佳青年获得者</span>
+                    </div>
+                </div>
+                <div class="jub"><img src="../../../static/imgs/con_ju.png" alt="" class="img">举报</div>
+            </div>
+            <div class="content">
+               皮卡刻字机1200脱机状态 小车不动 走纸轴不动 风扇也不转摁任何键子机器显示器上都有数值变化 就是小车不动 走纸 
+            </div>
+            <div class="opt">
+                <div class="time">11-27 16:06</div>
+                <div class="option">
+                    <div class="option-item"><img src="../../../static/imgs/p_use.png" alt="" class="opt-img">点赞</div>
+                    <div class="option-item"><img src="../../../static/imgs/con_hui.png" alt="" class="opt-img">回复</div>
+                    <div class="option-item"><img src="../../../static/imgs/rp_star.png" alt="" class="opt-img">收藏</div>
+                    <div class="option-item"><img src="../../../static/imgs/rp_share.png" alt="" class="opt-img">分享</div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="f-item"><span class="name">带带大师兄：</span>回复<span class="name">ZzZZZZZ：</span>nb<span class="recall">[回复]</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="gix-tab van-hairline--top">
+        <div class="tab-bottom">
+            <div class="ans">发表回复...</div>
+            <div class="tab-item"><img src="../../../static/imgs/con_hui.png" alt="" class="img"></div>
+            <div class="tab-item"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
+            <div class="tab-item"><img src="../../../static/imgs/rp_share.png" alt="" class="img"></div>
+        </div>
+    </div>
+</div>
 </template>
 <script>
 
@@ -86,174 +76,174 @@ export default {
         }
     }
     ,methods: {
-        onChange(event) {
-            this.active = event.mp.detail
-        }
     }
 }
 </script>
 <style lang="less" scoped>
-.detail {
+.consult {
     background: #F9F9F9;
-    .status {
-        padding: 20px; 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: #ffffff;
-        background: #5887F9;
-        .sts {
-            display: flex;
-            align-items: center;
-            font-size: 18px;
-            
-            .img {width:28px; height: 26px;margin-right: 10px;}
-
-        }
-        .last {
-            font-size: 10px;
-        }
-    }
-    .addr {
+    margin-top: 5px;
+    padding-bottom: 40px;
+    .detail {
         padding: 10px 20px;
-        display: flex;
-        .addr_img {
-            width: 23px;
-            height: 32px;;
+        .head {
+            font-size: 16px;
+            color:#000;
         }
-        .addr_detail {
-            padding-left: 5px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            .name {
-                color: #4C5264;
-                font-size: 14px;
-                .phone {
-                    color:#8A8A8A;
-                    margin-left: 5px;
-                }
-            }
-            .detail {
-                font-size: 14px;
-                color:#4C5264;
-            }
-        }
-    }
-    .order{
-        background: #ffffff;
-    
-        margin-bottom: 10px;
-        .heard {
+        .info {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding:5px 20px;
-            .info {
-                display: flex;
-                align-items: center;
-                .avator {
-                    width:13px;
-                    height: 14px;
-                    margin-right: 5px;
+            .person {
+                flex:1;
+                display:flex;
+                .img {
+                    width: 31px;
+                    height: 31px;
+                    border-radius: 50%;
                 }
-                .name {
-                    color: #4C5264;
-                    font-size: 12px;
+                .infos {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    padding-left: 5px;
+                    .name {color:#000;font-size: 12px;}
+                    .eye {
+                        display: flex;
+                        color:#8E8E8E;
+                        font-size: 8px;
+                        .eye-img {
+                            width: 11px;
+                            height: 7px;
+                            display: flex;
+                        }
+                    }
                 }
             }
-            .stat {
+            .guanzhu {
+                background: #5887F9;
+                border-radius: 11px;
+                color:#ffffff;
                 font-size: 12px;
-                color:#FC5F6B;
+                padding: 0 5px;
             }
         }
         .cont {
-            background: #F9F9F9;
-            padding: 10px 30px;
-            display: flex;
-            .or_img {width:64px;height: 64px;}
-            .or_cont {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-around;
-                padding-left: 10px;
-                .title {
-                    color:#4C5264;
-                    font-size: 12px;
-                }
-                .mini-title {
-                    color:#A2A2A2;
-                    font-size: 10px;
-                }
+            color:#8E8E8E;
+            font-size: 12px;
+            image {
+                width:100%;
+                border-radius: 5px;
             }
         }
-        .prices {
+        .btn-group {
             display: flex;
+            padding: 10px 0;
+            .btn {
+                border-radius: 3px;
+                border: 1px solid #dddddd;
+                color:#4C5264;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 5px 10px;
+                font-size: 10px;
+                margin-right: 5px;
+                .btn-img {
+                    width:11px;
+                    height: 12px;
+                    margin-right: 5px;
+                }
+            }
+            .fr {
+                float: right;
+            }
+        }
+    }
+    .pinglun {
+        padding: 10px 20px;
+        .hd {
+            border-left: 4px solid #5887F9;
+            color:#4C5264;
+            font-size: 14px;
+            padding-left: 5px;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        .pinglun-item {
+           .header {
+               display:flex;
+               justify-content: space-between;
+               .infod {
+                   flex: 1;
+                   display: flex;
+                   .avatar {width:23px;height: 23px;margin-right: 5px;border-radius: 50%;}
+                   .cont {
+                       flex: 1;
+                       display: flex;
+                       justify-content: center;
+                       flex-direction: column;
+                       .name {font-size: 12px;color:#000;}
+                       .barnd {color:#8E8E8E;font-size: 8px;}
+                   }
+               }
+               .jub {
+                   display: flex;
+                   font-size: 8px;
+                   color:#4C5264;
+                   .img {width: 9px; height: 10px;margin-right: 5px;}
+                   
+               }
+           } 
+           .content {color:#8E8E8E;font-size: 12px;margin-top:5px;}
+           .opt {
+               display: flex;
+               justify-content: space-between;
+               align-items: center;
+               .time {color:#8E8E8E;font-size: 8px;}
+               .option {
+                   color:#4C5264;
+                   font-size: 8px;
+                   display: flex;
+                   padding: 5px 0;
+                   .option-item {
+                       display: flex;
+                       margin-left: 10px;
+                       .opt-img {width: 10px;height: 10px;margin-right:5px;}
+                   }
+               }
+           }
+           .footer {
+               background: #F5F5F5;
+               border-radius: 5px;
+               padding: 5px 10px;
+               .f-item {
+                   font-size: 10px;
+                   color:#4C5264;
+                   .name {color:#5887F9;}
+                   .recall {font-size: 8px;margin-left: 5px;}
+               }
+           }
+        }
+    }
+    .gix-tab {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        .tab-bottom {
+            display: flex;
+            padding: 10px 20px;
             align-items: center;
             justify-content: space-between;
-            color:#4C5264;
-            font-size: 12px;
-            padding: 5px 20px;
-            .service {
-                display:flex;
-                align-items: center;
-                .price {
-                    font-size: 14px;
-                    font-weight: bold;
-                }
+            .ans {flex: 1;color:#4C5264;font-size: 14px;}
+            .tab-item {
+                min-width: 50px;
+                .img {width:26px;height: 25px;vertical-align: middle;}
             }
-            
-        }
-        .order-status {
-            display: flex;
-            justify-content: flex-end;
-            padding: 3px 20px;
-            color:#A2A2A2;
-            font-size: 10px;
-        }
-    }
-    .order-detail {
-        padding: 10px 20px;
-        background: #ffffff;
-        margin-bottom: 40px;
-        .header {
-            display: flex;
-            border-left: 5px solid #5887F9;
-            padding-left: 5px;
-            font-size: 14px;
-            line-height: 1;
-            color:#4C5264;
-            margin-bottom: 5px;
-        }
-        .item {
-            display: flex;
-            color:#A2A2A2;
-            padding: 2px 0;
-            font-size: 10px;
-            .title {min-width: 70px;}
-
-        }
-    }
-    .order-btn {
-        display: flex;
-        margin: 0 20px;
-        border-radius: 3px;
-        background: #5887F9;
-        color: #ffffff;
-        align-items: center;
-        justify-content: center;
-        min-height: 40px;
-        font-size: 14px;
-        .img {
-            width: 17px;
-            height: 17px;
-            margin-right: 5px;
         }
     }
 }
-
-
 </style>
 
