@@ -117,7 +117,8 @@ export default {
        
     }
     .zhonghe {
-        display: felx;
+        display: flex;
+        padding: 10px 0;
         .left {
             width: 50%;
             display: flex;
@@ -133,7 +134,10 @@ export default {
         }
         .right {
             display: flex;
+            width: 50%;
             flex-direction: column;
+             justify-content: center;
+            align-items: center;
             padding: 5px 0;
             .r-item {
                 font-size: 12px;

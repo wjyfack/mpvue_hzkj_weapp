@@ -1,6 +1,7 @@
 {
   "pages": [
-    "pages/pingjia_detail/main"
+    "pages/detail_order/main"
+    ,"pages/pingjia_detail/main"
     ,"pages/index/main"
     ,"pages/publish/main"
     ,"pages/consult_publish/main"
