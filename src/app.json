@@ -1,8 +1,6 @@
 {
   "pages": [
-    "pages/detail_consult/main"
-    ,"pages/detail_order/main"
-    ,"pages/pingjia_detail/main"
+    "pages/detail_demand/main"
     ,"pages/index/main"
     ,"pages/publish/main"
     ,"pages/consult_publish/main"
@@ -17,7 +15,9 @@
     ,"pages/my_login/main"
     ,"pages/detail_repair/main"
     ,"pages/demand_publish/main"
-    
+    ,"pages/detail_consult/main"
+    ,"pages/detail_order/main"
+    ,"pages/pingjia_detail/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
