@@ -1,52 +1,51 @@
 <template>
 <div class="demand">
     <div class="header van-hairline--bottom">
-        <div class="title">皮卡刻字机脱机状态小车走纸轴不动轴不动轴皮卡刻字机脱机状态小车走纸轴不动轴不动轴</div>
+        <div class="title">{{info.title}}</div>
         <div class="mini">
-            <div>发布于：2018-11-14</div>
-            <div class="eye"><img src="../../../static/imgs/eye.png" alt="" class="eye-img">9999+</div>
+            <div>发布于：{{info.add_time}}</div>
+            <div class="eye"><img src="../../../static/imgs/eye.png" alt="" class="eye-img">{{info.read_count}}</div>
         </div>
     </div>
     <div class="content">
-        <div>皮卡刻字机1200脱机状态 小车不动 走纸轴不动 风扇也不转 摁任何键子机器显示器上都有数值变化 就是小车不动 走纸轴叶不动 联机状态也一样 用刻绘大师软件输出 电脑读条走一点就不走了 刻字机显示器就会显示ERROR!+X Limit 我买了电源 驱动和主板 都换了 还是之前的状况 一点也没变化 求师傅上门检测维修</div>
+        <div>{{info.content}}</div>
         <div class="cont-img">
-            <img src="http://placehold.it/100x100" alt="" class="cont-img-item">
-            <img src="http://placehold.it/100x100" alt="" class="cont-img-item">
-            <img src="http://placehold.it/100x100" alt="" class="cont-img-item">
+            <img :src="item" alt="" class="cont-img-item" v-for="(item,index) in info.pics_str" :key="kkk">
         </div>
     </div>
     <div class="good">
         <div class="good-item">
             <div class="hd">目标预算</div>
-            <div class="cont">1500.00元</div>
+            <div class="cont">{{info.budget}}元</div>
         </div>
         <div class="good-item">
             <div class="hd">期望天数</div>
-            <div class="cont">7天</div>
+            <div class="cont">{{info.qiwang_days}}天</div>
         </div>
         <div class="good-item">
             <div class="hd">需求者</div>
-            <div class="cont">吴***</div>
+            <div class="cont">{{info.contact_name}}</div>
         </div>
         <div class="good-item">
             <div class="hd">联系方式</div>
-            <div class="cont">189****6621</div>
+            <div class="cont">{{info.contact_phone}}</div>
         </div>
     </div>
     <div class="bao">
+        <div class="brand">已有{{info.quoted_count}}人报价</div>
         <div class="hd">报价记录</div>
-        <div class="info">
-            <div class="info-item"><div class="name">林**</div> <div>2018-11-26</div></div>
-            <div class="info-item"><div>联系方式：158***333</div></div>
-            <div class="info-item"><div>预报单价：***</div></div>
-            <div class="info-item"><div>所需时间：***</div> 
+        <div class="info" v-for="(item,index) in quotedList" :key="kkk">
+            <div class="info-item"><div class="name">{{item.contact_name}}</div> <div>{{item.add_time}}</div></div>
+            <div class="info-item"><div>联系方式：{{item.contact_phone}}</div></div>
+            <div class="info-item"><div>预报单价：{{item.quoted_price}}</div></div>
+            <div class="info-item"><div>所需时间： {{item.need_days}}天</div> 
             <div class="opt">
                 <img src="../../../static/imgs/rp_gou.png" alt="" class="img">
                 <img src="../../../static/imgs/edit.png" alt="" class="img">
             </div></div>
         </div>
     </div>
-    <div class="baojia">报价</div>
+    <a :href="'../baojia/main?demand_id='+info.id" class="baojia">报价</a>
     <div class="tips">
         <div class="tips-item">1、以上所展示的信息由用户自行发布，内容的真实性、准确性和合法性由发布此信息的发布方负责。传动先生对此不承担任何保证责任。</div>
         <div class="tips-item">2、我们建议您在跟该用户发生任何交易之前，务必先确认其资质，若是涉及金额过大需先签署正规合同。请谨慎交易，谨防欺诈行为。</div>
@@ -54,12 +53,35 @@
 </div>
 </template>
 <script>
-
+import fly from '@/utils/fly'
+import * as Params from '@/utils/params'
 export default {
     data() {
+        return {
+            id: 0
+            ,info: {}
+            ,quotedList: {}
+        }
     }
     ,methods: {
+        getData() {
+            // 需求详情
+            fly.post('/?v=V1&g=Doctor&c=Demand&a=getDemandDetail'+Params.default.param,{
+                demand_id: this.id 
+            }).then((res)=> {
+                if(res.code == 0) {
+                   this.info = res.data.info
+                   this.quotedList = res.data.quoted_list
+                } else {
+                    console.log(res.message)
+                }
+            })
+        }
     }
+    ,mounted() {
+        this.id = this.$mp.query.id
+        this.getData()
+    },
 }
 </script>
 <style lang="less" scoped>
@@ -152,6 +174,19 @@ export default {
                     .img {width:15px;height: 15px;margin-left: 5px;}
                 }
             }
+        }
+        .brand {
+           min-width: 84px; 
+           text-align: center;
+           border-top-left-radius: 11px;
+           border-bottom-left-radius: 11px;
+           background: #FC5F6B;
+           color:#ffffff;
+           position:absolute;
+           top: 10px;
+           right: 0;
+           font-size: 10px;
+           padding: 0 5px;
         }
     }
     .baojia {

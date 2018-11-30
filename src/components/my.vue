@@ -6,7 +6,7 @@
                 <div class="name">{{baseInfo.nick_name}}</div>
                 <div class="id">{{baseInfo.user_name}}</div>
             </div>
-            <a class="setting" href="../setting/main"><img src="../../static/imgs/my_setting.png" class="set"> <div class="sett">设置</div></a>
+            <a class="setting" :href="'../setting/main?nick_name='+baseInfo.nick_name+'&user_picture='+baseInfo.user_picture"><img src="../../static/imgs/my_setting.png" class="set"> <div class="sett">设置</div></a>
         </div>
         <div class="option">
             <a href="../my_order/main" class="option_item">
@@ -141,7 +141,6 @@ export default {
                 _this.getInfo()
             },
             fail () { 
-               
               wx.login({
                 success (res) {
                     if (res.code) {

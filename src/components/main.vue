@@ -88,7 +88,7 @@
       </div>
       <van-tab title="项目维修">
         <div class="repair">
-          <a href="../detail_repair/main" class="repair-item" v-for="(item, index) in repairList" :key="key">
+          <a :href="'../detail_repair/main?id='+item.id" class="repair-item" v-for="(item, index) in repairList" :key="key">
             <div class="repair-header">
               <img :src="item.user_picture" alt="" class="actor">
               <div class="self">
@@ -110,7 +110,7 @@
       </van-tab>
       <van-tab title="需求列表">
         <div class="xuqiu">
-          <div class="xuqiu-item" v-for="(item, index) in xuqiuList" :key="key">
+          <a :href="'../detail_demand/main?id='+item.id" class="xuqiu-item" v-for="(item, index) in xuqiuList" :key="key">
               <div class="title title van-multi-ellipsis--l">{{item.title}}</div>
               <div class="cont title van-multi-ellipsis--l">{{item.content}}</div>
               <div class="xuqiu-imgs">
@@ -127,18 +127,18 @@
                 <div class="bar-item">正在进行</div>
                 <div class="bar-item">已有{{item.quoted_count}}人报价</div>
               </div>
-          </div>
+          </a>
         </div>
       </van-tab>
       <van-tab title="问题咨询">
         <div class="consult">
             
-            <a :href="item.id" class="consult-item van-hairline--bottom" v-for="(item, index) in consultList" :key="key">
+            <a :href="'../detail_consult/main?id='+item.id" class="consult-item van-hairline--bottom" v-for="(item, index) in consultList" :key="key">
                 <div class="cont">
                     <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
                     <div class="mini">
                         <div>{{item.nick_name}}</div>
-                        <div>{{itemexpert_answer_count}} 评论</div>
+                        <div>{{item.expert_answer_count}} 评论</div>
                     </div>
                 </div>
                 <!-- <img src="http://placehold.it/100x100" alt="" class="img"> -->

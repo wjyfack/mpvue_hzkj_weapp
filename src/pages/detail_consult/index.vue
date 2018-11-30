@@ -2,49 +2,50 @@
 <div class="consult">
     <div class="detail">
         <div class="head">
-            皮卡刻字机脱机状态小车走纸轴不动轴不动轴皮卡刻字机脱机状态小车走纸轴不动轴不动轴
+            {{info.title}}
         </div>
         <div class="info">
             <div class="person">
-                <img src="http://placehold.it/100x100" alt="" class="img">
+                <img :src="info.user_picture" alt="" class="img">
                 <div class="infos">
-                    <div class="name">abb1656408236</div>
+                    <div class="name">{{info.nick_name}}</div>
                     <div class="eye">
                         <img src="../../../static/imgs/eye.png" alt="" class="eye-img">
-                        9999+  /11-27 16:06
+                        {{info.read_count}}  /{{info>add_time}}
                     </div>
                 </div>
             </div>
-            <div class="guanzhu">关注</div>
+            <div class="guanzhu" v-if="myInfo.is_focus == 0">关注</div>
+            <div class="guanzhu" v-else-if="myInfo.is_focus == 1">已关注</div>
         </div>
         <div class="cont">
-            <p>皮卡刻字机1200脱机状态 小车不动 走纸轴不动 风扇也不转 摁任何键子机器显示器上都有数值变化 就是小车不动 走纸轴叶不动 联机状态也一样 用刻绘大师软件输出 电脑读条走一点就不走了 刻字机显示器就会显示ERROR!+X Limit 我买了电源 驱动和主板 都换了 还是之前的状况 一点也没变化 求师傅上门检测维修</p>
-            <img src="http://placehold.it/100x100" alt="">
+            <p>{{info.content}}</p>
+            
         </div>
         <div class="btn-group">
             <div class="btn"><img src="../../../static/imgs/con_hui.png" alt="" class="btn-img">回答</div>
             <div class="btn"><img src="../../../static/imgs/con_ju.png" alt="" class="btn-img">举报</div>
-            <div class="btn fr"><img src="../../../static/imgs/con_zhui.png" alt="" class="btn-img">追加悬赏</div>
+            <!-- <div class="btn fr"><img src="../../../static/imgs/con_zhui.png" alt="" class="btn-img">追加悬赏</div> -->
         </div>
     </div>
     <div class="pinglun">
         <div class="hd">评论</div>
-        <div class="pinglun-item">
+        <div class="pinglun-item" v-for="(item,index) in commentList" :key="key">
             <div class="header">
                 <div class="infod">
-                    <img src="http://placehold.it/100x100" alt="" class="avatar">
+                    <img :src="item.user_picture" alt="" class="avatar">
                     <div class="cont">
-                        <span class="name">ZzZZZZZ</span>
-                        <span class="barnd">传动先生认证专家、十佳青年获得者</span>
+                        <span class="name">{{item.nick_name}}}</span>
+                        <span class="barnd">{{item.user_label}}</span>
                     </div>
                 </div>
                 <div class="jub"><img src="../../../static/imgs/con_ju.png" alt="" class="img">举报</div>
             </div>
             <div class="content">
-               皮卡刻字机1200脱机状态 小车不动 走纸轴不动 风扇也不转摁任何键子机器显示器上都有数值变化 就是小车不动 走纸 
+               {{item.content}} 
             </div>
             <div class="opt">
-                <div class="time">11-27 16:06</div>
+                <div class="time">{{item.add_time}}</div>
                 <div class="option">
                     <div class="option-item"><img src="../../../static/imgs/p_use.png" alt="" class="opt-img">点赞</div>
                     <div class="option-item"><img src="../../../static/imgs/con_hui.png" alt="" class="opt-img">回复</div>
@@ -53,7 +54,9 @@
                 </div>
             </div>
             <div class="footer">
-                <div class="f-item"><span class="name">带带大师兄：</span>回复<span class="name">ZzZZZZZ：</span>nb<span class="recall">[回复]</span></div>
+                <div class="f-item" v-for="(items,indexs) in item.reply_list" :key="kes">
+                    <span class="name">{{items.a_nick_name}}：</span>回复<span class="name">{{items.b_nick_name}}：</span>{{items.content}}<span class="recall">[回复]</span>
+                </div>
             </div>
         </div>
     </div>
@@ -68,15 +71,57 @@
 </div>
 </template>
 <script>
-
+import fly from '@/utils/fly'
+import * as Params from '@/utils/params'
 export default {
     data() {
         return {
-            active: 0
+            id: 0
+            ,active: 0
+            ,info: {}
+            ,myInfo: {}
+            ,toUserInfo: {}
+            ,cainaInfo: {}
+            ,commentList: []
+            ,commentCount: 0 // 总评价数
         }
     }
     ,methods: {
+        getData() {
+            // 咨询详情
+            fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultDetail'+Params.default.param,{
+                consult_id: this.id
+            }).then((res)=> {
+                if(res.code == 0) {
+                    this.info = res.data.info
+                    this.myInfo = res.data.my_info
+                    this.toUserInfo = res.data.to_user_info
+                    this.cainaInfo = res.data.caina_info
+                } else {
+                    console.log(res.message)
+                }
+            })
+        }
+        ,getComment() {
+            //获取咨询评论列表
+            fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultCommentList'+Params.default.param,{
+                consult_id: this.id
+            }).then((res)=> {
+                if(res.code == 0) {
+                    this.commentCount = res.data[0].count
+                    this.commentList = res.data[0].list
+                } else {
+                    console.log(res.message)
+                }
+            })
+        }
     }
+    ,mounted() {
+        this.id = this.$mp.query.id
+        this.getData()
+        this.getComment()
+        // console.log(this.id)
+    },
 }
 </script>
 <style lang="less" scoped>
@@ -171,6 +216,7 @@ export default {
             margin-bottom: 10px;
         }
         .pinglun-item {
+            padding-top: 5px;
            .header {
                display:flex;
                justify-content: space-between;

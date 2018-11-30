@@ -1,7 +1,6 @@
 {
   "pages": [
-    "pages/detail_demand/main"
-    ,"pages/index/main"
+    "pages/index/main"
     ,"pages/publish/main"
     ,"pages/consult_publish/main"
     ,"pages/message_nieye/main"
@@ -18,6 +17,9 @@
     ,"pages/detail_consult/main"
     ,"pages/detail_order/main"
     ,"pages/pingjia_detail/main"
+    ,"pages/detail_demand/main"
+    ,"pages/baojia/main"
+    ,"pages/person_home/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

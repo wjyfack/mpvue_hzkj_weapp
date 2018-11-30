@@ -7,12 +7,14 @@
                 required
                 clearable
                 label="昵称"
-                placeholder="请输入昵称" 
+                placeholder="请输入昵称"
+                @change="changeNmae"
             />
         </div>
         <div class="btn">
             <van-button @click="onSubmit" type="danger" size="large">提交</van-button>
         </div>
+        <van-toast id="van-toast" />
     </div>
 </template>
 <script>
@@ -31,29 +33,39 @@ export default {
     }
     ,methods :{
         onSubmit () {
-            // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=User&a=getMyRealInfo
-            // review_status   0未审核1通过2不通过
-            fly.post('/?v=V1&g=Doctor&c=User&a=getMyRealInfo'+Params.default.param)
-                .then((res)=> {
-                    console.log(res)
+        //    修改自己的用户信息（必须登录）
+        //     http://cdzj.demo.com/Apiapi/?v=V1&g=Common&c=User&a=editMyInfo
+        //     nick_name
+        //     user_picture
+            if(this.baseInfo.nick_name == '') {
+                Toast('昵称不能为空')
+                return ;
+            }
+           
+            fly.post('/?v=V1&g=Common&c=User&a=editMyInfo'+Params.default.param,{
+                nick_name: this.baseInfo.nick_name
+                ,user_picture: this.avatar
+            }).then((res)=> {
+                    if(res.code == 0) {
+                        Toast('修改成功,正在返回')
+                        setTimeout(()=> {wx.navigateBack({ delta: 1})},1000)
+                    }　else {
+                        Toast(res.message)
+                    }
                 })
-        }
-        ,getAd() {
-            fly.post('/?v=V1&g=Common&c=User&a=getMyRealInfo'+Params.default.param)
-                .then((res)=> {
-                    this.baseInfo = res.data.base_info
-                })
+        }   
+        ,changeNmae(e) {
+            this.baseInfo.nick_name = e.mp.detail
         }
         ,onImage() {
             let _this = this
-            
             wx.chooseImage({
                 count: 1
                 ,sizeType: ['original', 'compressed']
                 ,sourceType: ['album', 'camera']
                 ,success(res) {
                     // console.log(res)
-                    _this.avatar = res.tempFilePaths[0]
+                    _this.baseInfo.user_picture = res.tempFilePaths[0]
                    
                     //console.log(res)
                     wx.uploadFile({
@@ -63,9 +75,11 @@ export default {
                         formData: {
                             'img_classify': 'doctor'
                         },
-                        success (data){
+                        success (datas){
+                            
+                            const data = JSON.parse(datas.data)
                             if(data.code == 0) {
-                                 _this.img = data.data.img_path
+                                 _this.avatar= data.data.img_path
                             } else {
                                 Toast('上传失败')
                             }
@@ -79,7 +93,12 @@ export default {
         }
     }
     ,mounted() {
-        this.getAd()
+        const query = this.$mp.query
+        if(query == null) {
+             wx.navigateTo({url: '../my_login/main'})
+        }
+        this.baseInfo = query
+        
     }
 }
 </script>

@@ -1,14 +1,16 @@
 <template>
     <div class="problem">
-        <div class="problem-item" v-for="(item,index) in 5" :key="key">
+        <div class="problem-item" v-for="(item,index) in questionList" :key="key">
             <div class="head" @click="toOpen(index)">
-                <div class="title van-ellipsis">我觉得你这个人有点小问题？我觉得你这个人有点小问题？</div>
+                <div class="title van-ellipsis">{{item.title}}</div>
                 <img src="../../../static/imgs/arrow.png" alt="" class="img" :class="{'act': active == index}">
             </div>
             <div class="cont" :class="{'active': active == index}">
-                <div class="con">ssssss</div>
+                <div class="con">
+                    <wxParse :content="item.content" />
+                </div>
                 <div class="user">
-                    <div class="item">
+                    <div class="item" >
                         <img src="../../../static/imgs/p_use.png" alt="" class="gg_img">
                         <div class="gd">有用</div>
                     </div>
@@ -19,25 +21,49 @@
                 </div>
             </div>
         </div>
+        <van-toast id="van-toast" />
     </div>
 </template>
 
 <script>
+import fly from '@/utils/fly'
+import * as Params from '@/utils/params'
+import Toast from '../../../static/vant/toast/toast';
+import wxParse from 'mpvue-wxparse'
 export default {
-    data(){
+    components: {
+        wxParse
+    }
+    ,data(){
         return{
             active: 0
+            ,questionList: []
         }
     }
     ,methods: {
         toOpen(index){
             this.active = index
         }
+        ,getData() {
+            fly.post('/?v=V1&g=Common&c=Help&a=getHelpfaqList'+Params.default.param,{
+                help_type: 1
+            })
+                .then((res)=> {
+                    if(res.code == 0) {
+                        this.questionList = res.data.list
+                    } else {
+                        Toast(res.message)
+                    }
+                })
+        }
     }
-    
+    ,mounted() {
+        this.getData()
+    },
 }
 </script>
 <style lang="less" scoped>
+@import url("~mpvue-wxparse/src/wxParse.css");
 .problem {
     background: #f9f9f9;
     &-item {

@@ -3,63 +3,193 @@
         <div class="zhonghe">
             <div class="left van-hairline--right">
                 <div class="zong">综合评分</div>
-                <div class="fen">100</div>
+                <div class="fen">{{good_info.pingjia.zonghe}}</div>
                 <div class="star_img">
-                    <img src="../../../static/imgs/rp_star.png" alt="" class="img">
+                    <img src="../../../static/imgs/rp_star.png" alt="" class="img" v-for="(item,index) in zongHeSart" :key="key">
                 </div>
             </div>
             <div class="right">
-                <div class="r-item">服务评价：<span class="fe">100</span> 分</div>
-                <div class="r-item">态度评价：<span class="fe">100</span> 分</div>
-                <div class="r-item">专业评价：<span class="fe">100</span> 分</div>
+                <div class="r-item">服务评价：<span class="fe">{{good_info.pingjia.fuwu}}</span> 分</div>
+                <div class="r-item">态度评价：<span class="fe">{{good_info.pingjia.taidu}}</span> 分</div>
+                <div class="r-item">专业评价：<span class="fe">{{good_info.pingjia.zhuanye}}</span> 分</div>
             </div>
         </div>
-        <van-tabs :active="active" color="#5887F9" bind:change="onChange">
-            <van-tab title="好评">
+        <van-tabs :active="active" color="#5887F9" @change="onChange">
+            <van-tab :title="'好评'+good_info.pingjia.type_hao">
                 <div class="content">
                     <div class="pingjia">
-                        <div class="pingjia-item van-hairline--bottom" v-for="(item,index) in 3" :key="k">
+                        <div class="pingjia-item van-hairline--bottom" v-for="(item,index) in haoList" :key="k">
                              <div class="pingjia-info">
                                  <div class="name">
-                                     <img src="http://placehold.it/100x100" alt="" class="img">
-                                     <div>bbbbb</div>
+                                     <img :src="item.user_picture" alt="" class="img">
+                                     <div>{{item.nick_name}}</div>
                                 </div>
                                  <div class="ping">
                                      <div>好评</div>
-                                     <img src="../../../static/imgs/rp_star.png" alt="" class="img">
+                                     <img src="../../../static/imgs/rp_star.png" alt="" class="img" v-for="(tt,ii) in item.star_num" :key="ks">
                                  </div>
                              </div> 
                              <div class="cont van-multi-ellipsis--l2">
-                                 工程师注重细节，维修的时候细节处理的非常好，服务周到，服务态度特别好，希望以后能继续合作！
+                                 {{item.content}}
                              </div>
                              <div class="footer">
-                                 <span>2018-11-24</span>
-                                 <span>交易金额¥400</span>
+                                 <span>{{item.add_time}}</span>
+                                 <span>交易金额¥{{item.total_pay}}</span>
                              </div>        
                         </div>
                     </div>
-                   
                 </div>
             </van-tab>
-            <van-tab title="中评">内容 2</van-tab>
-            <van-tab title="差评">内容 3</van-tab>
+            <van-tab :title="'中评'+good_info.pingjia.type_zhong">
+                <div class="content">
+                    <div class="pingjia">
+                        <div class="pingjia-item van-hairline--bottom" v-for="(item,index) in zhongList" :key="k">
+                             <div class="pingjia-info">
+                                 <div class="name">
+                                     <img :src="item.user_picture" alt="" class="img">
+                                     <div>{{item.nick_name}}</div>
+                                </div>
+                                 <div class="ping">
+                                     <div>好评</div>
+                                     <img src="../../../static/imgs/rp_star.png" alt="" class="img" v-for="(tt,ii) in item.star_num" :key="ks">
+                                 </div>
+                             </div> 
+                             <div class="cont van-multi-ellipsis--l2">
+                                 {{item.content}}
+                             </div>
+                             <div class="footer">
+                                 <span>{{item.add_time}}</span>
+                                 <span>交易金额¥{{item.total_pay}}</span>
+                             </div>        
+                        </div>
+                    </div>
+                </div>
+            </van-tab>
+            <van-tab :title="'差评'+good_info.pingjia.type_cha">
+                <div class="content">
+                    <div class="pingjia">
+                        <div class="pingjia-item van-hairline--bottom" v-for="(item,index) in chaList" :key="k">
+                             <div class="pingjia-info">
+                                 <div class="name">
+                                     <img :src="item.user_picture" alt="" class="img">
+                                     <div>{{item.nick_name}}</div>
+                                </div>
+                                 <div class="ping">
+                                     <div>好评</div>
+                                     <img src="../../../static/imgs/rp_star.png" alt="" class="img" v-for="(tt,ii) in item.star_num" :key="ks">
+                                 </div>
+                             </div> 
+                             <div class="cont van-multi-ellipsis--l2">
+                                 {{item.content}}
+                             </div>
+                             <div class="footer">
+                                 <span>{{item.add_time}}</span>
+                                 <span>交易金额¥{{item.total_pay}}</span>
+                             </div>        
+                        </div>
+                    </div>
+                </div>
+            </van-tab>
         </van-tabs>
     </div>
 </template>
 <script>
-
+import fly from '@/utils/fly'
+import * as Params from '@/utils/params'
 export default {
     data() {
         return {
             active: 0
-            ,banners: [{url: 'http://placehold.it/320x100'},{url: 'http://placehold.it/320x100'},{url: 'http://placehold.it/320x100'}]
+            ,id: 0
+            ,good_info: {
+                pingjia: {
+                    "fuwu": 0,
+                    "taidu": 0,
+                    "zhuanye": 0,
+                    "zonghe": 0,
+                    "type_hao": 0,
+                    "type_zhong": 0,
+                    "type_cha": 0,
+                    "count": 0, 
+                }
+            }
+            ,zongHeSart: 0
+            ,haoList: []
+            ,zhongList: []
+            ,chaList: []
+            ,haoPage: 0
+            ,zhongPage: 0
+            ,chaPage: 0
         }
     }
     ,methods: {
         onChange(event) {
-            this.active = event.mp.detail
+            this.active = event.mp.detail.index
+            this.getPingJia()
+        }
+        ,getData() {
+            // 维修项目详情
+            fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairDetail'+Params.default.param,{
+                repair_id: this.id 
+            }).then((res)=> {
+                if(res.code == 0) {
+                    this.good_info = res.data.good_info
+                    console.log(this.good_info)
+                     this.zongHeSart = this.getStarNum(this.good_info.pingjia.zonghe)
+                } else {
+                    console.log(res.message)
+                }
+            })
+        }
+        ,getPingJia() {
+            let page = 1
+            switch(this.active) {
+                 case 0: // 好
+                    page = ++this.haoPage
+                break;
+                 case 1:　// 中
+                    page = ++this.zhongPage
+                break;
+                 case 2:　// 差
+                    page = ++this.chaPage
+                break;
+            }
+            fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairCommentList'+Params.default.param,{
+                repair_id: this.id
+                ,pingjia_type: this.active +1// 1好评2中评3差评
+                ,page: page
+                ,page_size: 15
+            }).then((res)=> {
+                if(res.code == 0) {
+                    let data = res.data.list
+                    for(let i in data) {
+                        data[i].star_num = this.getStarNum(data[i].zonghe_pingjia)
+                    }
+                    switch(this.active) {
+                        case 0: // 好
+                           this.haoList = this.haoList.concat(data)
+                        break;
+                        case 1:　// 中
+                            this.zhongList = this.zhongList.concat(data)
+                        break;
+                        case 2:　// 差
+                            this.chaList = this.chaList.concat(data)
+                        break;
+                    }
+                } else {
+                    console.log(res.message)
+                }
+            })
+        }
+        ,getStarNum(num) {
+            return ~~(num /20)
         }
     }
+    ,mounted() {
+        this.id = this.$mp.query.id
+        this.getData()
+        this.getPingJia()
+    },
 }
 </script>
 <style lang="less" scoped>
