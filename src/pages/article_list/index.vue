@@ -1,85 +1,55 @@
 <template>
     <div class="publish">
         <div class="consult">
-            <div class="consult-item" v-for="(item, index) in 5" :key="key">
+            <div class="consult-item" v-for="(item, index) in artilceList" :key="key">
                 <div class="head">
                     <div class="cont">
-                        <div class="title van-multi-ellipsis--l2">什么联轴器才是最好用的呢用的呢用的呢用的呢用的呢用的呢</div>
+                        <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
                         <div class="mini">
-                            <div>追风少年刘全有</div>
-                            <div>2 评论</div>
+                            <div>{{item.nick_name}}</div>
+                            <div>{{item.add_time}}</div>
                         </div>
                     </div>
-                    <img src="http://placehold.it/100x100" alt="" class="img">
-                </div>
-                <div class="btn-list">
-                    <div class="status"></div>
-                    <div class="item">
-                        <div class="btn-item c1">编辑</div>
-                        <div class="btn-item">删除</div>
-                    </div>
+                    <img :src="item.list_pic" alt="" class="img">
                 </div>
             </div>   
         </div>
-    
+    <van-toast id="van-toast" />
     </div>
 </template>
 <script>
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
+import Toast from '../../../static/vant/toast/toast';
 export default {
     data() {
         return {
-            active: 0
-            ,repairList: []
-            ,consultList: []
-            ,xuqiuList: []
-            ,pageRepair: 0
-            ,pageXuqiu: 0
-            ,pageConsult: 0
+            artilceList: []
+            ,page: 1
         }
     }
     ,methods: {
-        onChange(event){
-            console.log(event)
-        }
-        ,getdata() {
-           this.getrepirList()
-           this.getxuqiuList()
-           this.getconsultList()
-        }
-        ,getrepirList(){
-            fly.post('/?v=V1&g=Doctor&c=Repair&a=getMyRepairList'+Params.default.param,{
+        getArtilceList(){
+            fly.post('/?v=V1&g=Doctor&c=Article&a=getArticleList'+Params.default.param,{
                 keyword: ''
-                ,page: this.pageRepair
-                ,page_size: 10
+                ,cat_id: 0
+                ,field_id: 0
+                ,sort: 'new' //默认new,hot,top,all,like,comment
+                ,page: this.page
+                ,page_size: 15
             }).then((res)=>{
-                console.log(res)
-                this.repairList = this.repairList.concat(res.data.list)
-            })
-        }
-        ,getxuqiuList(){
-            fly.post('/?v=V1&g=Doctor&c=Demand&a=getMyDemandList'+Params.default.param,{
-                keyword: ''
-                ,page: this.xuqiuList
-                ,page_size: 10
-            }).then((res)=>{
-                this.xuqiuList = this.xuqiuList.concat(res.data.list)
-            })
-        }
-        ,getconsultList(){
-            fly.post('/?v=V1&g=Doctor&c=Consult&a=getMyConsultList'+Params.default.param,{
-                keyword: ''
-                ,type: 0
-                ,page: this.pageConsult
-                ,page_size: 10
-            }).then((res)=>{
-                this.consultList = this.consultList.concat(res.data.list)
+                if(res.code == 0) {
+                    this.artilceList = this.artilceList.concat(res.data.list)
+                } 
             })
         }
     }
     ,mounted() {
-        this.getdata()
+        this.getArtilceList()
+    }
+    ,onReachBottom(){ // 底部添加更多
+        this.page++
+        this.getArtilceList()
     }
 }
 </script>

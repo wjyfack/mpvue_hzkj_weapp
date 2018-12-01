@@ -17,8 +17,13 @@ export function formatTime (date) {
 
   return `${t1} ${t2}`
 }
-
+export function getBrand(str) {
+  let brand = []
+  str.indexOf(',1,')? brand.push(1): ''
+  str.indexOf(',2,') ? brand.push(2) : ''
+  str.indexOf(',3,') ? brand.push(3): ''
+  return brand
+}
 export default {
-  formatNumber,
-  formatTime
+  getBrand
 }

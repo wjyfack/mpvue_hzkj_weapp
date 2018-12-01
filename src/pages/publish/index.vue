@@ -13,55 +13,59 @@
             <div class="textarea-hi">
                 <van-cell-group class="textarea-hi">
                     <van-field
-                        :value="title"
+                       
                         placeholder="在此填写标题"
                         :border=" true"
                         maxlength= "30"
                         @change="onChangeTittle"
                     />
                     <van-field
-                        :value="deatil"
                         placeholder="在此输入更加详细的信息~"
                         type="textarea"
                         :border="false"
                         autosize
-                        @change="onChangedetail" 
+                        @change="onChangeDetail" 
                     />
 
                 </van-cell-group> 
             </div>
-            <div class="addr" @click="onCloseAddr">
+            <!-- <div class="addr" @click="onCloseAddr">
                 <van-icon name="location"></van-icon>
                 <div class="addr_detail">{{area.province}} {{area.city}}</div>
-            </div>
+            </div> -->
             <div class="bell">
                 <div class="cells van-hairline--bottom" @click="onCloseSort">
                     <div class="name">分类</div>
-                    <div class="detail">分类 <img src="../../../static/imgs/arrow.png" class="arrow"></div>
+                    <div class="detail">{{sort}} <img src="../../../static/imgs/arrow.png" class="arrow"></div>
                 </div>
             </div>
             <div class="more_add">
                 <van-cell-group>
                     <van-field
+                        label="期望天数"
+                        placeholder="输入期望天数~"
+                        :border=" true"
+                         @change="onChangQiwan" 
+                    />
+                    <van-field
                         label="预算"
-                        :value="yunsuan"
                         placeholder="输入您预算的金额~"
                         :border=" true"
-                        
+                         @change="onChangeDudget" 
                     />
                     <van-field
                         label="联系手机"
                         :value="phone"
                         placeholder="输入您的手机号码~"
                         :border=" true"
-                        
+                         @change="onChangePhone" 
                     />
                     <van-field
                         label="联系人"
                         :value="concat"
                         placeholder="怎么称呼您呢？"
                         :border=" true"
-                        
+                         @change="onChangeName" 
                     />
                 </van-cell-group>
             </div>
@@ -76,76 +80,87 @@
             <div class="tree-select">
                 <div class="tree-select__nav">
                     <div
-                    v-for="(item, index) in 5"
+                    v-for="(item, index) in sortOneList"
                     :key="key"
                     class="tree-select__nitem van-ellipsis"
-                    @click="onClickNav(index)"
+                    @click="onClickNav(item.cat_id,index)"
                     :class="{'tree-select__nitem--active': index == sortOne}"
                     >
-                    分类１
+                    {{item.cat_name}}
                     </div>
                 </div>
                 <div class="tree-select__content">
                     <div
-                    v-for="(item, index) in 5"
+                    v-for="(item, index) in sortTwoList"
                     :key="key"
                     class="tree-select__item van-ellipsis"
                     :class="{'tree-select__item--active': index == sortTwo}"
-                    @click="onSelectItem(index)"
+                    @click="onSelectItem(item.cat_id,item.cat_name,index)"
                     >
-                    分类２
+                    {{item.cat_name}}
                     </div>
                 </div>
             </div>
         </van-popup>
-        <van-popup :show="isAddr" @close="onCloseAddr" position="bottom" custom-class="sort_tree">
+        <!-- <van-popup :show="isAddr" @close="onCloseAddr" position="bottom" custom-class="sort_tree">
             <van-area :area-list="areaList" :columns-num="2" @cancel="onCloseAddr" @confirm="getAddr"/>
-        </van-popup>
+        </van-popup> -->
     </div>
-</template>
+</template> 
 <script>
 import Toast from '../../../static/vant/toast/toast';
+import * as Params from '@/utils/params'
+import fly from '@/utils/fly'
 export default {
     data() {
         return {
-            title: ''
+            sort: '分类'
+            ,imgArr: []
             ,isSort: false // 分类
-            ,isAddr: false //地址选择
             ,isBtn: true
-            ,detail: ''
-            ,imgArr: [] // 图片
             ,sortOne: 0
             ,sortTwo: 0
-            ,area: { // 地区
-                city: ''
-                ,code: '0'
-                ,province: '请选择'
+            ,sortOneList: []
+            ,sortTwoList: []
+            ,reg_phone: /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/ // 验证手机号
+            ,reg_num: /\d*$/
+            ,demandData: {
+                user_id: 0
+                ,cat_id: 0
+                ,title: ''
+                ,content: ''
+                ,budget: 0
+                ,contact_name: ''
+                ,contact_phone: ''
+                ,qiwang_days: 0
+                ,pics_str: []
             }
-            ,areaList: {
-                province_list: {
-                    110000: '北京市',
-                    120000: '天津市'
-                },
-                city_list: {
-                    110100: '北京市',
-                    110200: '县',
-                    120100: '天津市'
-                },
-                county_list: {
-                    110101: '东城区',
-                    110102: '西城区',
-                    110105: '朝阳区'                 
-                }
-            }
+            
         }
     }
-    
-    ,methods: {
-        onChangeTittle(event) {
-           this.title = event.mp.detail
+    ,computed: {
+        userData(){
+            return wx.getStorageSync('userData')
         }
-        ,onChangedetail(event) {
-           this.detail = event.mp.detail
+    }
+    ,methods: {
+         onChangeTittle(event) {
+           this.demandData.title = event.mp.detail
+        }
+        ,onChangeDetail(event) {
+           this.demandData.content = event.mp.detail
+        }
+        ,onChangQiwan(event) {
+             this.demandData.qiwang_days = event.mp.detail
+        }
+        ,onChangeDudget(event) {
+            this.demandData.budget = event.mp.detail
+        }
+        ,onChangeName(event) {
+            this.demandData.contact_name = event.mp.detail
+        }
+        ,onChangePhone(event) {
+            this.demandData.contact_phone = event.mp.detail
         }
         ,onImage() {
             let _this = this
@@ -160,6 +175,25 @@ export default {
                 ,success(res) {
                     // console.log(res)
                     _this.imgArr.push(res.tempFilePaths)
+                   
+                    //console.log(res)
+                    wx.uploadFile({
+                        url: Params.default.host+'/?v=V1&g=Common&c=Upload&a=uploadImage'+Params.default.param,
+                        filePath: res.tempFilePaths[0],
+                        name: 'file',
+                        formData: {
+                            'img_classify': 'doctor'
+                        },
+                        success (datas){
+                             const data = JSON.parse(datas.data)
+                            console.log(data)
+                            if(data.code == 0) {
+                                 _this.demandData.pics_str.push(data.data.img_path)
+                            } else {
+                                Toast('上传失败')
+                            }
+                        }
+                    })
                 }
                 ,fail(res) {
                     console.log(res)
@@ -168,49 +202,97 @@ export default {
         }
         ,onClose(index) {
            this.imgArr.splice(index,1);
+           this.demandData.pics_str.splice(index,1);
         }
-        ,onPublish(){
-            console.log('发表')
-            wx.request({
-            url: 'https://www.cdxscn.com/doctor_repair.php', //仅为示例，并非真实的接口地址
-            data: {
-                act:'ajax_repair_list'
-                ,cat_id:0
-                ,field_ids:	''
-                ,keyword:''
-                ,page:1
-                ,region_sheng:0
-                ,region_shi:0
-            },
-            header: {
-                'content-type': 'application/json' // 默认值
-            },
-            success (res) {
-                console.log(res.data)
-            }
+        ,getSort(pid) {
+            fly.post('/?v=V1&g=Doctor&c=Cat&a=getCatsByPid'+Params.default.param, {
+                pid: pid
+                ,cat_type: 1
+            }).then((res) => {
+                if(pid == 0) {
+                    this.sortOneList = res.data.list
+                } else {
+                    this.sortTwoList = res.data.list
+                }
             })
         }
+        ,onPublish(){
+           
+            this.demandData.user_id = this.userData.user_id
+            if(this.demandData.user_id <= 0) {
+                Toast('请登录')
+                wx.navigateTo({url: '../my_login/main'})
+                return;
+            }
+            if(this.demandData.title == '') {
+                Toast('请输入标题')
+                return;
+            }
+            if(!this.reg_num.test(this.demandData.qiwang_days)) {
+                Toast('请输入天数')
+                return;
+            }
+            if(!this.reg_num.test(this.demandData.budget)) {
+                Toast('预算价格有误')
+                return;
+            }
+            if(!this.reg_phone.test(this.demandData.contact_phone)) {
+                Toast('电话号有误')
+                return;
+            }
+            if(this.demandData.content == '') {
+                Toast('请输入详情')
+                return;
+            }
+            // 新增需求（必须登录）
+            // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=Demand&a=addDemand
+            // user_id
+            // cat_id
+            // title
+            // content
+            // budget
+            // contact_name
+            // contact_phone
+            // qiwang_days
+            // pics_str
+            fly.post('/?v=V1&g=Doctor&c=Demand&a=addDemand'+Params.default.param,this.demandData)
+                .then((res) => {
+                    if(res.code == 0) {
+                        if(res.data.demand_id) {
+                            Toast('发布成功')
+                            setTimeout(()=>{
+                                wx.navigateBack({delta: 1})
+                            },1000)
+                        }
+                       
+                    }else {
+                        Toast(res.message)
+                    }
+                })
+        }
        
-        ,onCloseSort() {
+       ,onCloseSort() {
             this.isSort = !this.isSort            
             this.isBtn = this.isSort ? false:true
           
         }
-        ,onCloseAddr() { // 地址选择
-            this.isAddr = !this.isAddr
-            this.isBtn = this.isAddr ? false:true
-        }
-        ,getAddr(event) {
-            // console.log(event.mp.detail)
-            this.area = event.mp.detail.detail
-            this.onCloseAddr()
-        }
-        ,onClickNav(index) {
+        ,onClickNav(pid,index) {
             this.sortOne = index
+            this.getSort(pid)
         }
-        ,onSelectItem(index){
+        ,onSelectItem(pid,name,index){
             this.sortTwo = index
+            this.demandData.cat_id = pid
+            this.sort = name
             this.onCloseSort()
+        }
+    }
+    ,mounted: function(){
+        this.getSort(0)
+        console.log(this.userData)
+        if(this.userData.user_id <= 0) {
+            Toast('请先登录')
+            wx.navigateTo({url: '../my_logins/main'})
         }
     }
     
@@ -333,7 +415,8 @@ export default {
   -webkit-user-select: none;
   user-select: none;
   position: relative;
-  font-size: 16px
+  font-size: 16px;
+   min-height: 200px;
 }
 
 .tree-select__nav {

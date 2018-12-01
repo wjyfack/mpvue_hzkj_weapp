@@ -22,7 +22,7 @@
          <img src="../../static/imgs/weixiu.png" alt="" class="service-img">
          <div class="service-name">项目维修</div>
        </div>
-       <a href="../demand_publish/main" class="service-item">
+       <a href="../publish/main" class="service-item">
          <img src="../../static/imgs/xuqiu.png" alt="" class="service-img">
          <div class="service-name">需求发布</div>
        </a>
@@ -30,10 +30,10 @@
          <img src="../../static/imgs/wenda.png" alt="" class="service-img">
          <div class="service-name">咨询发布</div>
        </a>
-       <div class="service-item">
+       <a href="../expert_list/main" class="service-item">
          <img src="../../static/imgs/zhuanjia.png" alt="" class="service-img">
          <div class="service-name">专家服务</div>
-       </div>
+       </a>
       </div>
     </div>
     
@@ -42,10 +42,10 @@
       <!-- 专家列表 -->
       <div class="head">
         <div class="titl">专家列表</div>
-        <div class="more">更多>></div>
+        <a href="../expert_list/main" class="more">更多>></a>
       </div>
       <div class="expert">
-        <a :href="'../xxx/main?id='+item.user_id" class="expert-item" v-for="(item, index) in expertList" :key="key">
+        <a :href="'../person_home/main?id='+item.user_id" class="expert-item" v-for="(item, index) in expertList" :key="key">
           <img :src="item.user_picture" alt="" class="expert-img">
           <div class="expert-name">{{item.real_name}}</div>
         </a>
@@ -53,10 +53,10 @@
       <!-- 文章列表 -->
       <div class="head">
           <div class="titl">文章列表</div>
-          <a href="/pages/counter/main" class="more">更多>></a>
+          <a href="/pages/article_list/main" class="more">更多>></a>
         </div>
       <div class="article">
-        <a :href="'/pages/article/main?id='+item.id" class="article-item" v-for="(item, index) in articleList" :key="key">
+        <a :href="'/pages/detail_article/main?id='+item.id" class="article-item" v-for="(item, index) in articleList" :key="key">
           <div class="art-title van-ellipsis van-hairline--bottom">{{item.title}}</div>
           <div class="min_time">{{item.add_time}}</div>
         </a>
@@ -65,7 +65,7 @@
     <van-tabs :active="active" @change="onChange" :color="'#5887F9'" :custom-class="scrollTop">
       <!-- 选择框 -->
       <div class="select" :class="{selects: scrollTop != ''}">
-        <div class="select-item">
+        <!-- <div class="select-item">
           <div class="select-item-name" :class="{'active': isPrice}" @click="onSelect(1)"> <span>默认排序<van-icon name="arrow" class="arrow-icon"/></span></div>
           <van-transition :show="isPrice" :name="'fade-down'">
             <div class="select-pos">
@@ -84,7 +84,7 @@
               <div class="pos-item van-hairline--top">价格由低到高</div>
             </div>
           </van-transition>
-        </div>
+        </div> -->
       </div>
       <van-tab title="项目维修">
         <div class="repair">
@@ -132,7 +132,6 @@
       </van-tab>
       <van-tab title="问题咨询">
         <div class="consult">
-            
             <a :href="'../detail_consult/main?id='+item.id" class="consult-item van-hairline--bottom" v-for="(item, index) in consultList" :key="key">
                 <div class="cont">
                     <div class="title van-multi-ellipsis--l2">{{item.title}}</div>

@@ -23,7 +23,7 @@
             
         </div>
         <div class="btn-group">
-            <div class="btn"><img src="../../../static/imgs/con_hui.png" alt="" class="btn-img" @click="toColse">回答</div>
+            <div class="btn"><img src="../../../static/imgs/con_hui.png" alt="" class="btn-img">回答</div>
             <div class="btn"><img src="../../../static/imgs/con_ju.png" alt="" class="btn-img">举报</div>
             <!-- <div class="btn fr"><img src="../../../static/imgs/con_zhui.png" alt="" class="btn-img">追加悬赏</div> -->
         </div>
@@ -35,7 +35,7 @@
                 <div class="infod">
                     <img :src="item.user_picture" alt="" class="avatar">
                     <div class="cont">
-                        <span class="name">{{item.nick_name}}</span>
+                        <span class="name">{{item.nick_name}}}</span>
                         <span class="barnd">{{item.user_label}}</span>
                     </div>
                 </div>
@@ -62,34 +62,12 @@
     </div>
     <div class="gix-tab van-hairline--top">
         <div class="tab-bottom">
-            <div class="ans" @click="toColse">发表回复...</div>
+            <div class="ans">发表回复...</div>
             <div class="tab-item"><img src="../../../static/imgs/con_hui.png" alt="" class="img"></div>
             <div class="tab-item"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
             <div class="tab-item"><img src="../../../static/imgs/rp_share.png" alt="" class="img"></div>
         </div>
     </div>
-    <van-popup :show="show" @close="toColse" position="bottom">
-        <div class="commit">
-            <div class="commit-header"><div @click="toColse">取消</div>　<div @click="onSubmit">确定</div></div>
-           
-            <van-cell-group>
-            <!-- <van-radio-group :value="radio" @change="onChangeRadio">
-                <van-radio name="1">匿名</van-radio>
-                <van-radio name="0">不匿名</van-radio>
-            </van-radio-group> -->
-            <van-field
-                :value="cont"
-                placeholder="请输入内容"
-                type="textarea"
-                :border="false"
-                autosize
-                @change="onChangeCont"
-            />
-            </van-cell-group>
-
-        </div>
-    </van-popup>
-
 </div>
 </template>
 <script>
@@ -99,10 +77,7 @@ export default {
     data() {
         return {
             id: 0
-            ,show: false
             ,active: 0
-            ,radio: 0
-            ,cont: ''
             ,info: {}
             ,myInfo: {}
             ,toUserInfo: {}
@@ -140,49 +115,12 @@ export default {
                 }
             })
         }
-        ,toColse() {
-            this.show = !this.show
-        }
-        ,onChangeRadio(event) {
-            this.radio = event.mp.detail
-        }
-        ,onChangeCont(event) {
-            this.cont = event.mp.detail
-        }
-        ,onSubmit() {
-            if(this.cont == '') {
-                return ''
-            }
-          
-            // 咨询评论和回复(必须登录)
-            // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=Consult&a=postConsultComment
-            // content
-            // consult_id
-            // comment_id		//回复时必填这个和to_user_id，评论时没有这两个参数
-            // to_user_id
-            // is_niming			//1匿名 0 不匿名
-            fly.post('/?v=V1&g=Doctor&c=Consult&a=postConsultComment'+Params.default.param,{
-                consult_id: this.id
-                ,content: this.cont
-                ,is_niming: this.radio
-            }).then((res)=> {
-                console.log(res)
-                if(res.code == 0) {
-                    this.show = false
-                    this.cont = ''
-                    this.getComment()
-                } else {
-                    console.log(res.message)
-                }
-            })
-
-        }
     }
     ,mounted() {
         this.id = this.$mp.query.id
-        this.getData()
-        this.getComment()
-        // console.log(this.id)
+        //this.getData()
+        //this.getComment()
+         console.log(this.id)
     },
 }
 </script>
@@ -351,17 +289,6 @@ export default {
                 .img {width:26px;height: 25px;vertical-align: middle;}
             }
         }
-    }
-}
-.commit {
-    min-height: 150px;
-   
-    .commit-header {
-        display:flex;
-        padding: 10px 20px;
-        justify-content: space-between;
-        font-size: 14px;
-        color:#5887F9;
     }
 }
 </style>

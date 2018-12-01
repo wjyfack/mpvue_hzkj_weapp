@@ -106,7 +106,7 @@ export default {
             ,sortOneList: []
             ,sortTwoList: []
             ,reg_phone: /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/ // 验证手机号
-            ,reg_num: /^[1-9]\d*$/
+            ,reg_num: /\d*$/
             ,demandData: {
                 user_id: 0
                 ,cat_id: 0
@@ -210,7 +210,7 @@ export default {
                 Toast('请输入标题')
                 return;
             }
-            if(this.reg_num.test(this.demandData.qiwang_days)) {
+            if(this.demandData.qiwang_days　> 0) {
                 Toast('请输入天数')
                 return;
             }

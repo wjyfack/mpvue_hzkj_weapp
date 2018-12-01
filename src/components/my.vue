@@ -69,7 +69,7 @@
             </a>
             <a href="../my_renzheng/main" class="nongne_item van-hairline--bottom">
                 <img src="../../static/imgs/my_card.png" alt="" class="nongne_img" mode="widthFix">
-                <div class="name">实名认证 <div class="res">(立即去认证)</div></div>
+                <div class="name">实名认证 <div class="res">({{shiNameStatus}})</div></div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
             </a>
             <a href="../my_problem/main" class="nongne_item van-hairline--bottom">
@@ -97,7 +97,8 @@ import fly from '@/utils/fly'
 export default {
     data(){
         return {
-            baseInfo: {
+            shiNameStatus: '立即去认证'
+            ,baseInfo: {
                 user_picture: ''
                 ,nick_name: ''
                 ,user_money:0
@@ -130,6 +131,29 @@ export default {
                     }
                 })
         }
+        ,getshiName() {
+            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=User&a=getMyRealInfo&s='+this.userData.session_id)
+                .then((res)=>{
+                    console.log(res.data.user_real_info.review_status)
+                    if(res.code == 0) {
+                        let name = '立即去认证'
+                        switch(~~(res.data.user_real_info.review_status)) {
+                            case 0:
+                                name = '未审核'
+                            break;
+                            case 1:
+                                name = '通过'
+                            break;
+                            case 2:
+                                name = '不通过'
+                            break;
+                           
+                        }
+                        this.shiNameStatus = name
+                       
+                    }
+                })
+        }
     }
     ,mounted(){
         let _this = this
@@ -138,7 +162,48 @@ export default {
                 console.log(key)
                 //session_key 未过期，并且在本生命周期一直有效
                 // 获取个人信息
+                wx.login({
+                success (res) {
+                    if (res.code) {
+                       wx.getStorage({
+                        key: 'userInfo',
+                        success (data) {
+                            // console.log(data.data)
+                            let userData = data.data
+                            //发起网络请求
+                            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=Login&a=login', {
+                                login_type: 'wx_minprogram'
+                                ,encrypted_data: userData.encryptedData
+                                ,iv: userData.iv
+                                ,raw_data: userData.rawData
+                                ,signature: userData.signature
+                                // ,useInfo: userData.useInfo
+                                ,js_code: res.code
+                            }).then(function (response) {
+                                console.log(response.data)
+                                if(response.code == 0) {
+                                   wx.setStorage({
+                                    key:"userData",
+                                    data:response.data
+                                    })
+                                   if(response.data.user_id > 0) {// 有用户信息
+
+                                   } else { // 前去绑定帐号
+                                    wx.navigateTo({url: '../my_login/main'})
+                                   }
+                                }
+                            })
+                            
+                        }
+                        })
+                     
+                    } else {
+                    console.log('登录失败！' + res.errMsg)
+                    }
+                }
+              })
                 _this.getInfo()
+                _this.getshiName()
             },
             fail () { 
               wx.login({

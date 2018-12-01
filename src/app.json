@@ -17,9 +17,11 @@
     ,"pages/detail_consult/main"
     ,"pages/detail_order/main"
     ,"pages/pingjia_detail/main"
+    ,"pages/detail_article/main"
     ,"pages/detail_demand/main"
     ,"pages/baojia/main"
     ,"pages/person_home/main"
+    ,"pages/article_list/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

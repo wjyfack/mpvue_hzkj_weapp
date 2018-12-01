@@ -27,7 +27,7 @@
             <div class="consult-hd van-hairline--bottom">
                 <div class="hd">精选咨询</div>
             </div>
-            <a href="id" class="consult-item van-hairline--bottom" v-for="(item,index) in consultList" :key="key">
+            <a :href="'../detail_consult/main?id='+item.id" class="consult-item van-hairline--bottom" v-for="(item,index) in consultList" :key="key">
                 <div class="cont">
                     <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
                     <div class="mini">

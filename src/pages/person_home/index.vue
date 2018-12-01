@@ -1,20 +1,20 @@
 <template>
 <div class="person">
     <div class="header">
-        <div class="ruzhu">
-            <div>入驻时间: 2018-11-12</div>
-            <div> 从业时间: 13年</div>
+        <div class="ruzhu" v-if="user_info.extend == 'undefined'">
+            <div>入驻时间: {{user_info.extend.ruzhu_time}}</div>
+            <div> 从业时间: {{user_info.zhiye_nianxian}}年</div>
         </div>
         <div class="info">
-            <img src="http://placehold.it/100x100" alt="" class="avatar">
+            <img :src="user_info.user_picture" alt="" class="avatar">
             <div class="person">
-                <div class="name">伍师傅</div>
+                <div class="name">{{user_info.nick_name}}</div>
                 <div class="barnd">
                     <img src="../../../static/imgs/p_gong.png" alt="" class="b-img">
                     <img src="../../../static/imgs/p_zhuan.png" alt="" class="b-img">
                     <img src="../../../static/imgs/p_zuo.png" alt="" class="b-img">
                 </div>
-                <div class="jie">伍师傅</div>
+                <div class="jie">暂无信息</div>
             </div>
         </div>
     </div>
@@ -23,56 +23,329 @@
                 <div class="opt-btn">找他维修</div>
                 <div class="opt-btn c1">关注Ta</div>
             </div>
-            <div class="star">
+            <div class="star" v-if="user_info.extend == 'undefined'">
                 <div class="star-item van-hairline--right">
-                    <div class="star-img"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
+                    <!-- <div class="star-img"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div> -->
+                    <div class="cride">{{user_info.extend.xinyongdu}}</div>
                     <div>好评率</div>
                 </div>
                 <div class="star-item van-hairline--right">
-                    <div class="star-img"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
+                    <!-- <div class="star-img"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div> -->
+                    <div class="cride">{{user_info.extend.zhuanyedu}}%</div>
                     <div>专业程度</div>
                 </div>
                 <div class="star-item">
-                   <div class="cride">100</div>
+                   <div class="cride">{{user_info.extend.haopinglv}}</div>
                     <div>好评率</div>
                 </div>
             </div>
-            <div class="goodfor van-hairline--bottom">
-                <div class="goodfor-item">加工中心</div>
-                <div class="goodfor-item">加工中心</div>
+            <div class="goodfor van-hairline--bottom" v-if="user_info.extend == 'undefined'">
+                <div class="goodfor-item" v-for="(item,idex) in user_info.extend.shanchanglingyu" :key="key">{{item}}</div>
             </div>
             <div class="guangzu">
                 <div class="guangzu-item van-hairline--right">
-                    <span class="b">22，000</span>
+                    <span class="b">{{user_info.focus_me}}</span>
                     <span>关注Ta的人</span>
                 </div>
                 <div class="guangzu-item">
-                    <span class="b">22，000</span>
+                    <span class="b">{{user_info.my_focus}}</span>
                     <span>Ta关注的人</span>
                 </div>
             </div>
         </div>
     <van-tabs :active="active" @change="onChange" color="#5887F9">
-        <van-tab title="动态">内容 1</van-tab>
-        <van-tab title="参与问答">内容 2</van-tab>
-        <van-tab title="维修项目">内容 3</van-tab>
-        <van-tab title="文章">内容 4</van-tab>
+        <van-tab title="动态">
+            <div class="dongtai" v-for="(item,index) in MixinsList" :key="key">
+                <a :href="'../detail_repair/main?id='+item.repair_id" class="repair-item" v-if="item.type == 'new_repair'">
+                    <div class="tade"><div>他发布了新的维修</div><div>{{item.add_time}}</div></div>
+                    <div class="repair-imgs">
+                    <div class="img-item" v-for="(items, indexs) in item.pics_str" :key="keys"><img :src="items" alt="" class="img"></div>
+                    </div>
+                    <div class="repair-title">{{item.title}}</div>
+                    <div class="repair-price"><div class="yy">¥</div>　<div>{{item.price}}</div>  </div>
+                </a>
+                <a :href="'../detail_consult/main?id='+item.consult_id" class="consult-item van-hairline--bottom" v-else-if="item.type == 'new_consult'">
+                    <div class="tade"><div>他发布了新的咨询</div><div>{{item.add_time}}</div></div>
+                   
+                    <div class="cont">
+                        <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
+                        <div class="mini">
+                            <div>{{item.read_count}}阅读</div>
+                            <div>{{item.comment_count}} 评论</div>
+                        </div>
+                    </div>
+                
+                </a>
+                <!-- 文章 -->
+                 <a :href="'../detail_article/main?id='+item.article_id" class="article-item van-hairline--bottom" v-else-if="item.type == 'new_article'">
+                    <div class="tade"><div>他发布了新的文章</div><div>{{item.add_time}}</div></div>
+                    <div class="con">
+                        <div class="cont">
+                            <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
+                            <div class="mini">
+                                <div>{{item.read_count}}阅读</div>
+                                <div>{{item.comment_count}} 评论</div>
+                            </div>
+                        </div>
+                        <img src="item.list_pic" alt="" class="img">
+                    </div>
+                    
+                </a>
+                <a :href="'../detail_article/main?id='+item.article_id" class="article-item van-hairline--bottom" v-else-if="item.type == 'new_article_comment'">
+                    <div class="tade"><div>他回答了该的文章</div><div>{{item.add_time}}</div></div>
+                    <div class="ans">回答内容：　{{item.comment}}</div>
+                    <div class="con">
+                        <div class="cont">
+                            <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
+                            <div class="mini">
+                                <div>{{item.read_count}}阅读</div>
+                                <div>{{item.comment_count}} 评论</div>
+                            </div>
+                        </div>
+                        <img src="item.list_pic" alt="" class="img">
+                    </div>
+                    
+                </a>
+                <a :href="'../detail_consult/main?id='+item.consult_id" class="new-consult-item" v-else-if="item.type == 'new_consult_comment'">
+                    <div class="tade"><div>他回答了问题</div><div>{{item.add_time}}</div></div>
+                    <div class="commit">{{item.comment}}</div>
+                    <div class="cont">
+                        <div class="or_cont">
+                            <div class="title">
+                               {{item.title}}
+                            </div>
+                             <div class="mini-title">{{item.content}}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </van-tab>
+        <van-tab title="参与问答">
+            <div class="dongtai" v-for="(item,index) in ansList" :key="key">
+                 <a :href="'../detail_consult/main?id='+item.consult_id" class="consult-item van-hairline--bottom" v-if="item.type == 'new_consult'">
+                    <div class="tade"><div>他发布了新的咨询</div><div>{{item.add_time}}</div></div>
+                    <div class="cont">
+                        <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
+                        <div class="mini">
+                            <div>{{item.read_count}}阅读</div>
+                            <div>{{item.comment_count}} 评论</div>
+                        </div>
+                    </div>
+                </a>
+                <a :href="'../detail_consult/main?id='+item.consult_id" class="new-consult-item" v-else-if="item.type == 'new_consult_comment'">
+                    <div class="tade"><div>他回答了问题</div><div>{{item.add_time}}</div></div>
+                    <div class="commit">{{item.comment}}</div>
+                    <div class="cont">
+                        <div class="or_cont">
+                            <div class="title">
+                               {{item.title}}
+                            </div>
+                             <div class="mini-title">{{item.content}}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </van-tab>
+        <van-tab title="维修项目">
+            <div class="dongtai">
+                <a :href="'../detail_repair/main?id='+item.repair_id" class="repair-item" v-for="(item,index) in repairList" :key="key">
+                    <div class="tade"><div>他发布了新的维修</div><div>{{item.add_time}}</div></div>
+                    <div class="repair-imgs">
+                    <div class="img-item" v-for="(items, indexs) in item.pics_str" :key="keys"><img :src="items" alt="" class="img"></div>
+                    </div>
+                    <div class="repair-title">{{item.title}}</div>
+                    <div class="repair-price"><div class="yy">¥</div>　<div>{{item.price}}</div>  </div>
+                </a>
+            </div>
+        </van-tab>
+        <van-tab title="文章">
+            <div class="dongtai" v-for="(item,index) in articleList" :key="key">
+                <a :href="'../detail_article/main?id='+item.article_id" class="article-item van-hairline--bottom" v-if="item.type == 'new_article'">
+                    <div class="tade"><div>他发布了新的文章</div><div>{{item.add_time}}</div></div>
+                    <div class="con">
+                        <div class="cont">
+                            <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
+                            <div class="mini">
+                                <div>{{item.read_count}}阅读</div>
+                                <div>{{item.comment_count}} 评论</div>
+                            </div>
+                        </div>
+                        <img src="item.list_pic" alt="" class="img">
+                    </div>
+                </a>
+                 <a :href="'../detail_article/main?id='+item.article_id" class="article-item van-hairline--bottom" v-else-if="item.type == 'new_article_comment'">
+                    <div class="tade"><div>他回答了该的文章</div><div>{{item.add_time}}</div></div>
+                    <div class="ans">回答内容：　{{item.comment}}</div>
+                    <div class="con">
+                        <div class="cont">
+                            <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
+                            <div class="mini">
+                                <div>{{item.read_count}}阅读</div>
+                                <div>{{item.comment_count}} 评论</div>
+                            </div>
+                        </div>
+                        <img src="item.list_pic" alt="" class="img">
+                    </div>
+                    
+                </a>
+            </div>
+        </van-tab>
     </van-tabs>
+     <van-toast id="van-toast" />
 </div>
 </template>
 <script>
+import fly from '@/utils/fly'
+import * as Params from '@/utils/params'
+import Toast from '../../../static/vant/toast/toast';
 
 export default {
     data() {
         return {
-            active: 0
+            id: 0
+            ,active: 0
+            ,user_info: {
+                user_id: 0,
+                nick_name: '',
+                user_picture: '',
+                real_name: '',
+                status: 1,
+                zhiye_nianxian: 7,
+                extend: {
+                    ruzhu_time: '',
+                    haopinglv: 100,
+                    zhuanyedu: 100,
+                    xinyongdu: 100,
+                    shanchanglingyu: []
+                },
+                my_focus: 0,
+                focus_me: 0
+            }
+            ,MixinsList: []
+            ,repairList: []
+            ,articleList: []
+            ,ansList: []
+            ,type: 'all' //默认all,consult,repair,article
+            ,page: 1
+            ,mPage: 1
+            ,repairPage:1
+            ,ansPage: 1
+            ,artPage: 1
         }
     }
     ,methods: {
         onChange(e) {
-            
             this.active = e.mp.detail.index
+            
         }
+        ,getPerson() {
+           fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndex'+Params.default.param,{
+               user_id:this.id
+           }).then((res) =>{
+               console.log(res)
+               if(res.code == 0) {
+                   this.user_info = res.data.user_info
+               }
+            })     
+        }
+        ,getList() {
+            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Params.default.param,{
+               user_id:this.id
+               ,type: this.type //默认all,consult,repair,article
+               ,page: this.page
+           }).then((res) =>{
+              // console.log(res)
+               Toast.clear()
+               if(res.code == 0) {
+                   switch(this.active) {
+                        case 0:
+                        this.MixinsList = this.MixinsList.concat(res.data.list)
+                        break
+                        case 1:
+                        this.ansList = this.ansList.concat(res.data.list)
+                        break
+                        case 2:
+                        this.repairList = this.repairList.concat(res.data.list)
+                        break
+                        case 3:
+                        this.articleList = this.articleList.concat(res.data.list)
+                        break
+                    }
+                   
+               }
+            })
+        }
+        ,getAnsList() {
+            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Params.default.param,{
+               user_id:this.id
+               ,type: 'consult' //默认all,consult,repair,article
+               ,page: 1
+           }).then((res) =>{
+               if(res.code == 0) {
+                    this.ansList = this.ansList.concat(res.data.list)
+                }
+            })
+        }
+        ,getRepairList() {
+            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Params.default.param,{
+               user_id:this.id
+               ,type: 'repair' //默认all,consult,repair,article
+               ,page: 1
+           }).then((res) =>{
+               if(res.code == 0) {
+                    this.repairList = this.repairList.concat(res.data.list)
+                }
+            })
+        }
+        ,getArtList() {
+            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Params.default.param,{
+               user_id:this.id
+               ,type: 'article' //默认all,consult,repair,article
+               ,page: 1
+           }).then((res) =>{
+               if(res.code == 0) {
+                    this.articleList = this.articleList.concat(res.data.list)
+                }
+            })
+        }
+    }
+    ,mounted() {
+        this.id = this.$mp.query.id
+        Toast.loading({
+        mask: true,
+        message: '加载中...'
+        })
+        this.getPerson()
+        this.getList()
+        this.getAnsList()
+        this.getRepairList()
+        this.getArtList()
+    }
+    ,onReachBottom(){ // 底部添加更多
+      
+        switch(this.active) {
+            case 0:
+            this.type = 'all'
+            this.page = this.mPage++
+            break
+            case 1:
+            this.type = 'consult'
+            this.page = this.ansPage++
+            break
+            case 2:
+            this.type = 'repair'
+            this.page = this.repairPage++
+            break
+            case 3:
+            this.type = 'article'
+             this.page = this.artPage++
+            break
+        }
+        Toast.loading({
+        mask: true,
+        message: '加载中...'
+        })
+        this.getList()
     }
 }
 </script>
@@ -176,5 +449,190 @@ export default {
         }
     }
 }
+.dongtai {
+    background: #f9f9f9;
+}
+.repair-item {
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background: #FFFFFF;
+    .repair-header {
+      display: flex;
+      padding: 5px 0;
+      .actor {width: 27px;height: 27px;margin-right: 10px;border-radius: 50%;}
+      .self{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .name {font-size:12px;color:#4C5264; border-radius: 50%;}
+        .info{
+          font-size: 8px;
+          display: flex;
+
+          .addr {color: #A7A7A7;}
+          .online {color:#2ECB8B;}
+          .unline {color: #A7A7A7;}
+        }
+      }
+    }
+    .repair-imgs {
+      display: -webkit-box;
+      overflow-x: scroll;
+      -webkit-overflow-scrolling: touch;
+      height: 90px;
+      .img-item {
+        width: 80px;
+        height: 80px;
+        border-radius: 5px;
+        margin-right: 10px;
+        .img {width: 100%;height:100%;border-radius: 5px;}
+      }
+    }
+    .repair-title {
+      font-size: 12px;
+      color:#4C5264;
+      padding-bottom: 5px;
+    }
+    .repair-price {
+      display:flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      color: #FC5F6B;
+      font-size: 12px;
+      .yy {
+        font-size: 8px;
+      }
+    }
+  }
+  .xuqiu-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background: #FFFFFF;
+    .title {color:#4C5264;font-size: 12px;}
+    .cont {color:#8D8D8D;font-size: 10px;}
+    .name {font-size:10px;color: #A7A7A7;display: flex;justify-content: space-between;align-items: center;}
+    .xuqiu-imgs {
+      display: -webkit-box;
+      overflow-x: scroll;
+      -webkit-overflow-scrolling: touch;
+      height: 90px;
+      .img-item {
+        width: 80px;
+        height: 80px;
+        border-radius: 5px;
+        margin-right: 10px;
+        .img {width: 100%;height:100%;border-radius: 5px;}
+      }
+    }
+    .bar {
+      display: flex;
+      margin-top: 5px;
+      &-item {
+        color:#5887F9;
+        font-size: 10px;
+        background: #E8EFFF;
+        padding: 0px 12px;
+        border-radius: 10px;
+        margin-right: 10px;
+      }
+    }
+  }
+.consult-item {
+    background: #FFFFFF;
+    padding:10px 20px;
+    margin-bottom: 10px;
+   
+    .cont {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-right: 10px;
+        .title {
+            font-size: 14px;
+            color: #4C5264;
+        }
+        .mini {
+            display: flex;
+            justify-content: space-between;
+            color:#A1A1A1;
+            font-size: 10px;
+            padding: 5px 0;
+        }
+    }  
+}
+.article-item {
+    background: #FFFFFF;
+    padding:10px 20px;
+    margin-bottom: 10px;
+    .ans {color:#4C5264;font-size: 14px;}
+    .con {
+        display: flex;
+        justify-content: space-between;
+        .img {
+            width: 111px;
+            height: 67px;
+            border-radius:5px;
+        }
+        .cont {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-right: 10px;
+            .title {
+                font-size: 14px;
+                color: #4C5264;
+            }
+            .mini {
+                display: flex;
+                justify-content: space-between;
+                color:#A1A1A1;
+                font-size: 10px;
+                padding: 5px 0;
+            }
+        } 
+    }
+   
+    
+}
+.new-consult-item{
+    background: #ffffff;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+     .commit {color:#4C5264;font-size: 14px;}
+     .cont {
+         background: #F9F9F9;
+         margin: 10px 0;
+         display: flex;
+         .or_cont {
+             flex: 1;
+             display: flex;
+             flex-direction: column;
+             justify-content: space-around;
+             padding-left: 10px;
+             .title {
+                 color:#4C5264;
+                 font-size: 14px;
+             }
+             .mini-title {
+                 color:#A2A2A2;
+                 font-size: 10px;
+             }
+         }
+     }
+
+}
+.tade {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color:#8B8B8B;
+}
+
 </style>
 
