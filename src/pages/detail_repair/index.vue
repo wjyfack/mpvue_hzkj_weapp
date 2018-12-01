@@ -12,7 +12,7 @@
             <!-- 轮播图 end-->
             <div class="tou">
                 <div class="head">
-                    <div class="price"><div class="yan">￥</div><div>400.00/次</div></div>
+                    <div class="price"><div class="yan">￥</div><div>{{select.price}}/次</div> </div>
                     <img src="../../../static/imgs/rp_share.png" class="share">
                 </div>
                 <div class="detail van-multi-ellipsis--l2">{{good_info.title}}</div>
@@ -112,13 +112,22 @@
                     </div>
                     <div class="tabr">
                         <div class="tabr-item c1">电话联系</div>
-                        <div class="tabr-item c2">购买服务</div>
+                        <div class="tabr-item c2" @click="toColse">购买服务</div>
                         <div class="clear"></div>
                     </div>
                 </div>
                 
             </div>
         </div>
+        <van-popup :show="show" @close="toColse" position="bottom" :overlay="false">
+            <div class="commit">
+                <div class="commit-header"><div @click="toColse">取消</div>　<div @click="onQueding">确定</div></div>
+                <div class="hd">选择服务</div>
+                <div class="commit-list">
+                    <div class="commit-item" @click="onCommit(index)" :class="{'active': item.id == select.id}" v-for="(item,index) in good_attr" :key="key">{{item.title}}</div>
+                </div>
+            </div>
+        </van-popup>
     </div>
 </template>
 <script>
@@ -133,14 +142,13 @@ export default {
         return {
             active: 0
             ,id: 0
-            ,banners: [{url: 'http://placehold.it/320x100'},{url: 'http://placehold.it/320x100'},{url: 'http://placehold.it/320x100'}]
-            ,good_info: {
-
-            }
+            ,show: false
+            ,good_info: {}
             ,good_attr: {}
             ,user_info: {}
             ,pingjiaTwoList: {}
             ,allPingjia: 0
+            ,select: {}
         }
     }
     ,methods: {
@@ -160,6 +168,7 @@ export default {
                     this.user_info = res.data.user_info
                     this.good_attr = res.data.good_attr
                     this.good_info = res.data.good_info
+                    this.select = res.data.good_attr[0]
                 } else {
                     console.log(res.message)
                 }
@@ -189,6 +198,16 @@ export default {
                 //if(pingjia['star_num']<3)
             }
         }
+        ,toColse() {
+            this.show = !this.show
+        }
+        ,onCommit (index) {
+            
+        }
+        ,onQueding() {
+
+        }
+
     }
     ,mounted() {
         // console.log(this)
@@ -456,6 +475,35 @@ export default {
         }
     }
 }
-
+.commit {
+    min-height: 150px;
+    .commit-header {
+        display:flex;
+        padding: 10px 20px;
+        justify-content: space-between;
+        font-size: 14px;
+        color:#5887F9;
+    }
+    .hd {font-size: 14px;color:#4C5264;padding-bottom: 5px;padding-left: 20px;}
+    .commit-list {
+        display: flex;
+        padding: 0 20px;
+        .commit-item {
+            padding: 5px 10px;
+            font-size: 14px;
+            border:1px solid #8B8B8B;
+            border-radius: 5px;
+            color:#8B8B8B;
+            text-align: center;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .active {
+            color:#FFFFFF;
+            background: #5887F9;
+            border-color:#5887F9;
+        }
+    }
+}
 </style>
 

@@ -19,7 +19,7 @@
             <div class="guanzhu" v-else-if="myInfo.is_focus == 1">已关注</div>
         </div>
         <div class="cont">
-            <p>{{info.content}}</p>
+            <p><wxParse :content="info.content"/></p>
             
         </div>
         <div class="btn-group">
@@ -95,7 +95,11 @@
 <script>
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
+import wxParse from 'mpvue-wxparse'
 export default {
+    components: {
+        wxParse
+    },
     data() {
         return {
             id: 0
@@ -187,6 +191,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import url("~mpvue-wxparse/src/wxParse.css");
 .consult {
     background: #F9F9F9;
     margin-top: 5px;
