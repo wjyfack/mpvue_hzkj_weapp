@@ -1,50 +1,50 @@
 <template>
 <div class="message">
-    <a href="../message_nieye/main" class="message_item">
+    <a class="message_item">
         <div class="art_img">
             <img src="../../static/imgs/ms_zan.png" alt="" class="img">
-            <div class="abs_img"></div>
+            <!--<div class="abs_img"></div>-->
         </div>
         <div class="art_info">
             <div class="art_title">
                 <div class="title">点赞</div>
-                <div class="time">14:52</div>
+                <div class="time"></div>
             </div>
             <div class="art_con">
-                <div class="no_read">[2条未读]</div>
-                <div class="mes">王老铁对你的评论进行了点赞！</div>
+                <div class="no_read"></div>
+                <div class="mes">暂无消息</div>
             </div>
         </div>
     </a>
-    <a href="../message_nieye/main" class="message_item">
+    <a class="message_item">
         <div class="art_img">
             <img src="../../static/imgs/ms_tongzhi.png" alt="" class="img">
-            <div class="abs_img"></div>
+            <!--<div class="abs_img"></div>-->
         </div>
         <div class="art_info">
             <div class="art_title">
                 <div class="title">通知</div>
-                <div class="time">14:52</div>
+                <div class="time"></div>
             </div>
             <div class="art_con">
-                <div class="no_read">[2条未读]</div>
-                <div class="mes">在吗？老铁！</div>
+                <div class="no_read"></div>
+                <div class="mes">暂无消息</div>
             </div>
         </div>
     </a>
-    <a href="../message_nieye/main" class="message_item">
+    <a class="message_item">
         <div class="art_img">
             <img src="../../static/imgs/ms_pinglun.png" alt="" class="img">
-            <div class="abs_img"></div>
+            <!--<div class="abs_img"></div>-->
         </div>
         <div class="art_info">
             <div class="art_title">
                 <div class="title">评论</div>
-                <div class="time">14:52</div>
+                <div class="time"></div>
             </div>
             <div class="art_con">
-                <div class="no_read">[2条未读]</div>
-                <div class="mes">在吗？老铁！</div>
+                <div class="no_read"></div>
+                <div class="mes">暂无消息</div>
             </div>
         </div>
     </a>

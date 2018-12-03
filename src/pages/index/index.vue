@@ -11,7 +11,7 @@
         <image slot="icon" src="../../static/imgs/home.png" class="icon" mode="aspectFit" />
         <image slot="icon-active" src="/static/imgs/home_act.png " class="icon" mode="aspectFit" />
       </van-tabbar-item>
-      <van-tabbar-item :dot="true">
+      <van-tabbar-item>
         <span>咨询</span>
         <image slot="icon"  src="../../static/imgs/zixun.png" class="icon" mode="aspectFit" />
         <image slot="icon-active" src="../../static/imgs/zixun_act.png" class="icon" mode="aspectFit" />
@@ -21,7 +21,7 @@
         <image slot="icon" src="../../static/imgs/fabu.png" class="icon1" mode="aspectFit" />
         <image slot="icon-active" src="../../static/imgs/fabu.png" class="icon1" mode="aspectFit" />
       </van-tabbar-item>
-      <van-tabbar-item :info="9">
+      <van-tabbar-item >
         <span>消息</span>
         <image slot="icon" src="../../static/imgs/xiaoxi.png" class="icon" mode="aspectFit" />
         <image slot="icon-active" src="../../static/imgs/xiaoxi_act.png" class="icon" mode="aspectFit" />

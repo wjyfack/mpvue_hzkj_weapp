@@ -11,7 +11,7 @@
                     <div class="name">{{info.nick_name}}</div>
                     <div class="eye">
                         <img src="../../../static/imgs/eye.png" alt="" class="eye-img">
-                        {{info.read_count}}  /{{info>add_time}}
+                        {{info.read_count}}  /{{info.add_time}}
                     </div>
                 </div>
             </div>

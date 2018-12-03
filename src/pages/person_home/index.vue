@@ -1,7 +1,7 @@
 <template>
 <div class="person">
     <div class="header">
-        <div class="ruzhu" v-if="user_info.extend == 'undefined'">
+        <div class="ruzhu" v-if="user_info.extend != undefined">
             <div>入驻时间: {{user_info.extend.ruzhu_time}}</div>
             <div> 从业时间: {{user_info.zhiye_nianxian}}年</div>
         </div>
@@ -23,18 +23,16 @@
     </div>
     <div class="cont">
             <div class="option">
-                <div class="opt-btn">找他维修</div>
-                <div class="opt-btn c1">关注Ta</div>
+                <!-- <div class="opt-btn">找他维修</div>
+                <div class="opt-btn c1">关注Ta</div> -->
             </div>
-            <div class="star" v-if="user_info.extend == 'undefined'">
+            <div class="star" v-if="user_info.extend != undefined">
                 <div class="star-item van-hairline--right">
-                    <!-- <div class="star-img"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div> -->
-                    <div class="cride">{{user_info.extend.xinyongdu}}</div>
+                    <div class="star-img"><img src="../../../static/imgs/rp_star.png" alt="" class="img" v-for="(item, index) in user_info.xinyongdu" :key="index"></div>
                     <div>好评率</div>
                 </div>
                 <div class="star-item van-hairline--right">
-                    <!-- <div class="star-img"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div> -->
-                    <div class="cride">{{user_info.extend.zhuanyedu}}%</div>
+                    <div class="star-img"><img src="../../../static/imgs/rp_star.png" alt="" class="img" v-for="(item, index) in user_info.zhuanyedu" :key="index" ></div>
                     <div>专业程度</div>
                 </div>
                 <div class="star-item">
@@ -42,7 +40,7 @@
                     <div>好评率</div>
                 </div>
             </div>
-            <div class="goodfor van-hairline--bottom" v-if="user_info.extend == 'undefined'">
+            <div class="goodfor van-hairline--bottom" v-if="user_info.extend != 'undefined'">
                 <div class="goodfor-item" v-for="(item,idex) in user_info.extend.shanchanglingyu" :key="key">{{item}}</div>
             </div>
             <div class="guangzu">
@@ -250,7 +248,8 @@ export default {
                if(res.code == 0) {
                    let data = res.data.user_info
                    data.brand = Fun.getBrand(data.user_types)
-                   console.log(Fun.getBrand(data.user_types))
+                   data.xinyongdu = Fun.getStar(data.extend.xinyongdu)
+                   data.zhuanyedu = Fun.getStar(data.extend.zhuanyedu)
                    this.user_info = data
                    console.log(this.user_info)
                }

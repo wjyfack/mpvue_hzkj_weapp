@@ -18,6 +18,7 @@ fly.interceptors.request.use((config, promise) => {
 fly.interceptors.response.use(
     (response, promise) => {
         //只将请求结果的data字段返回
+        
         return response.data
     },
     (err, promise) => {

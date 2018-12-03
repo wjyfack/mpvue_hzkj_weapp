@@ -87,10 +87,10 @@
                 <div>{{info.jiedan_time}}</div>
             </div>
         </div>
-        <div class="order-btn">
+        <!-- <div class="order-btn">
             <img src="../../../static/imgs/order_phone.png" alt="" class="img">
             <div>联系卖家</div>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
@@ -103,6 +103,7 @@ export default {
             id:0
             ,active: 0
             ,info: {}
+            ,opt: ''
         }
     }
     ,methods: {
@@ -110,7 +111,9 @@ export default {
             this.active = event.mp.detail
         }
         ,getData() {
-            fly.post('/?v=V1&g=Doctor&c=Order&a=getMyOrderDetail'+Fun.getParam(),{
+            let url = '/?v=V1&g=Doctor&c=Order&a=getMyOrderDetail'
+            if(this.opt == 'my') url = '/?v=V1&g=Doctor&c=Order&a=getMyShopOrderDetail'
+            fly.post(url+Fun.getParam(),{
                 order_type: 'repair_order'
                 ,order_id: this.id
             }).then((res)=> {
@@ -122,7 +125,8 @@ export default {
     }
     ,mounted() {
         this.id = this.$mp.query.id
-        console.log(this.id)
+        this.opt = this.$mp.query.opt || ''
+        console.log(this.id,this.opt)
         this.getData()
     },
 }

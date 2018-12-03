@@ -141,12 +141,12 @@ export default {
                     key:"userData",
                     data:this.userData
                     })
-                    // wx.redirectTo({
-                    // url: '../index/main'
-                    // })
-                    wx.navigateBack({//返回
-                    delta:1
+                    wx.redirectTo({
+                    url: '../index/main'
                     })
+                    // wx.navigateBack({//返回
+                    // delta:1
+                    // })
                }else {
                    Toast(res.message)
                }
@@ -187,12 +187,12 @@ export default {
                     key:"userData",
                     data:this.userData
                     })
-                    // wx.redirectTo({
-                    // url: '../index/main'
-                    // })
-                    wx.navigateBack({//返回
-                    delta:1
+                    wx.redirectTo({
+                    url: '../index/main'
                     })
+                    // wx.navigateBack({//返回
+                    // delta:1
+                    // })
                }else {
                    Toast(res.message)
                }

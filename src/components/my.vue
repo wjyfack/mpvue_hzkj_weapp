@@ -52,6 +52,18 @@
             </div>
         </div>
         <div class="nongne">
+            <div v-for="(item, index) in doctor_info.brand" :key="index">
+            <a href="../my_repair_order/main" v-if="2 == item" class="nongne_item van-hairline--bottom">
+                <img src="../../static/imgs/p_gong.png" alt="" class="nongne_img" mode="widthFix">
+                <div class="name">我的维修订单</div>
+                <img src="../../static/imgs/arrow.png" alt="" class="arrow">
+            </a>
+            <a href="../my_article/main" v-if="1 == item" class="nongne_item van-hairline--bottom">
+                <img src="../../static/imgs/p_zuo.png" alt="" class="nongne_img" mode="widthFix">
+                <div class="name">我的文章列表</div>
+                <img src="../../static/imgs/arrow.png" alt="" class="arrow">
+            </a>
+            </div>
             <a href="../my_publish/main" class="nongne_item van-hairline--bottom">
                 <img src="../../static/imgs/my_fabu.png" alt="" class="nongne_img" mode="widthFix">
                 <div class="name">我的发布</div>
@@ -94,6 +106,7 @@
 <script>
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
 export default {
     data(){
         return {
@@ -108,6 +121,7 @@ export default {
                 coupon_count: 0
             }
             ,userData: {}
+            ,doctor_info: {brand:[]}
         }
     }
     // ,computed: {
@@ -130,6 +144,9 @@ export default {
                     if(res.code == 0) {
                         this.accountInfo = res.data.account_info
                         this.baseInfo = res.data.base_info
+                        let info = res.data.doctor_info
+                        info.brand = Fun.getBrand(info.user_types)
+                        this.doctor_info = info
                     }
                 })
         }
@@ -331,7 +348,7 @@ export default {
     }
     .nongne {
        
-        padding-bottom: 40px; 
+        padding-bottom: 40px;
         &_item {
             display: flex;
             justify-content: space-between;

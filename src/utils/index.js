@@ -27,9 +27,13 @@ export function getBrand(str) {
 export function getParam() {
   return '&d=wx_minprogram&s='+(wx.getStorageSync('userData').session_id == undefined ? '' : wx.getStorageSync('userData').session_id)
 }
+export function getStar(num) {
+  return ~~(num /20)
+}
 export default {
   getBrand
   ,formatTime
   ,formatNumber
   ,getParam
+  ,getStar
 }

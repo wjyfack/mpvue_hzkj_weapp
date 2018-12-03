@@ -69,6 +69,7 @@ export default {
                         name: 'file',
                         formData: {
                             'img_classify': 'doctor'
+                            //,'img_size': '400x400'
                         },
                         success (datas){
                             const data = JSON.parse(datas.data)
@@ -97,9 +98,9 @@ export default {
             }
             let str = '' 
             for(let i in this.imgs) {
-                str += '<img src="'+this.imgs[i] +'/>'
+                str += "<img src='"+this.imgs[i] +"'/>"
             }
-            let cont = '<p>'+this.detail+str+'</p>'
+            let cont = '<p>'+this.detail+'</p><p>'+str+'</p>'
             // 咨询评论和回复(必须登录)
             // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=Consult&a=postConsultComment
             // content
@@ -113,8 +114,8 @@ export default {
                 ,is_niming: 0
             }).then((res)=> {
                 if(res.code == 0) {
-                    wx.navigateBack({
-                        delta: 1
+                    wx.navigateTo({
+                    url: '../detail_consult/main?id='+this.id
                     })
                 } else {
                     console.log(res.message)

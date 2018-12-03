@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="info">
+            <a :href="'../person_home/main?id='+user_info.user_id" class="info">
                 <img :src="user_info.user_picture" alt="" class="avatar">
                 <div class="person-info">
                     <div class="info-name">
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 
-            </div>
+            </a>
             <div class="pingjia">
                 <div class="hd van-hairline--bottom">
                     <div class="left">
@@ -108,11 +108,11 @@
             <div class="fixed-tab van-hairline--top">
                 <div class="tabb">
                     <div class="tabl">
-                        <img src="../../../static/imgs/rp_shouc.png" class="sh-img"> 收藏
+                        <!-- <img src="../../../static/imgs/rp_shouc.png" class="sh-img"> 收藏 -->
                     </div>
                     <div class="tabr">
-                        <div class="tabr-item c1">电话联系</div>
-                        <div class="tabr-item c2" @click="toColse">购买服务</div>
+                        <div class="tabr-item c1" @click="toColse">选择服务</div>
+                        <div class="tabr-item c2" @click="onQueding">购买服务</div>
                         <div class="clear"></div>
                     </div>
                 </div>
@@ -213,6 +213,7 @@ export default {
                 url: '../order_sure/main?name='+this.user_info.nick_name+'&select='+data
             })
         }
+        
 
     }
     ,mounted() {
