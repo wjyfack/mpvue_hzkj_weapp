@@ -120,7 +120,7 @@
             </div>
         </div>
         <van-popup :show="show" @close="toColse" position="bottom" :overlay="false">
-            <div class="commit">
+            <div class="commit van-hairline--top">
                 <div class="commit-header"><div @click="toColse">取消</div>　<div @click="onQueding">确定</div></div>
                 <div class="hd">选择服务</div>
                 <div class="commit-list">
@@ -133,6 +133,7 @@
 <script>
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
 import wxParse from 'mpvue-wxparse'
 export default {
     components: {
@@ -159,7 +160,7 @@ export default {
             // 维修项目详情
             // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=Repair&a=getRepairDetail 
             // repair_id
-            fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairDetail'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairDetail'+Fun.getParam(),{
                 repair_id: id 
             }).then((res)=> {
                 if(res.code == 0) {
@@ -175,7 +176,7 @@ export default {
             })
         }
         ,getPingjia(id,pingjia_type,page,page_size) {
-            fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairCommentList'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairCommentList'+Fun.getParam(),{
                 repair_id: id
                 ,pingjia_type: pingjia_type// 1好评2中评3差评
                 ,page: page
@@ -201,11 +202,16 @@ export default {
         ,toColse() {
             this.show = !this.show
         }
-        ,onCommit (index) {
-            
+        ,onCommit(index) {
+        　　// console.log(index)
+            this.select = this.good_attr[index]
         }
         ,onQueding() {
-
+            let data = JSON.stringify(this.select)
+            // 跳到提交页面
+            wx.navigateTo({
+                url: '../order_sure/main?name='+this.user_info.nick_name+'&select='+data
+            })
         }
 
     }
@@ -428,6 +434,7 @@ export default {
                 }
             } 
             .cont {
+                padding:5px 20px;
                 min-height: 100px;
             }
         }

@@ -19,11 +19,17 @@ export function formatTime (date) {
 }
 export function getBrand(str) {
   let brand = []
-  str.indexOf(',1,')? brand.push(1): ''
-  str.indexOf(',2,') ? brand.push(2) : ''
-  str.indexOf(',3,') ? brand.push(3): ''
+  str.indexOf(',1,') >0 ? brand.push(1): ''
+  str.indexOf(',2,') >0 ? brand.push(2) : ''
+  str.indexOf(',3,') >0 ? brand.push(3): ''
   return brand
+}
+export function getParam() {
+  return '&d=wx_minprogram&s='+(wx.getStorageSync('userData').session_id == undefined ? '' : wx.getStorageSync('userData').session_id)
 }
 export default {
   getBrand
+  ,formatTime
+  ,formatNumber
+  ,getParam
 }

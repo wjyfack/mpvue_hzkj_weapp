@@ -44,6 +44,7 @@ import message from '@/components/message'
 import my from '@/components/my'
 
 import fly from '@/utils/fly'
+import Fun from '@/utils/index'
 export default {
   data () {
     return {

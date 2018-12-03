@@ -28,6 +28,7 @@
 <script>
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
 import Toast from '../../../static/vant/toast/toast';
 import wxParse from 'mpvue-wxparse'
 export default {
@@ -45,7 +46,7 @@ export default {
             this.active = index
         }
         ,getData() {
-            fly.post('/?v=V1&g=Common&c=Help&a=getHelpfaqList'+Params.default.param,{
+            fly.post('/?v=V1&g=Common&c=Help&a=getHelpfaqList'+Fun.getParam(),{
                 help_type: 1
             })
                 .then((res)=> {

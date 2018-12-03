@@ -47,7 +47,7 @@ export default {
     }
     ,methods: {
         getExpertData() {
-            fly.post('/?v=V1&g=Doctor&c=Expert&a=getExpertList'+Params.default.param).then((res) =>{
+            fly.post('/?v=V1&g=Doctor&c=Expert&a=getExpertList'+Fun.getParam()).then((res) =>{
                 if(res.code == 0) {
                     let list = res.data.list
                     for(let i in list) {

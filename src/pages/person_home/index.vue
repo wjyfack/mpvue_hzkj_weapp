@@ -10,9 +10,12 @@
             <div class="person">
                 <div class="name">{{user_info.nick_name}}</div>
                 <div class="barnd">
-                    <img src="../../../static/imgs/p_gong.png" alt="" class="b-img">
-                    <img src="../../../static/imgs/p_zhuan.png" alt="" class="b-img">
-                    <img src="../../../static/imgs/p_zuo.png" alt="" class="b-img">
+                    <span v-for="(item,index) in user_info.brand" :key="key" class="barnds">
+                        <img src="../../../static/imgs/p_gong.png" v-if="item == 2" alt="" class="b-img">
+                        <img src="../../../static/imgs/p_zhuan.png" v-if="item == 3" alt="" class="b-img">
+                        <img src="../../../static/imgs/p_zuo.png" v-if="item == 1" alt="" class="b-img">
+                    </span>
+                    
                 </div>
                 <div class="jie">暂无信息</div>
             </div>
@@ -197,6 +200,7 @@
 <script>
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
 import Toast from '../../../static/vant/toast/toast';
 
 export default {
@@ -239,17 +243,21 @@ export default {
             
         }
         ,getPerson() {
-           fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndex'+Params.default.param,{
+           fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndex'+Fun.getParam(),{
                user_id:this.id
            }).then((res) =>{
-               console.log(res)
+               
                if(res.code == 0) {
-                   this.user_info = res.data.user_info
+                   let data = res.data.user_info
+                   data.brand = Fun.getBrand(data.user_types)
+                   console.log(Fun.getBrand(data.user_types))
+                   this.user_info = data
+                   console.log(this.user_info)
                }
             })     
         }
         ,getList() {
-            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Fun.getParam(),{
                user_id:this.id
                ,type: this.type //默认all,consult,repair,article
                ,page: this.page
@@ -276,7 +284,7 @@ export default {
             })
         }
         ,getAnsList() {
-            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Fun.getParam(),{
                user_id:this.id
                ,type: 'consult' //默认all,consult,repair,article
                ,page: 1
@@ -287,7 +295,7 @@ export default {
             })
         }
         ,getRepairList() {
-            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Fun.getParam(),{
                user_id:this.id
                ,type: 'repair' //默认all,consult,repair,article
                ,page: 1
@@ -298,7 +306,7 @@ export default {
             })
         }
         ,getArtList() {
-            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndexDongtai'+Fun.getParam(),{
                user_id:this.id
                ,type: 'article' //默认all,consult,repair,article
                ,page: 1
@@ -376,6 +384,9 @@ export default {
                 .name {color:#ffffff;font-size: 16px;}
                 .barnd {
                     display: flex;
+                    .barnds {
+                        display: flex;
+                    }
                     .b-img {
                         width: 22px;
                         height: 22px;

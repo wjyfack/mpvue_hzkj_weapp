@@ -42,8 +42,8 @@
                     <div class="btn-list">
                         <div class="status"></div>
                         <div class="item">
-                            <div class="btn-item c1">编辑</div>
-                            <div class="btn-item">删除</div>
+                            <!-- <div class="btn-item c1">编辑</div>
+                            <div class="btn-item">删除</div> -->
                         </div>
                     </div>
                 </div>
@@ -65,8 +65,8 @@
                         <div class="btn-list">
                             <div class="status"></div>
                             <div class="item">
-                                <div class="btn-item c1">编辑</div>
-                                <div class="btn-item">删除</div>
+                                <!-- <div class="btn-item c1">编辑</div>
+                                <div class="btn-item">删除</div> -->
                             </div>
                         </div>
                     </div>   
@@ -79,6 +79,7 @@
 </template>
 <script>
 import fly from '@/utils/fly'
+import Fun from '@/utils/index'
 import * as Params from '@/utils/params'
 import Dialog from '../../../static/vant//dialog/dialog';
 import Toast from '../../../static/vant/toast/toast';
@@ -104,7 +105,7 @@ export default {
            this.getconsultList()
         }
         ,getrepirList(){
-            fly.post('/?v=V1&g=Doctor&c=Repair&a=getMyRepairList'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Repair&a=getMyRepairList'+Fun.getParam(),{
                 keyword: ''
                 ,page: this.pageRepair
                 ,page_size: 10
@@ -114,7 +115,7 @@ export default {
             })
         }
         ,getxuqiuList(){
-            fly.post('/?v=V1&g=Doctor&c=Demand&a=getMyDemandList'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Demand&a=getMyDemandList'+Fun.getParam(),{
                 keyword: ''
                 ,page: this.xuqiuList
                 ,page_size: 10
@@ -123,7 +124,7 @@ export default {
             })
         }
         ,getconsultList(){
-            fly.post('/?v=V1&g=Doctor&c=Consult&a=getMyConsultList'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Consult&a=getMyConsultList'+Fun.getParam(),{
                 keyword: ''
                 ,type: 0
                 ,page: this.pageConsult
@@ -158,7 +159,7 @@ export default {
                 title: title,
                 message: ''
                 }).then(() => {
-                fly.post('/?v=V1&g=Doctor&c=Repair&a=editMyRepair'+Params.default.param,{
+                fly.post('/?v=V1&g=Doctor&c=Repair&a=editMyRepair'+Fun.getParam(),{
                     repair_id: id
                     ,type: type
                     ,val: sale

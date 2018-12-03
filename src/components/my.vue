@@ -9,29 +9,29 @@
             <a class="setting" :href="'../setting/main?nick_name='+baseInfo.nick_name+'&user_picture='+baseInfo.user_picture"><img src="../../static/imgs/my_setting.png" class="set"> <div class="sett">设置</div></a>
         </div>
         <div class="option">
-            <a href="../my_order/main" class="option_item">
+            <a :href="'../my_order/main?id=2'" class="option_item">
                 <img src="../../static/imgs/my_fukuan.png" alt="" class="img">
                 <div class="name">待付款</div>
             </a>
-            <a href="../my_order/main" class="option_item">
+            <a :href="'../my_order/main?id=3'" class="option_item">
                 <img src="../../static/imgs/my_fuwu.png" alt="" class="img">
                 <div class="name">待服务</div>
             </a>
-            <a href="../my_order/main" class="option_item">
+            <a :href="'../my_order/main?id=6'" class="option_item">
                 <img src="../../static/imgs/my_pinjia.png" alt="" class="img">
                 <div class="name">评价</div>
             </a>
-            <a href="../my_order/main" class="option_item">
+            <a :href="'../my_order/main?id=8'" class="option_item">
                 <img src="../../static/imgs/my_shouhou.png" alt="" class="img">
                 <div class="name">售后</div>
             </a>
-            <a href="../my_order/main" class="option_item">
+            <a :href="'../my_order/main?id=0'" class="option_item">
                 <img src="../../static/imgs/my_all.png" alt="" class="img">
                 <div class="name">全部订单</div>
             </a>
         </div>
         <div class="bell">
-            <a href="../my_bell/main" class="cells van-hairline--bottom">
+            <a :href="'../my_bell/main?id='+baseInfo.user_money" class="cells van-hairline--bottom">
                 <div class="name">我的钱包</div>
                 <div class="detail">账单、提现 <img src="../../static/imgs/arrow.png" class="arrow"></div>
             </a>
@@ -63,7 +63,7 @@
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
             </a>
             <a href="" class="nongne_item van-hairline--bottom">
-                <img src="../../static/imgs/my_dizhi.png" alt="" class="nongne_img" mode="widthFix">
+                <img src="../../static/imgs/my_dizhi.png" alt="" class="nongne_img nongne_imgs" mode="widthFix">
                 <div class="name">我的地址</div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
             </a>
@@ -93,7 +93,7 @@
 
 <script>
 import fly from '@/utils/fly'
-
+import * as Params from '@/utils/params'
 export default {
     data(){
         return {
@@ -107,23 +107,25 @@ export default {
             ,accountInfo: {
                 coupon_count: 0
             }
+            ,userData: {}
         }
     }
-    ,computed: {
-        userData() {
-            var value = wx.getStorageSync('userData')
-            return value
-        }
-    }
+    // ,computed: {
+    //     userData() {
+    //         var value = wx.getStorageSync('userData')
+    //         return value
+    //     }
+    // }
     ,methods: {
         bindViewTap (url) {
             // const url = '../logs/main'
             wx.navigateTo({ url })
         }
-        ,getInfo() {
+        ,getInfo(session_id) {
             // 我的个人中心（必须登录）
             // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=User&a=getMyInfo
-            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=User&a=getMyInfo&s='+this.userData.session_id)
+           
+            fly.post('/?v=V1&g=Common&c=User&a=getMyInfo&d=wx_minprogram&s='+session_id)
                 .then((res)=>{
                     if(res.code == 0) {
                         this.accountInfo = res.data.account_info
@@ -131,8 +133,8 @@ export default {
                     }
                 })
         }
-        ,getshiName() {
-            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=User&a=getMyRealInfo&s='+this.userData.session_id)
+        ,getshiName(session_id) {
+            fly.post('/?v=V1&g=Common&c=User&a=getMyRealInfo&d=wx_minprogram&s='+session_id)
                 .then((res)=>{
                     console.log(res.data.user_real_info.review_status)
                     if(res.code == 0) {
@@ -154,98 +156,68 @@ export default {
                     }
                 })
         }
+        ,tologin(_this) {
+            wx.clearStorage()
+             wx.login({
+                success (res) {
+                    if (res.code) {
+                       console.log('abc')
+                        wx.getUserInfo({
+                         success: function(data) {
+                             console.log(data)
+                            wx.setStorageSync('userInfo', data)
+                            let userData = data
+                            //发起网络请求
+                            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=Login&a=login', {
+                                login_type: 'wx_minprogram'
+                                ,encrypted_data: userData.encryptedData
+                                ,iv: userData.iv
+                                ,raw_data: userData.rawData
+                                ,signature: userData.signature
+                                // ,useInfo: userData.useInfo
+                                ,js_code: res.code
+                            }).then(function (response) {
+                                console.log(response.data)
+                                if(response.code == 0) {
+                                   wx.setStorage({
+                                    key:"userData",
+                                    data:response.data
+                                    })
+                                    wx.setStorageSync('userData', response.data)
+                                   
+                                   if(response.data.user_id > 0) {// 有用户信息
+                                        _this.getInfo(response.data.session_id)
+                                        _this.getshiName(response.data.session_id) 
+                                   } else { // 前去绑定帐号
+                                    wx.navigateTo({url: '../my_login/main'})
+                                   }
+                                }
+                            }).then(() => {
+                                   
+                            })
+                        }   
+                        })
+                    } else {
+                    console.log('登录失败！' + res.errMsg)
+                    }
+                }
+              })
+        }
     }
     ,mounted(){
         let _this = this
         wx.checkSession({
-            success (key) {
-                console.log(key)
-                //session_key 未过期，并且在本生命周期一直有效
-                // 获取个人信息
-                wx.login({
-                success (res) {
-                    if (res.code) {
-                       wx.getStorage({
-                        key: 'userInfo',
-                        success (data) {
-                            // console.log(data.data)
-                            let userData = data.data
-                            //发起网络请求
-                            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=Login&a=login', {
-                                login_type: 'wx_minprogram'
-                                ,encrypted_data: userData.encryptedData
-                                ,iv: userData.iv
-                                ,raw_data: userData.rawData
-                                ,signature: userData.signature
-                                // ,useInfo: userData.useInfo
-                                ,js_code: res.code
-                            }).then(function (response) {
-                                console.log(response.data)
-                                if(response.code == 0) {
-                                   wx.setStorage({
-                                    key:"userData",
-                                    data:response.data
-                                    })
-                                   if(response.data.user_id > 0) {// 有用户信息
-
-                                   } else { // 前去绑定帐号
-                                    wx.navigateTo({url: '../my_login/main'})
-                                   }
-                                }
-                            })
-                            
-                        }
-                        })
-                     
-                    } else {
-                    console.log('登录失败！' + res.errMsg)
-                    }
-                }
-              })
-                _this.getInfo()
-                _this.getshiName()
+            success () {
+                let userData = wx.getStorageSync('userData')
+               if(userData.user_id > 0 && userData.session_id != '') {
+                   _this.getInfo(userData.session_id)
+                   _this.getshiName(userData.session_id)
+               } else {
+                   _this.tologin(_this)
+               }
             },
             fail () { 
-              wx.login({
-                success (res) {
-                    if (res.code) {
-                       wx.getStorage({
-                        key: 'userInfo',
-                        success (data) {
-                            // console.log(data.data)
-                            let userData = data.data
-                            //发起网络请求
-                            fly.post('/?d=wx_minprogram&v=V1&g=Common&c=Login&a=login', {
-                                login_type: 'wx_minprogram'
-                                ,encrypted_data: userData.encryptedData
-                                ,iv: userData.iv
-                                ,raw_data: userData.rawData
-                                ,signature: userData.signature
-                                // ,useInfo: userData.useInfo
-                                ,js_code: res.code
-                            }).then(function (response) {
-                                console.log(response.data)
-                                if(response.code == 0) {
-                                   wx.setStorage({
-                                    key:"userData",
-                                    data:response.data
-                                    })
-                                   if(response.data.user_id > 0) {// 有用户信息
-
-                                   } else { // 前去绑定帐号
-                                    wx.navigateTo({url: '../my_login/main'})
-                                   }
-                                }
-                            })
-                            
-                        }
-                        })
-                     
-                    } else {
-                    console.log('登录失败！' + res.errMsg)
-                    }
-                }
-              })
+             _this.tologin(_this)
             }
         })
     //  if(true) {
@@ -369,6 +341,10 @@ export default {
             .nongne_img {
                 width: 20px;
                 // height: 20px;
+            }
+            .nongne_imgs {
+                width: 20px;
+                 height: 20px;
             }
             .name {
                 flex: 1;

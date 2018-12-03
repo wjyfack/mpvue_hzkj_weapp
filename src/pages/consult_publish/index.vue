@@ -1,7 +1,7 @@
 <template>
 
     <div class="publish">
-       <div class="img_select">
+       <!-- <div class="img_select">
             <div class="img_select_item" @click="onImage">
                 <img src="../../../static/imgs/add.png" class="img">
             </div> 
@@ -9,11 +9,11 @@
                 <img :src="item" class="img">
                 <img src="../../../static/imgs/close.png" class="close" @click="onClose(index)">
             </div>
-        </div>
+        </div> -->
         <div class="bell">
             <div class="cells van-hairline--bottom" @click="onCloseSort">
                 <div class="name">分类</div>
-                <div class="detail">分类 <img src="../../../static/imgs/arrow.png" class="arrow"></div>
+                <div class="detail">{{sort}} <img src="../../../static/imgs/arrow.png" class="arrow"></div>
             </div>
         </div>
         <div class="textarea-hi">
@@ -42,29 +42,29 @@
         <div class="set_btn" v-if="isBtn">
             <van-button size="large" type="danger" square @click="onPublish">发布</van-button>
         </div>
-        <van-popup :show="isSort" @close="onCloseSort" position="bottom" custom-class="sort_tree">
+         <van-popup :show="isSort" @close="onCloseSort" position="bottom" custom-class="sort_tree">
             <div class="back"><van-button size="small" type="default" @click="onCloseSort">返回</van-button></div>
             <div class="tree-select">
                 <div class="tree-select__nav">
                     <div
-                    v-for="(item, index) in 5"
+                    v-for="(item, index) in sortOneList"
                     :key="key"
                     class="tree-select__nitem van-ellipsis"
-                    @click="onClickNav(index)"
+                    @click="onClickNav(item.cat_id,index)"
                     :class="{'tree-select__nitem--active': index == sortOne}"
                     >
-                    分类１
+                    {{item.cat_name}}
                     </div>
                 </div>
                 <div class="tree-select__content">
                     <div
-                    v-for="(item, index) in 5"
+                    v-for="(item, index) in sortTwoList"
                     :key="key"
                     class="tree-select__item van-ellipsis"
                     :class="{'tree-select__item--active': index == sortTwo}"
-                    @click="onSelectItem(index)"
+                    @click="onSelectItem(item.cat_id,item.cat_name,index)"
                     >
-                    分类２
+                    {{item.cat_name}}
                     </div>
                 </div>
             </div>
@@ -73,16 +73,31 @@
 </template>
 <script>
 import Toast from '../../../static/vant/toast/toast';
+import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
+import fly from '@/utils/fly'
 export default {
     data() {
         return {
             title: ''
             ,detail: ''
             ,imgArr: []
+            ,detail: ''
+            ,sort: '分类'
+            ,imgArr: []
             ,isSort: false // 分类
             ,isBtn: true
             ,sortOne: 0
             ,sortTwo: 0
+            ,sortOneList: []
+            ,sortTwoList: []
+            ,cat_id: 0
+            ,field_id: 0
+        }
+    }
+    ,computed: {
+        userData(){
+            return wx.getStorageSync('userData')
         }
     }
     ,methods: {
@@ -105,6 +120,25 @@ export default {
                 ,success(res) {
                     // console.log(res)
                     _this.imgArr.push(res.tempFilePaths)
+                   
+                    //console.log(res)
+                    wx.uploadFile({
+                        url: Params.default.host+'/?v=V1&g=Common&c=Upload&a=uploadImage'+Fun.getParam(),
+                        filePath: res.tempFilePaths[0],
+                        name: 'file',
+                        formData: {
+                            'img_classify': 'doctor'
+                        },
+                        success (datas){
+                            const data = JSON.parse(datas.data)
+                            console.log(data)
+                            if(data.code == 0) {
+                                 _this.demandData.pics_str.push(data.data.img_path)
+                            } else {
+                                Toast('上传失败')
+                            }
+                        }
+                    })
                 }
                 ,fail(res) {
                     console.log(res)
@@ -113,21 +147,89 @@ export default {
         }
         ,onClose(index) {
            this.imgArr.splice(index,1);
+           this.demandData.pics_str.splice(index,1);
+        }
+        ,getSort(pid) {
+            fly.post('/?v=V1&g=Doctor&c=Cat&a=getCatsByPid'+Fun.getParam(), {
+                pid: pid
+                ,cat_type: 1
+                ,sort_type: 2
+            }).then((res) => {
+                if(pid == 0) {
+                    this.sortOneList = res.data.list
+                } else {
+                    this.sortTwoList = res.data.list
+                }
+            })
+        }
+        ,onClose(index) {
+           this.imgArr.splice(index,1);
         }
         ,onPublish(){
-            console.log('发表')
+            console.log(this.title,this.detail,this.cat_id,this.field_id)
+            if(this.title == '') {
+                Toast('请输入标题')
+                return 
+            }
+            if(this.detail == '') {
+                Toast('请输入内容')
+                return
+            }
+            if(this.cat_id == 0 || this.field_id == 0) {
+                Toast('请输入分类')
+                return
+            }
+            // 发布咨询（必须登录）
+            // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=Consult&a=postConsult
+            // 'consult_id'			
+            // 'cat_id'			
+            // 'field_id'		
+            // 'type'				//1普通,2一对一
+            // 'to_user_id'		//一对一的专家id
+            // 'title'			
+            // 'content'			
+            // 'is_open'			//1公开，0不公开
+            fly.post('/?v=V1&g=Doctor&c=Cat&a=getCatsByPid'+Fun.getParam(), {
+                'cat_id': this.cat_id		
+                ,'field_id':this.field_id
+                ,'type':1			//1普通,2一对一
+                ,'title': this.title			
+                ,'content': this.detail		
+                ,'is_open': 1			//1公开，0不公开
+            }).then((res) => {
+                if(res.code == 0) {
+                    Toast('发布成功,等待审核')
+                    setTimeout(()=>{
+                        wx.navigateBack({delta: 1})
+                    },1500)
+                } else {
+                   Toast(res.message)
+                }
+            })
         }
         ,onCloseSort() {
             this.isSort = !this.isSort            
             this.isBtn = this.isSort ? false:true
           
         }
-        ,onClickNav(index) {
+        ,onClickNav(pid,index) {
             this.sortOne = index
+            this.cat_id = pid
+            this.getSort(pid)
         }
-        ,onSelectItem(index){
+        ,onSelectItem(pid,name,index){
             this.sortTwo = index
+            this.field_id = pid
+            this.sort = name
             this.onCloseSort()
+        }
+    }
+    ,mounted: function(){
+        this.getSort(0)
+        console.log(this.userData)
+        if(this.userData.user_id <= 0) {
+            Toast('请先登录')
+            // wx.nav
         }
     }
 
@@ -219,7 +321,8 @@ export default {
   -webkit-user-select: none;
   user-select: none;
   position: relative;
-  font-size: 16px
+  font-size: 16px;
+  min-height: 200px;
 }
 
 .tree-select__nav {

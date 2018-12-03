@@ -1,6 +1,6 @@
 <template>
     <div class="login">
-        <img src="//placehold.it/100x100" alt="" class="img" >
+        <img src="../../../static/imgs/logo.jpg" alt="" class="img" >
         <div class="p1">传动先生</div>
         <div class="p2">申请获取你的公开信息(昵称，头像等)</div>
         <div class="btn">

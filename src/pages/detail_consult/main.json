@@ -5,5 +5,6 @@
         ,"van-field": "../../static/vant/field/index"
         ,"van-radio": "../../static/vant/radio/index"
         ,"van-radio-group": "../../static/vant/radio-group/index"
+        ,"van-toast": "../../static/vant/toast/index"
     }
 }

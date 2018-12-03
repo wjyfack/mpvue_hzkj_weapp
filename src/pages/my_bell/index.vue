@@ -3,7 +3,7 @@
         <div class="bell">
             <div class="hearder">
                 <img src="../../../static/imgs/bell_bg.png" alt="" class="img" mode="aspectFill">
-                <div class="price">12355.00</div>
+                <div class="price">{{user_money}}</div>
             </div>
             
         </div>
@@ -41,7 +41,15 @@
 <script>
 
 export default {
-
+    data() {
+        return {
+            user_money: 0
+        }
+    }
+    ,mounted() {
+        let  user_money = this.$mp.query.id
+        this.user_money = user_money
+    },
 }
 </script>
 <style lang="less" scoped>

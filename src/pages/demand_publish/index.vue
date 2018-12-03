@@ -91,6 +91,7 @@
 <script>
 import Toast from '../../../static/vant/toast/toast';
 import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
 import fly from '@/utils/fly'
 export default {
     data() {
@@ -161,7 +162,7 @@ export default {
                    
                     //console.log(res)
                     wx.uploadFile({
-                        url: Params.default.host+'/?v=V1&g=Common&c=Upload&a=uploadImage'+Params.default.param,
+                        url: Params.default.host+'/?v=V1&g=Common&c=Upload&a=uploadImage'+Fun.getParam(),
                         filePath: res.tempFilePaths[0],
                         name: 'file',
                         formData: {
@@ -188,7 +189,7 @@ export default {
            this.demandData.pics_str.splice(index,1);
         }
         ,getSort(pid) {
-            fly.post('/?v=V1&g=Doctor&c=Cat&a=getCatsByPid'+Params.default.param, {
+            fly.post('/?v=V1&g=Doctor&c=Cat&a=getCatsByPid'+Fun.getParam(), {
                 pid: pid
                 ,cat_type: 1
             }).then((res) => {
@@ -237,7 +238,7 @@ export default {
             // contact_phone
             // qiwang_days
             // pics_str
-            fly.post('/?v=V1&g=Doctor&c=Demand&a=addDemand'+Params.default.param,this.demandData)
+            fly.post('/?v=V1&g=Doctor&c=Demand&a=addDemand'+Fun.getParam(),this.demandData)
                 .then((res) => {
                     if(res.code == 0) {
                         Toat('发布成功')

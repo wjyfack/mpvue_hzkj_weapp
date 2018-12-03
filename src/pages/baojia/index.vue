@@ -33,6 +33,7 @@
 <script>
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
 import Toast from '../../../static/vant/toast/toast'
 export default {
     data() {
@@ -70,7 +71,7 @@ export default {
             }
             // 需求报价
            
-            fly.post('/?v=V1&g=Doctor&c=Demand&a=quotedDemand'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Demand&a=quotedDemand'+Fun.getParam(),{
                 demand_id: this.demand_id
                 ,contact_name: this.formData.baojia
                 ,contact_phone: this.formData.dianhua

@@ -2,56 +2,491 @@
     <div class="order">
        <van-tabs :active="active" @change="onChange" :color="'#5887F9'">
             <van-tab title="全部订单">
-                <div class="order-item" v-for="(item, index) in 3" :key="key">
+                <div class="order-item" v-for="(item, index) in allOrderList" :key="key">
                     <div class="heard">
                         <div class="info">
-                            <div class="name">黄老铁</div>
-                            
+                            <div class="name">{{item.real_name}}</div>
                         </div>
-                        <div class="status">待付款</div>
+
+                        <div class="status" v-if="item.order_status == 1">待接</div>
+                        <div class="status" v-else-if="item.order_status == 2">待付款</div>
+                        <div class="status" v-else-if="item.order_status == 3">待服务</div>
+                        <div class="status" v-else-if="item.order_status == 4">进行中</div>
+                        <div class="status" v-else-if="item.order_status == 5">售后中</div>
+                        <div class="status" v-else-if="item.order_status == 6">待评论</div>
+                        <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
+                        <div class="status" v-else-if="item.order_status == 7">已完成</div>
                     </div>
                     <div class="cont">
-                        <img src="//placehold.it/100x100" alt="" class="or_img">
+                        <img :src="item.good_pic" alt="" class="or_img">
                         <div class="or_cont">
-                             <div class="title van-multi-ellipsis--l2">tittle</div>
-                            <div class="mini-title">分裂了</div>
+                             <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
+                            <div class="mini-title">服务：{{item.attr_names}}</div>
+                        </div>
+                    </div>
+                    <div class="prices">
+                        <div></div>
+                        <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
+                    </div>
+                    <div class="btn-list">
+                        <!-- <div class="btn-item">取消订单</div>
+                        <div class="btn-item cl">取消订单</div> -->
+                        <a :href="'../detail_order/main?id='+item.id" class="btn-item">订单详情</a>
+                    </div>
+                </div>
+            </van-tab>
+            <van-tab title="待接">
+                <div v-if="daijieList.length != 0">
+                
+                <div class="order-item"  v-for="(item, index) in daijieList" :key="key">
+                    <div class="heard">
+                        <div class="info">
+                            <div class="name">{{item.real_name}}</div>
+                        </div>
+
+                        <div class="status" v-if="item.order_status == 1">待接</div>
+                        <div class="status" v-else-if="item.order_status == 2">待付款</div>
+                        <div class="status" v-else-if="item.order_status == 3">待服务</div>
+                        <div class="status" v-else-if="item.order_status == 4">进行中</div>
+                        <div class="status" v-else-if="item.order_status == 5">售后中</div>
+                        <div class="status" v-else-if="item.order_status == 6">待评论</div>
+                        <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
+                        <div class="status" v-else-if="item.order_status == 7">已完成</div>
+                    </div>
+                    <div class="cont">
+                        <img :src="item.good_pic" alt="" class="or_img">
+                        <div class="or_cont">
+                             <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
+                            <div class="mini-title">服务：{{item.attr_names}}</div>
                         </div>
                        
                     </div>
                     <div class="prices">
-                        <div>状态</div>
-                        <div class="service">共1次服务 实付款：<div class="price">¥1000.00</div> </div>
+                        <div></div>
+                        <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
                     </div>
                     <div class="btn-list">
-                        <div class="btn-item">取消订单</div>
-                        <div class="btn-item cl">取消订单</div>
+                        <!-- <div class="btn-item">取消订单</div>
+                        <div class="btn-item cl">取消订单</div> -->
+                        <a :href="'../detail_order/main?id='+item.id" class="btn-item">订单详情</a>
                     </div>
                 </div>
+                    
+                </div>
             </van-tab>
-            <van-tab title="待付款">内容 2</van-tab>
-            <van-tab title="待服务">内容 3</van-tab>
-            <van-tab title="评价">内容 4</van-tab>
-            <van-tab title="售后">内容 4</van-tab>
+            <van-tab title="待付款">
+                <div v-if="fukuangList.length != 0">
+                
+                <div class="order-item"  v-for="(item, index) in fukuangList" :key="key">
+                    <div class="heard">
+                        <div class="info">
+                            <div class="name">{{item.real_name}}</div>
+                        </div>
+
+                        <div class="status" v-if="item.order_status == 1">待接</div>
+                        <div class="status" v-else-if="item.order_status == 2">待付款</div>
+                        <div class="status" v-else-if="item.order_status == 3">待服务</div>
+                        <div class="status" v-else-if="item.order_status == 4">进行中</div>
+                        <div class="status" v-else-if="item.order_status == 5">售后中</div>
+                        <div class="status" v-else-if="item.order_status == 6">待评论</div>
+                        <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
+                        <div class="status" v-else-if="item.order_status == 7">已完成</div>
+                    </div>
+                    <div class="cont">
+                        <img :src="item.good_pic" alt="" class="or_img">
+                        <div class="or_cont">
+                             <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
+                            <div class="mini-title">服务：{{item.attr_names}}</div>
+                        </div>
+                       
+                    </div>
+                    <div class="prices">
+                        <div></div>
+                        <div class="service">共{{item.buy_count}}次服务 待付款：<div class="price">¥{{item.total_pay}}</div> </div>
+                    </div>
+                    <div class="btn-list">
+                        <!-- <div class="btn-item">取消订单</div>
+                        <div class="btn-item cl">取消订单</div> -->
+                        <a :href="'../detail_order/main?id='+item.id" class="btn-item">订单详情</a>
+                    </div>
+                </div>
+                    
+                </div>
+            </van-tab>
+            <van-tab title="待服务">
+                <div v-if="fuwuList.length != 0">
+                
+                <div class="order-item"  v-for="(item, index) in fuwuList" :key="key">
+                    <div class="heard">
+                        <div class="info">
+                            <div class="name">{{item.real_name}}</div>
+                        </div>
+
+                        <div class="status" v-if="item.order_status == 1">待接</div>
+                        <div class="status" v-else-if="item.order_status == 2">待付款</div>
+                        <div class="status" v-else-if="item.order_status == 3">待服务</div>
+                        <div class="status" v-else-if="item.order_status == 4">进行中</div>
+                        <div class="status" v-else-if="item.order_status == 5">售后中</div>
+                        <div class="status" v-else-if="item.order_status == 6">待评论</div>
+                        <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
+                        <div class="status" v-else-if="item.order_status == 7">已完成</div>
+                    </div>
+                    <div class="cont">
+                        <img :src="item.good_pic" alt="" class="or_img">
+                        <div class="or_cont">
+                             <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
+                            <div class="mini-title">服务：{{item.attr_names}}</div>
+                        </div>
+                       
+                    </div>
+                    <div class="prices">
+                        <div></div>
+                        <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
+                    </div>
+                    <div class="btn-list">
+                        <!-- <div class="btn-item">取消订单</div>
+                        <div class="btn-item cl">取消订单</div> -->
+                        <a :href="'../detail_order/main?id='+item.id" class="btn-item">订单详情</a>
+                    </div>
+                </div>
+                    
+                </div>
+            </van-tab>
+            <van-tab title="进行中">
+                <div v-if="jinxinList.length != 0">
+                
+                <div class="order-item"  v-for="(item, index) in jinxinList" :key="key">
+                    <div class="heard">
+                        <div class="info">
+                            <div class="name">{{item.real_name}}</div>
+                        </div>
+
+                        <div class="status" v-if="item.order_status == 1">待接</div>
+                        <div class="status" v-else-if="item.order_status == 2">待付款</div>
+                        <div class="status" v-else-if="item.order_status == 3">待服务</div>
+                        <div class="status" v-else-if="item.order_status == 4">进行中</div>
+                        <div class="status" v-else-if="item.order_status == 5">售后中</div>
+                        <div class="status" v-else-if="item.order_status == 6">待评论</div>
+                        <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
+                        <div class="status" v-else-if="item.order_status == 7">已完成</div>
+                    </div>
+                    <div class="cont">
+                        <img :src="item.good_pic" alt="" class="or_img">
+                        <div class="or_cont">
+                             <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
+                            <div class="mini-title">服务：{{item.attr_names}}</div>
+                        </div>
+                       
+                    </div>
+                    <div class="prices">
+                        <div></div>
+                        <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
+                    </div>
+                    <div class="btn-list">
+                        <!-- <div class="btn-item">取消订单</div>
+                        <div class="btn-item cl">取消订单</div> -->
+                        <a :href="'../detail_order/main?id='+item.id" class="btn-item">订单详情</a>
+                    </div>
+                </div>
+                    
+                </div>
+            </van-tab>
+            <van-tab title="售后中">
+                 <div v-if="shouhuoList.length != 0">
+                
+                <div class="order-item"  v-for="(item, index) in shouhuoList" :key="key">
+                    <div class="heard">
+                        <div class="info">
+                            <div class="name">{{item.real_name}}</div>
+                        </div>
+
+                        <div class="status" v-if="item.order_status == 1">待接</div>
+                        <div class="status" v-else-if="item.order_status == 2">待付款</div>
+                        <div class="status" v-else-if="item.order_status == 3">待服务</div>
+                        <div class="status" v-else-if="item.order_status == 4">进行中</div>
+                        <div class="status" v-else-if="item.order_status == 5">售后中</div>
+                        <div class="status" v-else-if="item.order_status == 6">待评论</div>
+                        <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
+                        <div class="status" v-else-if="item.order_status == 7">已完成</div>
+                    </div>
+                    <div class="cont">
+                        <img :src="item.good_pic" alt="" class="or_img">
+                        <div class="or_cont">
+                             <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
+                            <div class="mini-title">服务：{{item.attr_names}}</div>
+                        </div>
+                       
+                    </div>
+                    <div class="prices">
+                        <div></div>
+                        <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
+                    </div>
+                    <div class="btn-list">
+                        <!-- <div class="btn-item">取消订单</div>
+                        <div class="btn-item cl">取消订单</div> -->
+                        <a :href="'../detail_order/main?id='+item.id" class="btn-item">订单详情</a>
+                    </div>
+                </div>
+                    
+                </div>
+            </van-tab>
+            <van-tab title="待评论">
+                 <div v-if="pinjiaList.length != 0">
+                
+                <div class="order-item"  v-for="(item, index) in pinjiaList" :key="key">
+                    <div class="heard">
+                        <div class="info">
+                            <div class="name">{{item.real_name}}</div>
+                        </div>
+
+                        <div class="status" v-if="item.order_status == 1">待接</div>
+                        <div class="status" v-else-if="item.order_status == 2">待付款</div>
+                        <div class="status" v-else-if="item.order_status == 3">待服务</div>
+                        <div class="status" v-else-if="item.order_status == 4">进行中</div>
+                        <div class="status" v-else-if="item.order_status == 5">售后中</div>
+                        <div class="status" v-else-if="item.order_status == 6">待评论</div>
+                        <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
+                        <div class="status" v-else-if="item.order_status == 7">已完成</div>
+                    </div>
+                    <div class="cont">
+                        <img :src="item.good_pic" alt="" class="or_img">
+                        <div class="or_cont">
+                             <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
+                            <div class="mini-title">服务：{{item.attr_names}}</div>
+                        </div>
+                       
+                    </div>
+                    <div class="prices">
+                        <div></div>
+                        <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
+                    </div>
+                    <div class="btn-list">
+                        <!-- <div class="btn-item">取消订单</div>
+                        <div class="btn-item cl">取消订单</div> -->
+                        <a :href="'../detail_order/main?id='+item.id" class="btn-item">订单详情</a>
+                    </div>
+                </div>
+                    
+                </div>
+            </van-tab>
+            <van-tab title="已完成">
+                 <div v-if="wanchengList.length != 0">
+                
+                <div class="order-item"  v-for="(item, index) in wanchengList" :key="key">
+                    <div class="heard">
+                        <div class="info">
+                            <div class="name">{{item.real_name}}</div>
+                        </div>
+
+                        <div class="status" v-if="item.order_status == 1">待接</div>
+                        <div class="status" v-else-if="item.order_status == 2">待付款</div>
+                        <div class="status" v-else-if="item.order_status == 3">待服务</div>
+                        <div class="status" v-else-if="item.order_status == 4">进行中</div>
+                        <div class="status" v-else-if="item.order_status == 5">售后中</div>
+                        <div class="status" v-else-if="item.order_status == 6">待评论</div>
+                        <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
+                        <div class="status" v-else-if="item.order_status == 7">已完成</div>
+                    </div>
+                    <div class="cont">
+                        <img :src="item.good_pic" alt="" class="or_img">
+                        <div class="or_cont">
+                             <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
+                            <div class="mini-title">服务：{{item.attr_names}}</div>
+                        </div>
+                       
+                    </div>
+                    <div class="prices">
+                        <div></div>
+                        <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
+                    </div>
+                    <div class="btn-list">
+                        <!-- <div class="btn-item">取消订单</div>
+                        <div class="btn-item cl">取消订单</div> -->
+                        <a :href="'../detail_order/main?id='+item.id" class="btn-item">订单详情</a>
+                    </div>
+                </div>
+                    
+                </div>
+            </van-tab>
+            <van-tab title="退款售后">
+                 <div v-if="tuikuangList.length != 0">
+                
+                <div class="order-item"  v-for="(item, index) in tuikuangList" :key="key">
+                    <div class="heard">
+                        <div class="info">
+                            <div class="name">{{item.real_name}}</div>
+                        </div>
+
+                        <div class="status" v-if="item.order_status == 1">待接</div>
+                        <div class="status" v-else-if="item.order_status == 2">待付款</div>
+                        <div class="status" v-else-if="item.order_status == 3">待服务</div>
+                        <div class="status" v-else-if="item.order_status == 4">进行中</div>
+                        <div class="status" v-else-if="item.order_status == 5">售后中</div>
+                        <div class="status" v-else-if="item.order_status == 6">待评论</div>
+                        <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
+                        <div class="status" v-else-if="item.order_status == 7">已完成</div>
+                    </div>
+                    <div class="cont">
+                        <img :src="item.good_pic" alt="" class="or_img">
+                        <div class="or_cont">
+                             <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
+                            <div class="mini-title">服务：{{item.attr_names}}</div>
+                        </div>
+                       
+                    </div>
+                    <div class="prices">
+                        <div></div>
+                        <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
+                    </div>
+                    <div class="btn-list">
+                        <!-- <div class="btn-item">取消订单</div>
+                        <div class="btn-item cl">取消订单</div> -->
+                        <a :href="'../detail_order/main?id='+item.id" class="btn-item">订单详情</a>
+                    </div>
+                </div>
+                    
+                </div>
+            </van-tab>
         </van-tabs>
     </div>
 </template>
 <script>
+import fly from '@/utils/fly'
+import Fun from '@/utils/index'
+import * as Params from '@/utils/params'
 export default {
     data() {
         return {
             active: 0
+            ,allOrderList: []
+            ,daijieList: []
+            ,fukuangList: []
+            ,fuwuList: []
+            ,jinxinList: []
+            ,shouhuoList: []
+            ,pinjiaList: []
+            ,wanchengList: []
+            ,tuikuangList: []
+            ,order_type: 'repair_order'			//默认repair_order  ，demand_order
+            ,order_status: 0		//默认0所有
+            ,order_extend_status:0		//默认0
+            ,keyword: ''
+            ,page_size: 15 //默认15
+            ,page:1 //默认1
+            ,allOrderPage: 0
+            ,taijiePage: 0
+            ,daifukuangPage:0
+            ,daifuwuPage: 0
+            ,jingxinPage: 0
+            ,shouhuoPage: 0
+            ,pingjuPage: 0
+            ,tuikuangPage: 0
+            ,wanchenPage: 0
         }
     }
     ,methods: {
         onChange(event){
-            console.log(event);
+            this.active = event.mp.detail.index
+            this.changeOpt()
         }
-        ,getdata() {
-            console.log(this)
+        ,getdata(act) {
+            fly.post('/?v=V1&g=Doctor&c=Order&a=getMyOrderList'+Fun.getParam(),{
+                order_type: this.order_type
+                ,order_status: this.order_status		//默认0所有
+                ,order_extend_status: this.order_extend_status		//默认0
+                ,keyword: this.keyword
+                ,page_size: this.page_size //默认15
+                ,page:this.page //默认1 
+            }).then((res)=> {
+                if(res.code == 0) {
+                    switch(act) {
+                        case 0:
+                        this.allOrderList = this.allOrderList.concat(res.data[0].list)
+                        break
+                         case 1:
+                        this.daijieList = this.daijieList.concat(res.data[0].list)
+                        break
+                         case 2:
+                        this.fukuangList = this.fukuangList.concat(res.data[0].list)
+                        break
+                         case 3:
+                        this.fuwuList = this.fuwuList.concat(res.data[0].list)
+                        break
+                         case 4:
+                        this.jinxinList = this.jinxinList.concat(res.data[0].list)
+                        break
+                         case 5:
+                        this.shouhuoList = this.shouhuoList.concat(res.data[0].list)
+                        break
+                         case 6:
+                        this.pinjiaList = this.pinjiaList.concat(res.data[0].list)
+                        break
+                        case 7:
+                        this.wanchengList = this.wanchengList.concat(res.data[0].list)
+                        break
+                        case 8:
+                        this.tuikuangList = this.tuikuangList.concat(res.data[0].list)
+                        break
+                    }
+                } else {
+                    console.log(res.message)
+                }
+            })
+        }
+        ,changeOpt (){
+            this.order_status = this.active
+            switch(this.active) {
+                case 0:
+                    this.page = this.allOrderPage ++
+                    this.getdata()
+                break
+                case 1:
+                    this.page = this.taijiePage ++
+                    this.getdata()
+                break
+                case 2:
+                    this.page = this.daifukuangPage ++
+                    this.getdata()
+                break
+                case 3:
+                    this.page = this.daifuwuPage ++
+                    this.getdata()
+                break
+                case 4:
+                    this.page = this.jingxinPage ++
+                    this.getdata()
+                break
+                case 5:
+                    this.page = this.shouhuoPage ++
+                    this.getdata()
+                break
+                case 6:
+                    this.page = this.pingjuPage ++
+                    this.getdata()
+                break
+                case 7:
+                    this.page = this.wanchenPage ++
+                    this.getdata()
+                break
+                case 8:
+                    this.page = this.tuikuangPage ++
+                    this.order_status  = 0
+                    this.getdata()
+                break
+            }
+            this.getdata(this.active)
         }
     }
-    ,onShow() {
-        this.getdata()
+    ,created() {
+        
+    }
+    ,mounted() {
+        // console.log(this)
+        this.active = ~~this.$mp.query.id
+        this.changeOpt()
+    }
+    ,onReachBottom(){ // 底部添加更多
+        this.changeOpt()
     }
 }
 </script>

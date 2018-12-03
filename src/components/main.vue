@@ -18,10 +18,10 @@
     <!-- 轮播图 end-->
     <div class="bg-f9">
       <div class="service">
-       <div class="service-item">
+       <a href="../repair_list/main" class="service-item">
          <img src="../../static/imgs/weixiu.png" alt="" class="service-img">
          <div class="service-name">项目维修</div>
-       </div>
+       </a>
        <a href="../publish/main" class="service-item">
          <img src="../../static/imgs/xuqiu.png" alt="" class="service-img">
          <div class="service-name">需求发布</div>
@@ -151,8 +151,10 @@
 
 <script>
 import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
 import fly from '@/utils/fly'
-import Toast from '../../static/vant/toast/toast';
+import Toast from '../../static/vant/toast/toast'
+
 export default {
   data () {
     return {
@@ -219,12 +221,12 @@ export default {
       this.getAdData()
     }
     ,getExpertData() {
-       fly.post('/?v=V1&g=Doctor&c=Expert&a=getIndexExpertList'+Params.default.param).then((res) =>{
+       fly.post('/?v=V1&g=Doctor&c=Expert&a=getIndexExpertList'+Fun.getParam()).then((res) =>{
         this.expertList = res.data.list
       })
     }
     ,getConsultData() { // 咨询
-       fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultList'+Params.default.param,{
+       fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultList'+Fun.getParam(),{
          cat_id: 0//cat_id
         ,field_id: 0//field_id
         ,page: this.consultPage
@@ -236,7 +238,7 @@ export default {
       })
     }
     ,getArticleData() {
-      fly.post('/?v=V1&g=Doctor&c=Article&a=getArticleList'+Params.default.param,{
+      fly.post('/?v=V1&g=Doctor&c=Article&a=getArticleList'+Fun.getParam(),{
          cat_id: 0//cat_id
         ,field_id: 0//field_id
         //,sort: 'new' // 默认new,hot,top,all,like,comment
@@ -249,7 +251,7 @@ export default {
       })
     }
     ,getxuqiuData() {
-      fly.post('/?v=V1&g=Doctor&c=Demand&a=getDemandList'+Params.default.param,{
+      fly.post('/?v=V1&g=Doctor&c=Demand&a=getDemandList'+Fun.getParam(),{
          cat_id: 0//cat_id
         ,field_ids: 0//field_id
         //,sort: 'new' // 默认new,hot,top,all,like,comment
@@ -262,7 +264,7 @@ export default {
       })
     }
     ,getrepairsData() {
-      fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairList'+Params.default.param,{
+      fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairList'+Fun.getParam(),{
          cat_id: 0
         ,field_ids: 0
         ,page: this.repairPage
@@ -274,7 +276,7 @@ export default {
       })
     }
     ,getAdData() {
-      fly.post('/?v=V1&g=Common&c=Ad&a=getAdList'+Params.default.param,{
+      fly.post('/?v=V1&g=Common&c=Ad&a=getAdList'+Fun.getParam(),{
         ad_type: 'doctor_index_top'
       }).then((res)=>{
         if(res.code == 0)

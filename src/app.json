@@ -22,6 +22,8 @@
     ,"pages/baojia/main"
     ,"pages/person_home/main"
     ,"pages/article_list/main"
+    ,"pages/repair_list/main"
+    ,"pages/consult_ans/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

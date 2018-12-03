@@ -54,6 +54,7 @@
 </template>
 <script>
 import fly from '@/utils/fly'
+import Fun from '@/utils/index'
 import * as Params from '@/utils/params'
 export default {
     data() {
@@ -66,7 +67,7 @@ export default {
     ,methods: {
         getData() {
             // 需求详情
-            fly.post('/?v=V1&g=Doctor&c=Demand&a=getDemandDetail'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Demand&a=getDemandDetail'+Fun.getParam(),{
                 demand_id: this.id 
             }).then((res)=> {
                 if(res.code == 0) {

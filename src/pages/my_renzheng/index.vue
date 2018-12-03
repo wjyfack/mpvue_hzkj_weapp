@@ -70,7 +70,7 @@
 import Toast from '../../../static/vant/toast/toast';
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
-
+import Fun from '@/utils/index'
 export default {
     data() {
         return {
@@ -150,7 +150,7 @@ export default {
             // 'front_of_id_card'	//身份证正面
             // 'reverse_of_id_card'//身份证反面
             // 'sms_code'			//短信验证码
-            fly.post('/?v=V1&g=Doctor&c=User&a=editMyRealInfo'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=User&a=editMyRealInfo'+Fun.getParam(),{
                 real_name: this.userInfo.real_name
                 ,bank_mobile: this.userInfo.bank_mobile
                 ,bank_name: this.userInfo.bank_name
@@ -187,7 +187,7 @@ export default {
                    
                     //console.log(res)
                     wx.uploadFile({
-                        url: Params.default.host+'/?v=V1&g=Common&c=Upload&a=uploadImage'+Params.default.param,
+                        url: Params.default.host+'/?v=V1&g=Common&c=Upload&a=uploadImage'+Fun.getParam(),
                         filePath: res.tempFilePaths[0],
                         name: 'file',
                         formData: {
@@ -232,7 +232,7 @@ export default {
                 }
                 
             },1000)
-            fly.post('/?v=V1&g=Common&c=Sms&a=sendSms&s='+Params.default.param,{
+            fly.post('/?v=V1&g=Common&c=Sms&a=sendSms&s='+Fun.getParam(),{
                 mobile: this.userInfo.bank_mobile
             }).then((res)=> {
                if(res.code == 0) {
@@ -261,15 +261,25 @@ export default {
             this.mobile_code = event.mp.detail
         }
         ,getUserInfo(){
-            fly.post('/?v=V1&g=Common&c=User&a=getMyRealInfo'+Params.default.param)
+            fly.post('/?v=V1&g=Common&c=User&a=getMyRealInfo'+Fun.getParam())
             .then((res)=> {
                 console.log(res)
                 let data = res.data.user_real_info
-                data.front_of_id_card == ''? data.front_of_id_card = this.proson_z :this.img_f =  'data'+data.reverse_of_id_card.split('data')[1]
-                data.reverse_of_id_card == '' ?  data.reverse_of_id_card = this.proson_f:this.img_z =  'data'+data.front_of_id_card.split('data')[1]
+                if(data.front_of_id_card == ''){
+                   data.front_of_id_card = this.proson_z 
+                }  else {
+                    this.img_f =  data.reverse_of_id_card
+                    data.front_of_id_card = Params.oHost+data.reverse_of_id_card
+                }
+                if(data.reverse_of_id_card == '' ){ 
+                     data.reverse_of_id_card = this.proson_f
+                }else {
+                    this.img_z =  data.front_of_id_card
+                    data.reverse_of_id_card =  Params.oHost+data.reverse_of_id_card
+                } 
                 this.userInfo = data
-                // console.log(this.userInfo)
-                // console.log(this.img_z,this.img_f)
+                console.log(this.userInfo)
+                console.log(this.img_z,this.img_f)
             })
         }
     }

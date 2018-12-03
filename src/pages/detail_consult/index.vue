@@ -15,17 +15,19 @@
                     </div>
                 </div>
             </div>
-            <div class="guanzhu" v-if="myInfo.is_focus == 0">关注</div>
-            <div class="guanzhu" v-else-if="myInfo.is_focus == 1">已关注</div>
+            <div class="guanzhu" @click="onFoucs" v-if="myInfo.is_focus == 0">关注</div>
+            <div class="guanzhu"  @click="onFoucs" v-else-if="myInfo.is_focus == 1">已关注</div>
         </div>
         <div class="cont">
             <p><wxParse :content="info.content"/></p>
             
         </div>
         <div class="btn-group">
-            <div class="btn"><img src="../../../static/imgs/con_hui.png" alt="" class="btn-img" @click="toColse">回答</div>
-            <div class="btn"><img src="../../../static/imgs/con_ju.png" alt="" class="btn-img">举报</div>
+            <a :href="'../consult_ans/main?id='+id" class="btn"><img src="../../../static/imgs/con_hui.png" alt="" class="btn-img">回答</a>
+            <div class="btn" @click="onShouc(info.id,2)"><img src="../../../static/imgs/rp_star.png" alt="" class="btn-img"> <span v-if="myInfo.is_coll == 0">收藏</span><span v-if="myInfo.is_coll == 1">已收藏</span> </div>
+            <div class="btn" @click="toColse('ju',info.id,2)"><img src="../../../static/imgs/con_ju.png" alt="" class="btn-img">举报</div>
             <!-- <div class="btn fr"><img src="../../../static/imgs/con_zhui.png" alt="" class="btn-img">追加悬赏</div> -->
+
         </div>
     </div>
     <div class="pinglun">
@@ -39,38 +41,41 @@
                         <span class="barnd">{{item.user_label}}</span>
                     </div>
                 </div>
-                <div class="jub"><img src="../../../static/imgs/con_ju.png" alt="" class="img">举报</div>
+                <div class="jub" @click="toColse('ju',item.id,2)"><img src="../../../static/imgs/con_ju.png" alt="" class="img">举报</div>
             </div>
             <div class="content">
-               {{item.content}} 
+               <wxParse :content="item.content"/>
             </div>
             <div class="opt">
                 <div class="time">{{item.add_time}}</div>
                 <div class="option">
                     <div class="option-item"><img src="../../../static/imgs/p_use.png" alt="" class="opt-img">点赞</div>
-                    <div class="option-item"><img src="../../../static/imgs/con_hui.png" alt="" class="opt-img">回复</div>
-                    <div class="option-item"><img src="../../../static/imgs/rp_star.png" alt="" class="opt-img">收藏</div>
-                    <div class="option-item"><img src="../../../static/imgs/rp_share.png" alt="" class="opt-img">分享</div>
+                    <div class="option-item" @click="toColse('pin',item.id,item.user_id)"><img src="../../../static/imgs/con_hui.png" alt="" class="opt-img" >回复</div>
+                    <div class="option-item"  @click="onShouc(item.id,3)"><img src="../../../static/imgs/rp_star.png" alt="" class="opt-img">
+                    <span v-if="item.is_coll == 0">收藏</span>
+                    <span　v-else>已收藏</span>
+                    </div>
+                    <div class="option-item" ><img src="../../../static/imgs/rp_share.png" alt="" class="opt-img">分享</div>
                 </div>
             </div>
             <div class="footer">
                 <div class="f-item" v-for="(items,indexs) in item.reply_list" :key="kes">
-                    <span class="name">{{items.a_nick_name}}：</span>回复<span class="name">{{items.b_nick_name}}：</span>{{items.content}}<span class="recall">[回复]</span>
+                    <span class="name">{{items.a_nick_name}}：</span>回复<span class="name">{{items.b_nick_name}}：</span>{{items.content}}<span class="recall"></span>
                 </div>
             </div>
         </div>
     </div>
     <div class="gix-tab van-hairline--top">
         <div class="tab-bottom">
-            <div class="ans" @click="toColse">发表回复...</div>
+            <a class="ans" :href="'../consult_ans/main?id='+id">发表回答...</a>
             <div class="tab-item"><img src="../../../static/imgs/con_hui.png" alt="" class="img"></div>
             <div class="tab-item"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
             <div class="tab-item"><img src="../../../static/imgs/rp_share.png" alt="" class="img"></div>
         </div>
     </div>
-    <van-popup :show="show" @close="toColse" position="bottom">
+    <van-popup :show="show" @close="toColses" position="bottom">
         <div class="commit">
-            <div class="commit-header"><div @click="toColse">取消</div>　<div @click="onSubmit">确定</div></div>
+            <div class="commit-header"><div @click="toColses">取消</div>　<div @click="onSubmit">确定</div></div>
            
             <van-cell-group>
             <!-- <van-radio-group :value="radio" @change="onChangeRadio">
@@ -89,13 +94,15 @@
 
         </div>
     </van-popup>
-
+<van-toast id="van-toast" />
 </div>
 </template>
 <script>
 import fly from '@/utils/fly'
+import Fun from '@/utils/index'
 import * as Params from '@/utils/params'
 import wxParse from 'mpvue-wxparse'
+import Toast from '../../../static/vant/toast/toast';
 export default {
     components: {
         wxParse
@@ -103,9 +110,12 @@ export default {
     data() {
         return {
             id: 0
+            ,commit_id: 0
+            ,to_user_id: 0
             ,show: false
             ,active: 0
             ,radio: 0
+            ,option: ''
             ,cont: ''
             ,info: {}
             ,myInfo: {}
@@ -118,7 +128,7 @@ export default {
     ,methods: {
         getData() {
             // 咨询详情
-            fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultDetail'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultDetail'+Fun.getParam(),{
                 consult_id: this.id
             }).then((res)=> {
                 if(res.code == 0) {
@@ -133,7 +143,7 @@ export default {
         }
         ,getComment() {
             //获取咨询评论列表
-            fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultCommentList'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultCommentList'+Fun.getParam(),{
                 consult_id: this.id
             }).then((res)=> {
                 if(res.code == 0) {
@@ -144,8 +154,16 @@ export default {
                 }
             })
         }
-        ,toColse() {
+        ,toColses() {
+             this.show = !this.show
+        }
+        ,toColse(option,commit_id,to_user_id) {
+           
             this.show = !this.show
+            this.option = option
+            this.to_user_id = to_user_id || 0
+            this.commit_id = commit_id || 0
+          
         }
         ,onChangeRadio(event) {
             this.radio = event.mp.detail
@@ -157,7 +175,30 @@ export default {
             if(this.cont == '') {
                 return ''
             }
-          
+            let data = {}
+            let url = ''
+            
+            switch(this.option) {
+                case 'pin':
+                    url= '/?v=V1&g=Doctor&c=Consult&a=postConsultComment'
+                    data = {
+                        consult_id: this.id
+                        ,content: this.cont
+                        ,is_niming: this.radio
+                        ,comment_id: this.commit_id
+                        ,to_user_id: this.to_user_id
+                    }
+                break
+                case 'ju':
+                    url = '/?v=V1&g=Doctor&c=Common&a=jubao'
+                    data ={
+                        id: this.commit_id
+                        ,type: this.to_user_id
+                        ,content: this.cont
+                    }
+                break;
+            }
+            console.log(url,data)
             // 咨询评论和回复(必须登录)
             // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=Consult&a=postConsultComment
             // content
@@ -165,21 +206,46 @@ export default {
             // comment_id		//回复时必填这个和to_user_id，评论时没有这两个参数
             // to_user_id
             // is_niming			//1匿名 0 不匿名
-            fly.post('/?v=V1&g=Doctor&c=Consult&a=postConsultComment'+Params.default.param,{
-                consult_id: this.id
-                ,content: this.cont
-                ,is_niming: this.radio
-            }).then((res)=> {
-                console.log(res)
+            fly.post(url+Fun.getParam(),data).then((res)=> {
+                
                 if(res.code == 0) {
+                    Toast('操作成功')
                     this.show = false
                     this.cont = ''
+                    if(this.option == 'pin')
                     this.getComment()
+                } else {
+                    Toast(res.message)
+                }
+            })
+
+        }
+        ,onFoucs() {
+            fly.post('/?v=V1&g=Doctor&c=Common&a=switchFocus'+Fun.getParam(),{
+                to_user_id: this.info.author_id
+            }).then((res)=> {
+                
+                if(res.code == 0) {
+                    Toast('操作成功')
+                    this.getData()
+                } else {
+                    console.log(res.message)
+                }
+            })  
+        }
+        ,onShouc(id,type) {
+            fly.post('/?v=V1&g=Doctor&c=Common&a=switchColl'+Fun.getParam(),{
+                id: id
+                ,type:type //  2 3
+            }).then((res)=> {
+                
+                if(res.code == 0) {
+                    Toast('操作成功')
+                    type == 2 ?this.getData(): this.getComment()
                 } else {
                     console.log(res.message)
                 }
             })
-
         }
     }
     ,mounted() {

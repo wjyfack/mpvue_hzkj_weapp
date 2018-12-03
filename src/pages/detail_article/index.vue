@@ -6,25 +6,26 @@
         </div>
         <div class="info">
             <div class="person">
-                <img :src="info.user_picture" alt="" class="img">
+                <img :src="info.author_info.user_picture" alt="" class="img">
                 <div class="infos">
-                    <div class="name">{{info.nick_name}}</div>
+                    <div class="name">{{info.author_info.nick_name}}</div>
                     <div class="eye">
                         <img src="../../../static/imgs/eye.png" alt="" class="eye-img">
-                        {{info.read_count}}  /{{info>add_time}}
+                        {{info.read_count}}  /{{info.add_time}}
                     </div>
                 </div>
             </div>
-            <div class="guanzhu" v-if="myInfo.is_focus == 0">关注</div>
-            <div class="guanzhu" v-else-if="myInfo.is_focus == 1">已关注</div>
+            <div class="guanzhu" @click="onFoucs" v-if="info.my_info.is_focus ==0">关注</div>   
+            <div class="guanzhu" @click="onFoucs" v-if="info.my_info.is_focus ==1">已关注</div>   
         </div>
         <div class="cont">
-            <p>{{info.content}}</p>
+            <p><wxParse :content="info.content"/></p>
             
         </div>
         <div class="btn-group">
-            <div class="btn"><img src="../../../static/imgs/con_hui.png" alt="" class="btn-img">回答</div>
-            <div class="btn"><img src="../../../static/imgs/con_ju.png" alt="" class="btn-img">举报</div>
+            <div class="btn" @click="toColse('pin')"><img src="../../../static/imgs/con_hui.png" alt="" class="btn-img">评论</div>
+            <div class="btn" @click="onShouc"><img src="../../../static/imgs/rp_star.png" alt="" class="btn-img"> <span v-if="info.my_info.is_coll == 0">收藏</span><span v-if="info.my_info.is_coll == 1">已收藏</span> </div>
+            <!-- <div class="btn" @click="toColse('ju')"><img src="../../../static/imgs/con_ju.png" alt="" class="btn-img">举报</div> -->
             <!-- <div class="btn fr"><img src="../../../static/imgs/con_zhui.png" alt="" class="btn-img">追加悬赏</div> -->
         </div>
     </div>
@@ -35,11 +36,11 @@
                 <div class="infod">
                     <img :src="item.user_picture" alt="" class="avatar">
                     <div class="cont">
-                        <span class="name">{{item.nick_name}}}</span>
+                        <span class="name">{{item.nick_name}}</span>
                         <span class="barnd">{{item.user_label}}</span>
                     </div>
                 </div>
-                <div class="jub"><img src="../../../static/imgs/con_ju.png" alt="" class="img">举报</div>
+                <div class="jub" @click="toColse('ju',item.id,item.user_id)"><img src="../../../static/imgs/con_ju.png" alt="" class="img">举报</div>
             </div>
             <div class="content">
                {{item.content}} 
@@ -47,56 +48,83 @@
             <div class="opt">
                 <div class="time">{{item.add_time}}</div>
                 <div class="option">
-                    <div class="option-item"><img src="../../../static/imgs/p_use.png" alt="" class="opt-img">点赞</div>
-                    <div class="option-item"><img src="../../../static/imgs/con_hui.png" alt="" class="opt-img">回复</div>
-                    <div class="option-item"><img src="../../../static/imgs/rp_star.png" alt="" class="opt-img">收藏</div>
-                    <div class="option-item"><img src="../../../static/imgs/rp_share.png" alt="" class="opt-img">分享</div>
+                    <!-- <div class="option-item"><img src="../../../static/imgs/p_use.png" alt="" class="opt-img">点赞</div> -->
+                    <div class="option-item" @click="toColse('hui',item.id,item.user_id)"><img src="../../../static/imgs/con_hui.png" alt="" class="opt-img">回复</div>
+                    <!-- <div class="option-item"><img src="../../../static/imgs/rp_star.png" alt="" class="opt-img">收藏</div>
+                    <div class="option-item"><img src="../../../static/imgs/rp_share.png" alt="" class="opt-img">分享</div> -->
                 </div>
             </div>
             <div class="footer">
                 <div class="f-item" v-for="(items,indexs) in item.reply_list" :key="kes">
-                    <span class="name">{{items.a_nick_name}}：</span>回复<span class="name">{{items.b_nick_name}}：</span>{{items.content}}<span class="recall">[回复]</span>
+                    <span class="name">{{items.a_nick_name}}：</span>回复<span class="name">{{items.b_nick_name}}：</span>{{items.content}}<span class="recall"></span>
                 </div>
             </div>
         </div>
     </div>
     <div class="gix-tab van-hairline--top">
         <div class="tab-bottom">
-            <div class="ans">发表回复...</div>
-            <div class="tab-item"><img src="../../../static/imgs/con_hui.png" alt="" class="img"></div>
-            <div class="tab-item"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
-            <div class="tab-item"><img src="../../../static/imgs/rp_share.png" alt="" class="img"></div>
+            <div class="ans" @click="toColse('pin')">发表评论...</div>
+            <!-- <div class="tab-item"><img src="../../../static/imgs/con_hui.png" alt="" class="img"></div> -->
+            <div class="tab-item" @click="onShouc"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
+            <div class="tab-item"><img src="../../../static/imgs/rp_share.png" alt="" class="img"></div> 
         </div>
     </div>
+    <van-popup :show="show" @close="toColses" position="bottom">
+        <div class="commit">
+            <div class="commit-header"><div @click="toColses">取消</div>　<div @click="onSubmit">确定</div></div>
+           
+            <van-cell-group>
+            <van-field
+                :value="cont"
+                placeholder="请输入内容"
+                type="textarea"
+                :border="false"
+                autosize
+                @change="onChangeCont"
+            />
+            </van-cell-group>
+
+        </div>
+    </van-popup>
+<van-toast id="van-toast" />
 </div>
 </template>
 <script>
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
+import wxParse from 'mpvue-wxparse'
+import Toast from '../../../static/vant/toast/toast';
 export default {
+    components: {
+        wxParse
+    },
     data() {
         return {
             id: 0
-            ,active: 0
-            ,info: {}
-            ,myInfo: {}
-            ,toUserInfo: {}
-            ,cainaInfo: {}
+            ,show: false
+            ,cont: ''
+            ,info: {
+                author_info: {}
+                ,my_info: {}
+            }
+            ,option: 'pin'
+            ,comment_id: 0
+            ,to_user_id: 0
             ,commentList: []
             ,commentCount: 0 // 总评价数
         }
     }
     ,methods: {
         getData() {
-            // 咨询详情
-            fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultDetail'+Params.default.param,{
-                consult_id: this.id
+            // 文章详情
+            fly.post('/?v=V1&g=Doctor&c=Article&a=getArticleDetail'+Fun.getParam(),{
+                article_id: this.id
             }).then((res)=> {
+                
                 if(res.code == 0) {
-                    this.info = res.data.info
-                    this.myInfo = res.data.my_info
-                    this.toUserInfo = res.data.to_user_info
-                    this.cainaInfo = res.data.caina_info
+                    this.info = res.data
+                 
                 } else {
                     console.log(res.message)
                 }
@@ -104,12 +132,100 @@ export default {
         }
         ,getComment() {
             //获取咨询评论列表
-            fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultCommentList'+Params.default.param,{
-                consult_id: this.id
+            fly.post('/?v=V1&g=Doctor&c=Article&a=getArticleCommentList'+Fun.getParam(),{
+                article_id: this.id
             }).then((res)=> {
                 if(res.code == 0) {
-                    this.commentCount = res.data[0].count
-                    this.commentList = res.data[0].list
+                    this.commentCount = res.data.count
+                    this.commentList = res.data.list
+                } else {
+                    console.log(res.message)
+                }
+            })
+        }
+        ,toColses() {
+            this.show = !this.show
+        }
+        ,toColse(opt,comment_id,to_user_id) {
+            this.show = !this.show
+            this.option = opt
+            this.comment_id = comment_id || 0
+            this.to_user_id = to_user_id || 0
+        }
+        ,onChangeRadio(event) {
+            this.radio = event.mp.detail
+        }
+        ,onChangeCont(event) {
+            this.cont = event.mp.detail
+        }
+        ,onSubmit() {
+            let url = '/?v=V1&g=Doctor&c=Article&a=postArticleComment'
+            if(this.cont == '') {
+                return ''
+            }
+            let data = {
+                article_id: this.id
+                ,content: this.cont
+            }
+            switch(this.option) {
+                 case 'pin':
+
+                break
+                 case 'hui':
+                    data.comment_id = this.comment_id
+                    data.to_user_id = this.to_user_id
+                break
+                case 'ju': 
+                 data = {
+                     id: this.comment_id
+                     ,type: 1
+                     ,content: this.cont
+                 }
+                 url = '/?v=V1&g=Doctor&c=Common&a=jubao'
+                break
+            }
+            // 评论/回复-文章(必须登录)
+            // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=Article&a=postArticleComment
+            // article_id 	
+            // content
+            // consult_id
+            // comment_id		//回复时必填这个和to_user_id，评论时没有这两个参数
+            // to_user_id
+            fly.post(url+Fun.getParam(),data).then((res)=> {
+                console.log(res)
+                if(res.code == 0) {
+                    if(this.option == 'ju') Toast('举报成功')
+                    this.show = false
+                    this.cont = ''
+                    this.getComment()
+                } else {
+                    console.log(res.message)
+                }
+            })
+
+        }
+        ,onFoucs() {
+            fly.post('/?v=V1&g=Doctor&c=Common&a=switchFocus'+Fun.getParam(),{
+                to_user_id: this.info.author_info.user_id
+            }).then((res)=> {
+                
+                if(res.code == 0) {
+                    Toast('操作成功')
+                    this.getData()
+                } else {
+                    console.log(res.message)
+                }
+            })  
+        }
+        ,onShouc() {
+            fly.post('/?v=V1&g=Doctor&c=Common&a=switchColl'+Fun.getParam(),{
+                id: this.info.id
+                ,type:1
+            }).then((res)=> {
+                
+                if(res.code == 0) {
+                    Toast('操作成功')
+                    this.getData()
                 } else {
                     console.log(res.message)
                 }
@@ -118,13 +234,14 @@ export default {
     }
     ,mounted() {
         this.id = this.$mp.query.id
-        //this.getData()
-        //this.getComment()
-         console.log(this.id)
+        this.getData()
+        this.getComment()
+        // console.log(this.id)
     },
 }
 </script>
 <style lang="less" scoped>
+@import url("~mpvue-wxparse/src/wxParse.css");
 .consult {
     background: #F9F9F9;
     margin-top: 5px;
@@ -289,6 +406,17 @@ export default {
                 .img {width:26px;height: 25px;vertical-align: middle;}
             }
         }
+    }
+}
+.commit {
+    min-height: 150px;
+   
+    .commit-header {
+        display:flex;
+        padding: 10px 20px;
+        justify-content: space-between;
+        font-size: 14px;
+        color:#5887F9;
     }
 }
 </style>

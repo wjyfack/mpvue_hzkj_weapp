@@ -71,6 +71,7 @@
 <script>
 import fly from '@/utils/fly'
 import Toast from '../../static/vant/toast/toast';
+import Fun from '@/utils/index'
 export default {
     data() {
         return {
@@ -89,6 +90,7 @@ export default {
             ,pid: 0
             ,cat_type: 1
             ,sort_type: 2
+            ,param : '&d=wx_minprogram&s='+(wx.getStorageSync('userData').session_id == undefined ? '' : wx.getStorageSync('userData').session_id)
         }
     }
     ,methods: {
@@ -116,7 +118,7 @@ export default {
         }
         ,getRepairData() {
             let _this = this
-            fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=Consult&a=getConsultList',{
+            fly.post('/?v=V1&g=Doctor&c=Consult&a=getConsultList'+this.param,{
                 cat_id: this.cat_id
                 ,field_id: this.field_id
                 ,page: this.page
@@ -140,7 +142,7 @@ export default {
             });
         }
         ,getSort() {
-            fly.post('/?d=wx_minprogram&v=V1&g=Doctor&c=Cat&a=getCatsByPid',{
+            fly.post('/?v=V1&g=Doctor&c=Cat&a=getCatsByPid'+this.param,{
                 pid:this.pid
                 ,cat_type: this.cat_type
                 ,sort_type: this.sort_type

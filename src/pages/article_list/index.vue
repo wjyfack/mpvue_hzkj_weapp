@@ -1,7 +1,7 @@
 <template>
     <div class="publish">
         <div class="consult">
-            <div class="consult-item" v-for="(item, index) in artilceList" :key="key">
+            <a :href="'/pages/detail_article/main?id='+item.id" class="consult-item" v-for="(item, index) in artilceList" :key="key">
                 <div class="head">
                     <div class="cont">
                         <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
@@ -12,13 +12,15 @@
                     </div>
                     <img :src="item.list_pic" alt="" class="img">
                 </div>
-            </div>   
+            </a>   
         </div>
     <van-toast id="van-toast" />
     </div>
 </template>
 <script>
 import fly from '@/utils/fly'
+import Fun from '@/utils/index'
+
 import * as Params from '@/utils/params'
 import Toast from '../../../static/vant/toast/toast';
 export default {
@@ -30,7 +32,7 @@ export default {
     }
     ,methods: {
         getArtilceList(){
-            fly.post('/?v=V1&g=Doctor&c=Article&a=getArticleList'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Article&a=getArticleList'+Fun.getParam(),{
                 keyword: ''
                 ,cat_id: 0
                 ,field_id: 0

@@ -96,6 +96,7 @@
 <script>
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
 export default {
     data() {
         return {
@@ -129,7 +130,7 @@ export default {
         }
         ,getData() {
             // 维修项目详情
-            fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairDetail'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairDetail'+Fun.getParam(),{
                 repair_id: this.id 
             }).then((res)=> {
                 if(res.code == 0) {
@@ -154,7 +155,7 @@ export default {
                     page = ++this.chaPage
                 break;
             }
-            fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairCommentList'+Params.default.param,{
+            fly.post('/?v=V1&g=Doctor&c=Repair&a=getRepairCommentList'+Fun.getParam(),{
                 repair_id: this.id
                 ,pingjia_type: this.active +1// 1好评2中评3差评
                 ,page: page

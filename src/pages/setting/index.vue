@@ -20,6 +20,7 @@
 <script>
 import fly from '@/utils/fly'
 import * as Params from '@/utils/params'
+import Fun from '@/utils/index'
 import Toast from '../../../static/vant/toast/toast';
 export default {
     data() {
@@ -42,7 +43,7 @@ export default {
                 return ;
             }
            
-            fly.post('/?v=V1&g=Common&c=User&a=editMyInfo'+Params.default.param,{
+            fly.post('/?v=V1&g=Common&c=User&a=editMyInfo'+Fun.getParam(),{
                 nick_name: this.baseInfo.nick_name
                 ,user_picture: this.avatar
             }).then((res)=> {
@@ -69,7 +70,7 @@ export default {
                    
                     //console.log(res)
                     wx.uploadFile({
-                        url: Params.default.host+'/?v=V1&g=Common&c=Upload&a=uploadImage'+Params.default.param,
+                        url: Params.default.host+'/?v=V1&g=Common&c=Upload&a=uploadImage'+Fun.getParam(),
                         filePath: res.tempFilePaths[0],
                         name: 'file',
                         formData: {
