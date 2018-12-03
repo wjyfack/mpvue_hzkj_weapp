@@ -24,6 +24,7 @@
     ,"pages/article_list/main"
     ,"pages/repair_list/main"
     ,"pages/consult_ans/main"
+    ,"pages/search/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

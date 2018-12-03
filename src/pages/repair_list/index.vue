@@ -38,6 +38,7 @@ export default {
             cat_id: 0
             ,field_ids: 0
             ,page: this.repairPage
+            ,keyword: this.keyword
             ,page_size: 15
         }).then((res)=>{
             // console.log(res)
@@ -47,6 +48,7 @@ export default {
         }
     }
     ,mounted() {
+        this.keyword = this.$mp.query.keyword || ''
        this.getrepairsData()
     }
     ,onReachBottom(){ // 底部添加更多

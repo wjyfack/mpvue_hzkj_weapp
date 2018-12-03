@@ -2,9 +2,9 @@
   <scroll-view scroll-y="true" class="container" @scrolltolower="onLoadMore">
    
     <div class="search-bar">
-      <div class="search">
+      <a :href="'../search/main?opt=repair'" class="search">
         搜索您需要的服务<img src="../../static/imgs/search.png" class="search-icon"/>
-      </div>
+      </a>
       <!-- <div><img src="../../static/imgs/filters.png" alt="" class="filter"></div> -->
     </div>
    <!-- 轮播图 -->

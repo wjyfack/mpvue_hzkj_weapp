@@ -9,15 +9,22 @@ export default {
     data(){
         return{
             value: ''
+            ,opt: ''
         }
     }
     ,methods: {
         onSearch(event) {
-            console.log(event)
+            ths.value = event.mp.detail
+            wx.navigateTo({
+            url: '../repair_list/main?keyword='+this.value
+            })
         }
     }
-    
-}
+    ,mounted() {
+        this.opt = this.$mp.query.opt
+        console.log(this.$mp.query)
+    },
+} 
 </script>
 <style lang="less" scoped>
 
