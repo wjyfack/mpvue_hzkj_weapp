@@ -55,7 +55,7 @@
                     <span v-if="item.is_coll == 0">收藏</span>
                     <span　v-else>已收藏</span>
                     </div>
-                    <div class="option-item" ><img src="../../../static/imgs/rp_share.png" alt="" class="opt-img">分享</div>
+                    <!-- <div class="option-item" ><img src="../../../static/imgs/rp_share.png" alt="" class="opt-img">分享</div> -->
                 </div>
             </div>
             <div class="footer">
@@ -68,9 +68,9 @@
     <div class="gix-tab van-hairline--top">
         <div class="tab-bottom">
             <a class="ans" :href="'../consult_ans/main?id='+id">发表回答...</a>
-            <div class="tab-item"><img src="../../../static/imgs/con_hui.png" alt="" class="img"></div>
-            <div class="tab-item"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
-            <div class="tab-item"><img src="../../../static/imgs/rp_share.png" alt="" class="img"></div>
+            <!-- <div class="tab-item"><img src="../../../static/imgs/con_hui.png" alt="" class="img"></div> -->
+            <div class="tab-item" @click="onShouc(info.id,2)"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
+            <!-- <div class="tab-item"><img src="../../../static/imgs/rp_share.png" alt="" class="img"></div> -->
         </div>
     </div>
     <van-popup :show="show" @close="toColses" position="bottom">

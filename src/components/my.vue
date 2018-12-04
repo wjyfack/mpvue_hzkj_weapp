@@ -63,13 +63,14 @@
                 <div class="name">我的文章列表</div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
             </a>
-            </div>
-            <a href="../my_publish/main" class="nongne_item van-hairline--bottom">
+            <a href="../my_publish/main" v-if="2 == item" class="nongne_item van-hairline--bottom">
                 <img src="../../static/imgs/my_fabu.png" alt="" class="nongne_img" mode="widthFix">
                 <div class="name">我的发布</div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">
             </a>
-            <a href="../my_shou/main" class="nongne_item van-hairline--bottom">
+            </div>
+            
+            <a href="" class="nongne_item van-hairline--bottom">
                 <img src="../../static/imgs/my_shouc.png" alt="" class="nongne_img" mode="widthFix">
                 <div class="name">我的收藏</div>
                 <img src="../../static/imgs/arrow.png" alt="" class="arrow">

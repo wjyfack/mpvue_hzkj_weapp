@@ -288,13 +288,70 @@ export default {
             this.onCloseSort()
         }
     }
-    ,mounted: function(){
+    ,mounted(){
         this.getSort(0)
-        console.log(this.userData)
-        if(this.userData.user_id <= 0) {
-            Toast('请先登录')
-            wx.navigateTo({url: '../my_logins/main'})
-        }
+        
+        var userData = wx.getStorageSync('userData')
+        //console.log(userData,123123)
+        if(userData.user_id <= 0|| userData.user_id == undefined || userData.session_id == undefined) {
+            //Toast('请先登录') 
+             wx.getSetting({
+                success (res) {
+                    if(res.authSetting['scope.userInfo']) {
+                        wx.clearStorage()
+                        wx.login({
+                            success (res) {
+                                if (res.code) {
+                                console.log('abc')
+                                    wx.getUserInfo({
+                                    success: function(data) {
+                                        // console.log(data)
+                                        wx.setStorageSync('userInfo', data)
+                                        let userData = data
+                                        //发起网络请求
+                                        fly.post('/?d=wx_minprogram&v=V1&g=Common&c=Login&a=login', {
+                                            login_type: 'wx_minprogram'
+                                            ,encrypted_data: userData.encryptedData
+                                            ,iv: userData.iv
+                                            ,raw_data: userData.rawData
+                                            ,signature: userData.signature
+                                            // ,useInfo: userData.useInfo
+                                            ,js_code: res.code
+                                        }).then(function (response) {
+                                            // console.log(response.data)
+                                            if(response.code == 0) {
+                                            wx.setStorage({
+                                                key:"userData",
+                                                data:response.data
+                                                })
+                                                wx.setStorageSync('userData', response.data)
+                                            
+                                            if(response.data.user_id > 0) {// 有用户信息
+                                                
+                                            } else { // 前去绑定帐号
+                                                wx.navigateTo({url: '../my_login/main'})
+                                            }
+                                            }
+                                        }).then(() => {
+                                            
+                                        })
+                                    }   
+                                    })
+                                } else {
+                                console.log('登录失败！' + res.errMsg)
+                                }
+                            }
+                        })
+        
+                    } else {
+                    // 跳到授权页面
+                    console.log(2323)
+                    wx.navigateTo({ url: '../login/main' })
+                    }
+                    
+                }
+            })
+        } 
     }
     
 }

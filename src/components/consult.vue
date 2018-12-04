@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-       <a href="" class="search"> 搜索您所寻找的答案~ <van-icon name="search" class="s_icon"/></a>
+       <!-- <a href="" class="search"> 搜索您所寻找的答案~ <van-icon name="search" class="s_icon"/></a> -->
        <div class="bar">
            <a href="../consult_publish/main" class="bar-item">
                <img src="../../static/imgs/consult_wenti.png" alt="" class="img" mode="aspectFit">
@@ -127,6 +127,7 @@ export default {
             }).then(function(res){
                 // console.log(_this.consultList.concat(res.data.list))
                 if(res.code == 0) {
+                    
                     _this.consultList =_this.consultList.concat(res.data.list)
 
                 }
@@ -136,7 +137,7 @@ export default {
         }
         ,onLoading(){
             Toast.loading({
-                duration: 1500,
+                duration: 1000,
                 mask: true,
                 message: '加载中...'
             });

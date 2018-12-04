@@ -11,7 +11,7 @@
     <swiper class="swiper" indicator-dots="true" autoplay="true" interval="5000" duration="1000"> 
       <block v-for="(item, index) in banners" :index="index" :key="key">
         <swiper-item> 
-          <image :src="item.ad_code" class="slide-image" mode="scaleToFill"/> 
+          <image v-if="item.ad_code" :src="item.ad_code" class="slide-image" mode="scaleToFill"/> 
         </swiper-item> 
       </block> 
     </swiper>
@@ -46,7 +46,7 @@
       </div>
       <div class="expert">
         <a :href="'../person_home/main?id='+item.user_id" class="expert-item" v-for="(item, index) in expertList" :key="key">
-          <img :src="item.user_picture" alt="" class="expert-img">
+          <img v-if="item.user_picture" :src="item.user_picture" alt="" class="expert-img">
           <div class="expert-name">{{item.real_name}}</div>
         </a>
       </div>
@@ -56,8 +56,8 @@
           <a href="/pages/article_list/main" class="more">更多>></a>
         </div>
       <div class="article">
-        <a :href="'/pages/detail_article/main?id='+item.id" class="article-item" v-for="(item, index) in articleList" :key="key">
-          <div class="art-title van-ellipsis van-hairline--bottom">{{item.title}}</div>
+        <a :href="'/pages/detail_article/main?id='+item.id" class="article-item van-hairline--bottom" v-for="(item, index) in articleList" :key="key">
+          <div class="art-title van-ellipsis">{{item.title}}</div>
           <div class="min_time">{{item.add_time}}</div>
         </a>
       </div>
@@ -90,7 +90,7 @@
         <div class="repair">
           <a :href="'../detail_repair/main?id='+item.id" class="repair-item" v-for="(item, index) in repairList" :key="key">
             <div class="repair-header">
-              <img :src="item.user_picture" alt="" class="actor">
+              <img v-if="item.user_picture" :src="item.user_picture" alt="" class="actor">
               <div class="self">
                 <div class="name">{{item.real_name}}</div>
                 <div class="info">
@@ -101,7 +101,7 @@
               </div>
             </div>
             <div class="repair-imgs">
-              <div class="img-item" v-for="(items, indexs) in item.pics_str" :key="keys"><img :src="items" alt="" class="img"></div>
+              <div class="img-item" v-for="(items, indexs) in item.pics_str" :key="keys"><img v-if="items" :src="items" alt="" class="img"></div>
             </div>
             <div class="repair-title">{{item.title}}</div>
             <div class="repair-price"><div class="yy">¥</div>　<div>{{item.price}}</div>  </div>
@@ -112,10 +112,10 @@
         <div class="xuqiu">
           <a :href="'../detail_demand/main?id='+item.id" class="xuqiu-item" v-for="(item, index) in xuqiuList" :key="key">
               <div class="title title van-multi-ellipsis--l">{{item.title}}</div>
-              <div class="cont title van-multi-ellipsis--l">{{item.content}}</div>
+              <div class="cont title van-multi-ellipsis--l2">{{item.content}}</div>
               <div class="xuqiu-imgs">
                 <div class="img-item" v-for="(items, indexs) in item.pics_str" :key="keys">
-                  <img :src="items" alt="" class="img">
+                  <img v-if="items" :src="items" alt="" class="img">
                   </div>
               </div>
               <div class="name">

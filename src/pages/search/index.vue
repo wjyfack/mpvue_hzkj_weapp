@@ -14,7 +14,7 @@ export default {
     }
     ,methods: {
         onSearch(event) {
-            ths.value = event.mp.detail
+            this.value = event.mp.detail
             wx.navigateTo({
             url: '../repair_list/main?keyword='+this.value
             })
@@ -22,7 +22,6 @@ export default {
     }
     ,mounted() {
         this.opt = this.$mp.query.opt
-        console.log(this.$mp.query)
     },
 } 
 </script>

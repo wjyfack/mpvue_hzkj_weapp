@@ -4,7 +4,7 @@
             <van-tab title="维修">
                 <div class="publish-item" v-for="(item, index) in repairList" :key="key">
                     <div class="cont">
-                        <img :src="item.pics_str" alt="" class="or_img">
+                        <img v-if="item.pics_str" :src="item.pics_str" alt="" class="or_img">
                         <div class="or_cont">
                              <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
                              <div class="price"><div class="ya">￥</div><div class="men">1000.00</div></div>

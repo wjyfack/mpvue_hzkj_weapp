@@ -66,7 +66,7 @@
             <div class="ans" @click="toColse('pin')">发表评论...</div>
             <!-- <div class="tab-item"><img src="../../../static/imgs/con_hui.png" alt="" class="img"></div> -->
             <div class="tab-item" @click="onShouc"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
-            <div class="tab-item"><img src="../../../static/imgs/rp_share.png" alt="" class="img"></div> 
+            <!-- <div class="tab-item"><img src="../../../static/imgs/rp_share.png" alt="" class="img"></div>  -->
         </div>
     </div>
     <van-popup :show="show" @close="toColses" position="bottom">
@@ -274,6 +274,7 @@ export default {
                         display: flex;
                         color:#8E8E8E;
                         font-size: 8px;
+                        align-items: center;
                         .eye-img {
                             width: 11px;
                             height: 7px;

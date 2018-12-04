@@ -5,7 +5,7 @@
             <swiper class="swiper" indicator-dots="true" autoplay="true" interval="5000" duration="1000"> 
             <block v-for="(item, index) in good_info.pics_str" :index="index" :key="key">
                 <swiper-item> 
-                <image :src="item.url" class="slide-image" mode="scaleToFill"/> 
+                <image :src="item" class="slide-image" mode="scaleToFill"/> 
                 </swiper-item> 
             </block> 
             </swiper>

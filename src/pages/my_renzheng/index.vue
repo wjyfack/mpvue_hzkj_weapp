@@ -264,19 +264,19 @@ export default {
             fly.post('/?v=V1&g=Common&c=User&a=getMyRealInfo'+Fun.getParam())
             .then((res)=> {
                 console.log(res)
+
                 let data = res.data.user_real_info
-                if(data.front_of_id_card == ''){
+                console.log(data.front_of_id_card)
+                if(!data){
+                    data = this.userInfo
+                    data.reverse_of_id_card = this.proson_f
                    data.front_of_id_card = this.proson_z 
                 }  else {
                     this.img_f =  data.reverse_of_id_card
                     data.front_of_id_card = Params.oHost+data.reverse_of_id_card
-                }
-                if(data.reverse_of_id_card == '' ){ 
-                     data.reverse_of_id_card = this.proson_f
-                }else {
                     this.img_z =  data.front_of_id_card
                     data.reverse_of_id_card =  Params.oHost+data.reverse_of_id_card
-                } 
+                }
                 this.userInfo = data
                 console.log(this.userInfo)
                 console.log(this.img_z,this.img_f)

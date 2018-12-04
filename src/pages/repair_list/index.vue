@@ -18,6 +18,7 @@
     <div class="repair-title">{{item.title}}</div>
     <div class="repair-price"><div class="yy">¥</div>　<div>{{item.price}}</div>  </div>
     </a>
+     <van-toast id="van-toast" />
 </div>
 </template>
 <script>

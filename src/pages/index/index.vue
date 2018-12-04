@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <mains v-if="active == 0"></mains>
-    <consult v-else-if="active == 1"/>
+    <mains v-if="act == 0"></mains>
+    <consult v-else-if="act == 1"/>
     
-    <message v-else-if="active == 3"/>
-    <my v-else-if="active == 4"/>
+    <message v-else-if="act == 3"/>
+    <my v-else-if="act == 4"/>
     <van-tabbar :active="act" @change="onChangeTab">
       <van-tabbar-item>
         <span>首页</span>
@@ -48,7 +48,7 @@ import Fun from '@/utils/index'
 export default {
   data () {
     return {
-      active: 0
+      act: 0
       ,userInfo: {}
     }
   },
@@ -115,7 +115,7 @@ export default {
           case 2:
             // url = '../publish/main'
             // name = '发布'
-            this.active = 0;
+            this.act = 0;
             this.bindViewTap('../publish/main')
             return ;
           break;
@@ -128,7 +128,8 @@ export default {
             name = '个人中心'
           break;
         }
-        this.active = detail
+        this.act = detail
+        console.log(this.act)
         this.changeNavigateBar(name)
     }
     ,changeNavigateBar(name) {
