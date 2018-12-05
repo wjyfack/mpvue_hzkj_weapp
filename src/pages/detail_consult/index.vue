@@ -15,16 +15,16 @@
                     </div>
                 </div>
             </div>
-            <div class="guanzhu" @click="onFoucs" v-if="myInfo.is_focus == 0">关注</div>
-            <div class="guanzhu"  @click="onFoucs" v-else-if="myInfo.is_focus == 1">已关注</div>
+            <div class="guanzhu" @click="onFoucs(myInfo.is_focus)" v-if="myInfo.is_focus == 0">关注</div>
+            <div class="guanzhu"  @click="onFoucs(myInfo.is_focus)" v-else-if="myInfo.is_focus == 1">已关注</div>
         </div>
         <div class="cont">
-            <p><wxParse :content="info.content"/></p>
+            <p v-if="info.content"><wxParse :content="info.content"/></p>
             
         </div>
         <div class="btn-group">
             <a :href="'../consult_ans/main?id='+id" class="btn"><img src="../../../static/imgs/con_hui.png" alt="" class="btn-img">回答</a>
-            <div class="btn" @click="onShouc(info.id,2)"><img src="../../../static/imgs/rp_star.png" alt="" class="btn-img"> <span v-if="myInfo.is_coll == 0">收藏</span><span v-if="myInfo.is_coll == 1">已收藏</span> </div>
+            <div class="btn" @click="onShouc(info.id,2,myInfo.is_coll)"><img src="../../../static/imgs/rp_star.png" alt="" class="btn-img"> <span v-if="myInfo.is_coll == 0">收藏</span><span v-if="myInfo.is_coll == 1">已收藏</span> </div>
             <div class="btn" @click="toColse('ju',info.id,2)"><img src="../../../static/imgs/con_ju.png" alt="" class="btn-img">举报</div>
             <!-- <div class="btn fr"><img src="../../../static/imgs/con_zhui.png" alt="" class="btn-img">追加悬赏</div> -->
 
@@ -43,15 +43,15 @@
                 </div>
                 <div class="jub" @click="toColse('ju',item.id,2)"><img src="../../../static/imgs/con_ju.png" alt="" class="img">举报</div>
             </div>
-            <div class="content">
+            <div class="content" v-if="item.content">
                <wxParse :content="item.content"/>
             </div>
             <div class="opt">
                 <div class="time">{{item.add_time}}</div>
                 <div class="option">
-                    <div class="option-item"><img src="../../../static/imgs/p_use.png" alt="" class="opt-img">点赞</div>
+                    <div class="option-item" @click="onZan(item.id,4,item.is_like)"><img src="../../../static/imgs/p_use.png" alt="" class="opt-img"><span v-if="0 ==item.is_like">点赞</span><span v-else>已点赞</span> </div>
                     <div class="option-item" @click="toColse('pin',item.id,item.user_id)"><img src="../../../static/imgs/con_hui.png" alt="" class="opt-img" >回复</div>
-                    <div class="option-item"  @click="onShouc(item.id,3)"><img src="../../../static/imgs/rp_star.png" alt="" class="opt-img">
+                    <div class="option-item"  @click="onShouc(item.id,3,item.is_coll)"><img src="../../../static/imgs/rp_star.png" alt="" class="opt-img">
                     <span v-if="item.is_coll == 0">收藏</span>
                     <span　v-else>已收藏</span>
                     </div>
@@ -69,7 +69,7 @@
         <div class="tab-bottom">
             <a class="ans" :href="'../consult_ans/main?id='+id">发表回答...</a>
             <!-- <div class="tab-item"><img src="../../../static/imgs/con_hui.png" alt="" class="img"></div> -->
-            <div class="tab-item" @click="onShouc(info.id,2)"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
+            <div class="tab-item" @click="onShouc(info.id,2,myInfo.is_coll)"><img src="../../../static/imgs/rp_star.png" alt="" class="img"></div>
             <!-- <div class="tab-item"><img src="../../../static/imgs/rp_share.png" alt="" class="img"></div> -->
         </div>
     </div>
@@ -137,7 +137,7 @@ export default {
                     this.toUserInfo = res.data.to_user_info
                     this.cainaInfo = res.data.caina_info
                 } else {
-                    console.log(res.message)
+                   // console.log(res.message)
                 }
             })
         }
@@ -150,7 +150,7 @@ export default {
                     this.commentCount = res.data[0].count
                     this.commentList = res.data[0].list
                 } else {
-                    console.log(res.message)
+                    //console.log(res.message)
                 }
             })
         }
@@ -198,7 +198,7 @@ export default {
                     }
                 break;
             }
-            console.log(url,data)
+            //console.log(url,data)
             // 咨询评论和回复(必须登录)
             // http://cdzj.demo.com/Apiapi/?v=V1&g=Doctor&c=Consult&a=postConsultComment
             // content
@@ -220,30 +220,44 @@ export default {
             })
 
         }
-        ,onFoucs() {
+        ,onFoucs(opt) {
             fly.post('/?v=V1&g=Doctor&c=Common&a=switchFocus'+Fun.getParam(),{
                 to_user_id: this.info.author_id
             }).then((res)=> {
                 
                 if(res.code == 0) {
-                    Toast('操作成功')
+                     opt == 0 ?Toast('关注成功'): Toast('取消关注')
                     this.getData()
                 } else {
-                    console.log(res.message)
+                   Toast(res.message)
                 }
             })  
         }
-        ,onShouc(id,type) {
+        ,onShouc(id,type,opt) {
             fly.post('/?v=V1&g=Doctor&c=Common&a=switchColl'+Fun.getParam(),{
                 id: id
                 ,type:type //  2 3
             }).then((res)=> {
                 
                 if(res.code == 0) {
-                    Toast('操作成功')
+                   opt == 0 ?Toast('收藏成功'): Toast('取消收藏')
                     type == 2 ?this.getData(): this.getComment()
                 } else {
-                    console.log(res.message)
+                    Toast(res.message)
+                }
+            })
+        }
+        ,onZan(id,type,opt) {
+            fly.post('/?v=V1&g=Doctor&c=Common&a=switchLike'+Fun.getParam(),{
+                id: id
+                ,type:type //  2 3
+            }).then((res)=> {
+                
+                if(res.code == 0) {
+                    opt == 0 ?Toast('点赞成功'): Toast('取消点赞')
+                     this.getComment()
+                } else {
+                    Toast(res.message)
                 }
             })
         }

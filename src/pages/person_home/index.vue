@@ -55,7 +55,7 @@
             </div>
         </div>
     <van-tabs :active="active" @change="onChange" color="#5887F9">
-        <van-tab title="动态">
+        <van-tab title="动态" @touchstart="onTouchStart" @touchend="onTouchEnd">
             <div class="dongtai" v-for="(item,index) in MixinsList" :key="key">
                 <a :href="'../detail_repair/main?id='+item.repair_id" class="repair-item" v-if="item.type == 'new_repair'">
                     <div class="tade"><div>他发布了新的维修</div><div>{{item.add_time}}</div></div>
@@ -121,7 +121,7 @@
                 </a>
             </div>
         </van-tab>
-        <van-tab title="参与问答">
+        <van-tab title="参与问答" @touchstart="onTouchStart" @touchend="onTouchEnd">
             <div class="dongtai" v-for="(item,index) in ansList" :key="key">
                  <a :href="'../detail_consult/main?id='+item.consult_id" class="consult-item van-hairline--bottom" v-if="item.type == 'new_consult'">
                     <div class="tade"><div>他发布了新的咨询</div><div>{{item.add_time}}</div></div>
@@ -147,7 +147,7 @@
                 </a>
             </div>
         </van-tab>
-        <van-tab title="维修项目">
+        <van-tab title="维修项目" @touchstart="onTouchStart" @touchend="onTouchEnd">
             <div class="dongtai">
                 <a :href="'../detail_repair/main?id='+item.repair_id" class="repair-item" v-for="(item,index) in repairList" :key="key">
                     <div class="tade"><div>他发布了新的维修</div><div>{{item.add_time}}</div></div>
@@ -159,7 +159,7 @@
                 </a>
             </div>
         </van-tab>
-        <van-tab title="文章">
+        <van-tab title="文章" @touchstart="onTouchStart" @touchend="onTouchEnd">
             <div class="dongtai" v-for="(item,index) in articleList" :key="key">
                 <a :href="'../detail_article/main?id='+item.article_id" class="article-item van-hairline--bottom" v-if="item.type == 'new_article'">
                     <div class="tade"><div>他发布了新的文章</div><div>{{item.add_time}}</div></div>
@@ -233,12 +233,29 @@ export default {
             ,repairPage:1
             ,ansPage: 1
             ,artPage: 1
+            ,pageX: 0
         }
     }
     ,methods: {
         onChange(e) {
             this.active = e.mp.detail.index
             
+        }
+        ,onTouchStart(event) {
+        //console.log(event)
+        this.pageX = event.pageX
+        }
+        ,onTouchEnd(event) {
+        //console.log(event)
+        let x = event.mp.changedTouches[0].pageX
+        //console.log(this.pageX,x)
+          let num = ~~(this.pageX-x)
+      if(num > 100 || num < -100)
+        if(this.pageX < x) {
+            this.active == 0 ? '' : --this.active
+        } else {
+            this.active == 3 ? '' : ++this.active
+        }
         }
         ,getPerson() {
            fly.post('/?v=V1&g=Doctor&c=User&a=getUserIndex'+Fun.getParam(),{

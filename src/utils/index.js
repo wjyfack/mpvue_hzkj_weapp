@@ -30,10 +30,14 @@ export function getParam() {
 export function getStar(num) {
   return ~~(num /20)
 }
+export function getZan(num) {
+  return num > 9999 ? '9999+': num
+}
 export default {
   getBrand
   ,formatTime
   ,formatNumber
   ,getParam
   ,getStar
+  ,getZan
 }

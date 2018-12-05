@@ -1,7 +1,7 @@
 <template>
     <div class="order">
        <van-tabs :active="active" @change="onChange" :color="'#5887F9'">
-            <van-tab title="全部订单">
+            <van-tab title="全部订单" @touchstart="onTouchStart" @touchend="onTouchEnd">
                 <div class="order-item" v-for="(item, index) in allOrderList" :key="key">
                     <div class="heard">
                         <div class="info">
@@ -15,13 +15,13 @@
                         <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
                         <div class="status" v-else-if="item.order_status == 5">已完成</div>
                     </div>
-                    <div class="cont">
+                    <a :href="'../detail_order/main?opt=my&id='+item.id" class="cont">
                         <img :src="item.good_pic" alt="" class="or_img">
                         <div class="or_cont">
                              <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
                             <div class="mini-title">服务：{{item.attr_names}}</div>
                         </div>
-                    </div>
+                    </a>
                     <div class="prices">
                         <div></div>
                         <div class="service">共{{item.buy_count}}次服务 付款：<div class="price">¥{{item.total_pay}}</div> </div>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
             </van-tab>
-            <van-tab title="待接">
+            <van-tab title="待接单" @touchstart="onTouchStart" @touchend="onTouchEnd">
                 <div v-if="daijieList.length != 0">
                 
                 <div class="order-item"  v-for="(item, index) in daijieList" :key="key">
@@ -54,14 +54,14 @@
                         <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
                         <div class="status" v-else-if="item.order_status == 7">已完成</div>
                     </div>
-                    <div class="cont">
+                    <a :href="'../detail_order/main?opt=my&id='+item.id" class="cont">
                         <img :src="item.good_pic" alt="" class="or_img">
                         <div class="or_cont">
                              <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
                             <div class="mini-title">服务：{{item.attr_names}}</div>
                         </div>
                        
-                    </div>
+                    </a>
                     <div class="prices">
                         <div></div>
                         <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
@@ -78,7 +78,7 @@
                     
                 </div>
             </van-tab>
-            <van-tab title="待付款">
+            <van-tab title="待付款" @touchstart="onTouchStart" @touchend="onTouchEnd">
                 <div v-if="fukuangList.length != 0">
                 
                 <div class="order-item"  v-for="(item, index) in fukuangList" :key="key">
@@ -96,14 +96,14 @@
                         <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
                         <div class="status" v-else-if="item.order_status == 7">已完成</div>
                     </div>
-                    <div class="cont">
+                    <a :href="'../detail_order/main?opt=my&id='+item.id" class="cont">
                         <img :src="item.good_pic" alt="" class="or_img">
                         <div class="or_cont">
                              <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
                             <div class="mini-title">服务：{{item.attr_names}}</div>
                         </div>
                        
-                    </div>
+                    </a>
                     <div class="prices">
                         <div></div>
                         <div class="service">共{{item.buy_count}}次服务 待付款：<div class="price">¥{{item.total_pay}}</div> </div>
@@ -120,7 +120,7 @@
                     
                 </div>
             </van-tab>
-            <van-tab title="待服务">
+            <van-tab title="待服务" @touchstart="onTouchStart" @touchend="onTouchEnd">
                 <div v-if="fuwuList.length != 0">
                 
                 <div class="order-item"  v-for="(item, index) in fuwuList" :key="key">
@@ -138,14 +138,14 @@
                         <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
                         <div class="status" v-else-if="item.order_status == 7">已完成</div>
                     </div>
-                    <div class="cont">
+                    <a :href="'../detail_order/main?opt=my&id='+item.id" class="cont">
                         <img :src="item.good_pic" alt="" class="or_img">
                         <div class="or_cont">
                              <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
                             <div class="mini-title">服务：{{item.attr_names}}</div>
                         </div>
                        
-                    </div>
+                    </a>
                     <div class="prices">
                         <div></div>
                         <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
@@ -160,7 +160,7 @@
                     
                 </div>
             </van-tab>
-            <van-tab title="进行中">
+            <van-tab title="进行中" @touchstart="onTouchStart" @touchend="onTouchEnd">
                 <div v-if="jinxinList.length != 0">
                 
                 <div class="order-item"  v-for="(item, index) in jinxinList" :key="key">
@@ -178,14 +178,14 @@
                         <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
                         <div class="status" v-else-if="item.order_status == 7">已完成</div>
                     </div>
-                    <div class="cont">
+                    <a :href="'../detail_order/main?opt=my&id='+item.id" class="cont">
                         <img :src="item.good_pic" alt="" class="or_img">
                         <div class="or_cont">
                              <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
                             <div class="mini-title">服务：{{item.attr_names}}</div>
                         </div>
                        
-                    </div>
+                    </a>
                     <div class="prices">
                         <div></div>
                         <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
@@ -200,7 +200,7 @@
                     
                 </div>
             </van-tab>
-            <van-tab title="已完成">
+            <van-tab title="已完成" @touchstart="onTouchStart" @touchend="onTouchEnd">
                  <div v-if="wanchengList.length != 0">
                 
                 <div class="order-item"  v-for="(item, index) in wanchengList" :key="key">
@@ -218,14 +218,14 @@
                         <div class="status" v-else-if="item.order_extend_status == 2">退款售后</div>
                         <div class="status" v-else-if="item.order_status == 7">已完成</div>
                     </div>
-                    <div class="cont">
+                    <a :href="'../detail_order/main?opt=my&id='+item.id" class="cont">
                         <img :src="item.good_pic" alt="" class="or_img">
                         <div class="or_cont">
                              <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
                             <div class="mini-title">服务：{{item.attr_names}}</div>
                         </div>
                        
-                    </div>
+                    </a>
                     <div class="prices">
                         <div></div>
                         <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
@@ -239,7 +239,7 @@
                     
                 </div>
             </van-tab>
-            <van-tab title="退款售后">
+            <van-tab title="退款售后" @touchstart="onTouchStart" @touchend="onTouchEnd">
                  <div v-if="tuikuangList.length != 0">
                 
                 <div class="order-item"  v-for="(item, index) in tuikuangList" :key="key">
@@ -249,14 +249,14 @@
                         </div>
                         <div class="status" >退款售后</div>
                     </div>
-                    <div class="cont">
+                    <a :href="'../detail_order/main?opt=my&id='+item.id" class="cont">
                         <img :src="item.good_pic" alt="" class="or_img">
                         <div class="or_cont">
                              <div class="title van-multi-ellipsis--l2" >{{item.good_name}}</div>
                             <div class="mini-title">服务：{{item.attr_names}}</div>
                         </div>
                        
-                    </div>
+                    </a>
                     <div class="prices">
                         <div></div>
                         <div class="service">共{{item.buy_count}}次服务 实付款：<div class="price">¥{{item.total_pay}}</div> </div>
@@ -308,12 +308,29 @@ export default {
             ,pingjuPage: 0
             ,tuikuangPage: 0
             ,wanchenPage: 0
+            ,pageX: 0
         }
     }
     ,methods: {
         onChange(event){
             this.active = event.mp.detail.index
             this.changeOpt()
+        }
+         ,onTouchStart(event) {
+        //console.log(event)
+        this.pageX = event.pageX
+        }
+        ,onTouchEnd(event) {
+        //console.log(event)
+        let x = event.mp.changedTouches[0].pageX
+        //console.log(this.pageX,x)
+          let num = ~~(this.pageX-x)
+      if(num > 100 || num < -100)
+        if(this.pageX < x) {
+            this.active == 0 ? '' : --this.active
+        } else {
+            this.active == 6 ? '' : ++this.active
+        }
         }
         ,getdata(act) {
             fly.post('/?v=V1&g=Doctor&c=Order&a=getMyShopOrderList'+Fun.getParam(),{

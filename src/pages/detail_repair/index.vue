@@ -2,18 +2,20 @@
     <div class="detail">
         <div class="content">
             <!-- 轮播图 -->
-            <swiper class="swiper" indicator-dots="true" autoplay="true" interval="5000" duration="1000"> 
-            <block v-for="(item, index) in good_info.pics_str" :index="index" :key="key">
-                <swiper-item> 
-                <image :src="item" class="slide-image" mode="scaleToFill"/> 
-                </swiper-item> 
-            </block> 
-            </swiper>
+            <div>
+                <swiper class="swiper" indicator-dots="true" autoplay="true" interval="5000" duration="1000" :style="height"> 
+                    <swiper-item v-for="(item, index) in good_info.pics_str" :index="index" :key="key"> 
+                    <img :src="item" class="slide-image" mode="scaleToFill"/> 
+                    </swiper-item> 
+        
+                </swiper>
+            </div>
+            
             <!-- 轮播图 end-->
             <div class="tou">
                 <div class="head">
                     <div class="price"><div class="yan">￥</div><div>{{select.price}}/次</div> </div>
-                    <img src="../../../static/imgs/rp_share.png" class="share">
+                    <img @click="onShare" src="../../../static/imgs/rp_share.png" class="share">
                 </div>
                 <div class="detail van-multi-ellipsis--l2">{{good_info.title}}</div>
                 <div class="infos">
@@ -150,11 +152,21 @@ export default {
             ,pingjiaTwoList: {}
             ,allPingjia: 0
             ,select: {}
+            ,height: 0
         }
     }
     ,methods: {
         onChange(event) {
             this.active = event.mp.detail
+        }
+        ,onShare() {
+        
+            wx.showShareMenu({
+                withShareTicket: true
+                ,success() {
+                    console.log(234)
+                }
+            })
         }
         ,getData(id) {
             // 维修项目详情
@@ -213,7 +225,15 @@ export default {
                 url: '../order_sure/main?name='+this.user_info.nick_name+'&select='+data
             })
         }
-        
+        ,getHeigth() {
+            let _this = this
+            wx.getSystemInfo({
+            success (res) {
+               _this.height = 'height:'+res.windowWidth+'px'
+               
+            }
+            })
+        }
 
     }
     ,mounted() {
@@ -222,12 +242,14 @@ export default {
         this.id = query.id
         this.getData(query.id)
         this.getPingjia(query.id,1,1,3)
+        this.getHeigth()
     },
 }
 </script>
 <style lang="less" scoped>
 @import url("~mpvue-wxparse/src/wxParse.css");
-
+.slide-image{width: 100%;height: 100%;}
+.swiper-hi {height: 300px;}
 .detail {
     background: #F9F9F9;
     .content {

@@ -1,8 +1,8 @@
 <template>
 <div class="consult">
     <div class="consult-item van-hairline--bottom" v-for="(item, index) in articleList" :key="key">
-        <div class="con">
-            <div class="cont">
+        <a :href="'../detail_article/main?id='+item.id" class="con">
+            <div  class="cont">
                 <div class="title van-multi-ellipsis--l2">{{item.title}}</div>
                 <div class="mini">
                     <div>{{item.like_count}}收藏</div>
@@ -10,7 +10,7 @@
                 </div>
             </div>
             <img :src="item.list_pic" alt="" class="img"> 
-        </div>
+        </a>
         <div class="btn-list">
             <div @click="zhangli(item.id)" class="btn-item" v-if="item.read_count_reward == 1">兑换阅读量</div>
             <a :href="'../detail_article/main?id='+item.id" class="btn-item">文章详情</a>

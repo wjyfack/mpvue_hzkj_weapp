@@ -1,7 +1,7 @@
 <template>
     <div class="publish">
        <van-tabs :active="active" @change="onChange" :color="'#5887F9'" custom-class="fixed-tab">
-            <van-tab title="维修">
+            <van-tab title="维修" @touchstart="onTouchStart" @touchend="onTouchEnd">
                 <div class="publish-item" v-for="(item, index) in repairList" :key="key">
                     <div class="cont">
                         <img v-if="item.pics_str" :src="item.pics_str" alt="" class="or_img">
@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </van-tab>
-            <van-tab title="需求">
+            <van-tab title="需求" @touchstart="onTouchStart" @touchend="onTouchEnd">
             <div class="xuqiu">
                 <div class="xuqiu-item" v-for="(item, index) in xuqiuList" :key="key">
                     <div class="title title van-multi-ellipsis--l">{{item.title}}</div>
@@ -49,7 +49,7 @@
                 </div>
             </div>  
             </van-tab>
-            <van-tab title="咨询">
+            <van-tab title="咨询" @touchstart="onTouchStart" @touchend="onTouchEnd">
                 <div class="consult">
                     <div class="consult-item" v-for="(item, index) in consultList" :key="key">
                         <div class="head">
@@ -93,6 +93,7 @@ export default {
             ,pageRepair: 0
             ,pageXuqiu: 0
             ,pageConsult: 0
+            ,pageX: 0
         }
     }
     ,methods: {
@@ -177,6 +178,22 @@ export default {
                 // on cancel
             });
             
+        }
+        ,onTouchStart(event) {
+        //console.log(event)
+        this.pageX = event.pageX
+        }
+        ,onTouchEnd(event) {
+        //console.log(event)
+        let x = event.mp.changedTouches[0].pageX
+        //console.log(this.pageX,x)
+          let num = ~~(this.pageX-x)
+      if(num > 100 || num < -100)
+        if(this.pageX < x) {
+            this.active == 0 ? '' : --this.active
+        } else {
+            this.active == 2 ? '' : ++this.active
+        }
         }
     }
     ,mounted() {

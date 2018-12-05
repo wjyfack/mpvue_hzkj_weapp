@@ -3,7 +3,7 @@ import Fly from "flyio/dist/npm/wx";
 const fly = new Fly;
 
 //配置请求基地址
-fly.config.baseURL = "https://www.cdxscn.com/Apiapi" // "https://www.cdxscn.com/Apiapi"
+fly.config.baseURL = "https://www.cdxscn.com/Apiapi" // "http://cdzj.demo.com/Apiapi"
 
 //添加请求拦截器
 fly.interceptors.request.use((config, promise) => {

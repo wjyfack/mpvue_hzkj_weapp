@@ -11,7 +11,7 @@
     <swiper class="swiper" indicator-dots="true" autoplay="true" interval="5000" duration="1000"> 
       <block v-for="(item, index) in banners" :index="index" :key="key">
         <swiper-item> 
-          <image v-if="item.ad_code" :src="item.ad_code" class="slide-image" mode="scaleToFill"/> 
+          <image  v-if="item.ad_code" :src="item.ad_code" class="slide-image" mode="scaleToFill"/> 
         </swiper-item> 
       </block> 
     </swiper>
@@ -45,12 +45,12 @@
         <a href="../expert_list/main" class="more">更多>></a>
       </div>
       <div class="expert">
-        <a :href="'../person_home/main?id='+item.user_id" class="expert-item" v-for="(item, index) in expertList" :key="key">
-          <img v-if="item.user_picture" :src="item.user_picture" alt="" class="expert-img">
+        <a :href="'../person_home/main?id='+item.user_id" class="expert-item" v-for="(item, index) in expertList" :key="key" v-if="item.user_picture.length > 0">
+          <img :src="item.user_picture" alt="" class="expert-img" >
           <div class="expert-name">{{item.real_name}}</div>
         </a>
       </div>
-      <!-- 文章列表 -->
+      <!-- 文章列表 --> 
       <div class="head">
           <div class="titl">文章列表</div>
           <a href="/pages/article_list/main" class="more">更多>></a>
@@ -86,11 +86,11 @@
           </van-transition>
         </div> -->
       </div>
-      <van-tab title="项目维修">
+      <van-tab title="项目维修" @touchstart="onTouchStart" @touchend="onTouchEnd">
         <div class="repair">
           <a :href="'../detail_repair/main?id='+item.id" class="repair-item" v-for="(item, index) in repairList" :key="key">
             <div class="repair-header">
-              <img v-if="item.user_picture" :src="item.user_picture" alt="" class="actor">
+              <img v-if="item.user_picture" :src="item.user_picture"  alt="" class="actor">
               <div class="self">
                 <div class="name">{{item.real_name}}</div>
                 <div class="info">
@@ -101,14 +101,14 @@
               </div>
             </div>
             <div class="repair-imgs">
-              <div class="img-item" v-for="(items, indexs) in item.pics_str" :key="keys"><img v-if="items" :src="items" alt="" class="img"></div>
+              <div class="img-item" v-for="(items, indexs) in item.pics_str" :key="keys" v-if="items.length > 0"><img :src="items" alt="" class="img"></div>
             </div>
             <div class="repair-title">{{item.title}}</div>
             <div class="repair-price"><div class="yy">¥</div>　<div>{{item.price}}</div>  </div>
           </a>
         </div>
       </van-tab>
-      <van-tab title="需求列表">
+      <van-tab title="需求列表" @touchstart="onTouchStart" @touchend="onTouchEnd">
         <div class="xuqiu">
           <a :href="'../detail_demand/main?id='+item.id" class="xuqiu-item" v-for="(item, index) in xuqiuList" :key="key">
               <div class="title title van-multi-ellipsis--l">{{item.title}}</div>
@@ -130,7 +130,7 @@
           </a>
         </div>
       </van-tab>
-      <van-tab title="问题咨询">
+      <van-tab title="问题咨询" @touchstart="onTouchStart" @touchend="onTouchEnd">
         <div class="consult">
             <a :href="'../detail_consult/main?id='+item.id" class="consult-item van-hairline--bottom" v-for="(item, index) in consultList" :key="key">
                 <div class="cont">
@@ -172,6 +172,7 @@ export default {
       ,consultPage: 1
       ,repairPage: 1
       ,xuqiuPage: 1
+      ,pageX: 0
     }
   },
 
@@ -283,6 +284,21 @@ export default {
         this.banners = res.data.list
       })
     }
+    ,onTouchStart(event) {
+      //console.log(event)
+      this.pageX = event.pageX
+    }
+     ,onTouchEnd(event) {
+       //console.log(event)
+      let x = event.mp.changedTouches[0].pageX
+      let num = ~~(this.pageX-x)
+      if(num > 100 || num < -100)
+      if(this.pageX < x) {
+        this.active == 0 ? '' : --this.active
+      } else {
+        this.active == 2 ? '' : ++this.active
+      }
+    }
   },
   created () {
     this.getData()
@@ -325,6 +341,7 @@ export default {
 // .container {
 //   padding-bottom: 50px;
 // }
+.slide-image {width: 100%;height: 100%;}
 .tabbars{
     position: fixed;
     top: 0;

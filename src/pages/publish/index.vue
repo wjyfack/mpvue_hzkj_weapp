@@ -292,6 +292,7 @@ export default {
         this.getSort(0)
         
         var userData = wx.getStorageSync('userData')
+        console.log(userData)
         //console.log(userData,123123)
         if(userData.user_id <= 0|| userData.user_id == undefined || userData.session_id == undefined) {
             //Toast('请先登录') 

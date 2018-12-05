@@ -14,7 +14,7 @@
             <div class="last"></div>
         </div>
         <div class="addr">
-            <img src="" alt="../../../static/imgs/order_addr.png" class="addr_img">
+            <!-- <img src="" alt="../../../static/imgs/order_addr.png" class="addr_img"> -->
             <div class="addr_detail">
                 <div class="name"><span class="phone">{{info.contact_tel}}</span></div>
                 <div class="detail">{{info.address_names}}</div>

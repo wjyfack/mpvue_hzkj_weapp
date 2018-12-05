@@ -144,7 +144,7 @@ export default {
             align-items: center;
             font-size: 10px;
             .hd {background: #5887F9;color:#ffffff;padding: 0 5px;border-radius: 8px;}
-            .cont {color:#8E8E8E;padding-top: 5px;}
+            .cont {color:#8E8E8E;padding-top: 5px;line-height: 1;}
         }
     }
     .bao {

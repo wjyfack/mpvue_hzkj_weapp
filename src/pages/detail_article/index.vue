@@ -6,7 +6,7 @@
         </div>
         <div class="info">
             <div class="person">
-                <img :src="info.author_info.user_picture" alt="" class="img">
+                <img v-if="info.author_info.user_picture" :src="info.author_info.user_picture" alt="" class="img">
                 <div class="infos">
                     <div class="name">{{info.author_info.nick_name}}</div>
                     <div class="eye">
@@ -15,18 +15,19 @@
                     </div>
                 </div>
             </div>
-            <div class="guanzhu" @click="onFoucs" v-if="info.my_info.is_focus ==0">关注</div>   
-            <div class="guanzhu" @click="onFoucs" v-if="info.my_info.is_focus ==1">已关注</div>   
+            <div class="guanzhu" @click="onFoucs(info.my_info.is_focus)" v-if="info.my_info.is_focus ==0">关注</div>   
+            <div class="guanzhu" @click="onFoucs(info.my_info.is_focus)" v-if="info.my_info.is_focus ==1">已关注</div>   
         </div>
         <div class="cont">
-            <p><wxParse :content="info.content"/></p>
+            <p v-if="info.content"><wxParse :content="info.content"/></p>
             
         </div>
         <div class="btn-group">
             <div class="btn" @click="toColse('pin')"><img src="../../../static/imgs/con_hui.png" alt="" class="btn-img">评论</div>
-            <div class="btn" @click="onShouc"><img src="../../../static/imgs/rp_star.png" alt="" class="btn-img"> <span v-if="info.my_info.is_coll == 0">收藏</span><span v-if="info.my_info.is_coll == 1">已收藏</span> </div>
+            <div class="btn" @click="onShouc(info.my_info.is_coll)"><img src="../../../static/imgs/rp_star.png" alt="" class="btn-img"> <span v-if="info.my_info.is_coll == 0">收藏</span><span v-if="info.my_info.is_coll == 1">已收藏</span> </div>
+            <div class="btn" @click="onZan(info.id,1,info.my_info.is_like)"><img src="../../../static/imgs/p_use.png" alt="" class="btn-img"> <span v-if="info.my_info.is_like == 0">点赞({{info.like_count}})</span><span v-if="info.my_info.is_like == 1">已点赞({{info.like_count}})</span> </div>
             <!-- <div class="btn" @click="toColse('ju')"><img src="../../../static/imgs/con_ju.png" alt="" class="btn-img">举报</div> -->
-            <!-- <div class="btn fr"><img src="../../../static/imgs/con_zhui.png" alt="" class="btn-img">追加悬赏</div> -->
+            <!--onZan <div class="btn fr"><img src="../../../static/imgs/con_zhui.png" alt="" class="btn-img">追加悬赏</div> -->
         </div>
     </div>
     <div class="pinglun">
@@ -123,7 +124,10 @@ export default {
             }).then((res)=> {
                 
                 if(res.code == 0) {
-                    this.info = res.data
+                    let data = res.data
+                    data.like_count = Fun.getZan(data.like_count)
+                    //console.log(data)
+                    this.info = data
                  
                 } else {
                     console.log(res.message)
@@ -204,30 +208,44 @@ export default {
             })
 
         }
-        ,onFoucs() {
+        ,onFoucs(opt) {
             fly.post('/?v=V1&g=Doctor&c=Common&a=switchFocus'+Fun.getParam(),{
                 to_user_id: this.info.author_info.user_id
             }).then((res)=> {
                 
                 if(res.code == 0) {
-                    Toast('操作成功')
+                     opt == 0 ?Toast('关注成功'): Toast('取消关注')
                     this.getData()
                 } else {
                     console.log(res.message)
                 }
             })  
         }
-        ,onShouc() {
+        ,onShouc(opt) {
             fly.post('/?v=V1&g=Doctor&c=Common&a=switchColl'+Fun.getParam(),{
                 id: this.info.id
                 ,type:1
             }).then((res)=> {
                 
                 if(res.code == 0) {
-                    Toast('操作成功')
+                    opt == 0 ?Toast('收藏成功'): Toast('取消收藏')
                     this.getData()
                 } else {
                     console.log(res.message)
+                }
+            })
+        }
+        ,onZan(id,type,opt) {
+            fly.post('/?v=V1&g=Doctor&c=Common&a=switchLike'+Fun.getParam(),{
+                id: id
+                ,type:type //  2 3
+            }).then((res)=> {
+                
+                if(res.code == 0) {
+                   opt == 0 ?Toast('点赞成功'): Toast('取消点赞')
+                     this.getData()
+                } else {
+                    Toast(res.message)
                 }
             })
         }
