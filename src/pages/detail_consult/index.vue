@@ -136,7 +136,13 @@ export default {
                     this.myInfo = res.data.my_info
                     this.toUserInfo = res.data.to_user_info
                     this.cainaInfo = res.data.caina_info
-                } else {
+                } else if(res.code == 1) {
+                     Toast(res.message)
+                   setTimeout(()=>{
+                    wx.navigateBack({
+                        delta: 1
+                    })
+                   },1500)
                    // console.log(res.message)
                 }
             })
@@ -150,7 +156,7 @@ export default {
                     this.commentCount = res.data[0].count
                     this.commentList = res.data[0].list
                 } else {
-                    //console.log(res.message)
+                  
                 }
             })
         }

@@ -43,11 +43,14 @@ export default {
         return {
             active: 0
             ,expertList: []
+            ,page: 0
         }
     }
     ,methods: {
         getExpertData() {
-            fly.post('/?v=V1&g=Doctor&c=Expert&a=getExpertList'+Fun.getParam()).then((res) =>{
+            fly.post('/?v=V1&g=Doctor&c=Expert&a=getExpertList'+Fun.getParam(),{
+              page: this.page  
+            }).then((res) =>{
                 if(res.code == 0) {
                     let list = res.data.list
                     for(let i in list) {
@@ -62,6 +65,10 @@ export default {
     }
     ,mounted() {
          this.getExpertData()
+    }
+    ,onReachBottom(){ // 底部添加更多
+        ++this.page
+        this.getExpertData()
     }
 }
 </script>

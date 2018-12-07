@@ -4,28 +4,27 @@
         <div class="title">请填写您的个人信息</div>
         <van-cell-group>
             <van-field
-                v-model="userInfo.real_name"
+               
                 placeholder="请输入真实姓名"
                 :border="true"
                 label="真实姓名："
                 @change="onChangeName"
             />
             <van-field
-                v-model="userInfo.self_num"
                 placeholder="请输入身份证"
                 :border="true"
                 label="身份证号："
-                @change="onChangeIdCards"
+                @change="onChangeIdcardaaas"
             />
             <van-field
-                v-model="userInfo.bank_name"
+               
                 placeholder="请输入银行名称"
                 :border="true"
                 label="银行名称："
                 @change="onChangeIbankName"
             />
             <van-field
-                v-model="userInfo.bank_card"
+               
                 placeholder="请输入银行卡号"
                 :border="true"
                 label="银行卡号："
@@ -33,7 +32,7 @@
                 @change="onChangeIbanknum"
             />
             <van-field
-               v-model="userInfo.bank_mobile"
+              
                 placeholder="请输入手机号"
                 :border="true"
                 label="手机号："
@@ -41,7 +40,7 @@
                 @change="onChangePhone"
             />
             <van-field
-                :value="mobile_code"
+               
                 placeholder="请输入验证码"
                 :border="true"
                 label="验证码："
@@ -116,7 +115,7 @@ export default {
                 Toast('请输入真实姓名')
                 return ;
             }
-            if(this.reg_idcard.test(this.userInfo.self_num)) {
+            if(!this.reg_idcard.test(this.userInfo.self_num)) {
                 Toast('身份证号格式有误')
                 return ;
             }
@@ -124,11 +123,11 @@ export default {
                 Toast('请输入银行名称')
                 return ;
             }
-            if(this.reg_ibankcard.test(this.userInfo.bank_card)) {
+            if(!this.reg_ibankcard.test(this.userInfo.bank_card)) {
                 Toast('银行卡号格式有误')
                 return ;
             }
-            if(this.reg_phone.test(this.userInfo.bank_mobile)) {
+            if(!this.reg_phone.test(this.userInfo.bank_mobile)) {
                 Toast('手机号格式有误')
                 return ;
             }
@@ -136,7 +135,7 @@ export default {
                 Toast('请输入验证码')
                 return ;
             }
-            if(this.img_z == '' || this.img_f) {
+            if(this.img_z == '' || this.img_f == '') {
                 Toast('请上传身份证')
                 return ;
             }
@@ -247,9 +246,9 @@ export default {
         ,onChangeName(event){
              this.userInfo.real_name = event.mp.detail
         }
-        ,onChangeIdcards(event) {
+        ,onChangeIdcardaaas(event) {
              this.userInfo.self_num = event.mp.detail
-             console.log(this.userInfo.self_num)
+             // console.log(this.userInfo.self_num,event.mp.detail)
         }
         ,onChangeIbanknum(event){
             this.userInfo.bank_card = event.mp.detail
